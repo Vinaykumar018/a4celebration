@@ -40,59 +40,57 @@ import AboutUs from "../pages/about-us/AboutUs";
 import PrivacyPolicy from "../pages/privacy-policy/PrivacyPolicy";
 import TermsOfService from "../pages/terms-conditions/Terms";
 import RefundPolicy from "../pages/refund/Refund";
+import AuthMiddleware from "./AuthMiddleware";
 
 
-
-const RoutesComponent = () => {
-  const isAuthenticated = !!localStorage.getItem('userId');
-
+const RoutesComponent = () =>{
   return (
     <Routes>
-     
-        {/* Home & Main Categories */}
-        <Route path="/" element={<Home />} />
-        <Route path="/decorations" element={<Decoration />} />
-        <Route path="/decorations/:slug" element={<Decoration />} />
-        <Route path="/giftings" element={<Gifting />} />
-        <Route path="/giftings/:slug" element={<Gifting />} />
-        <Route path="/artists" element={<Artist />} />
-        <Route path="/catering" element={<Caterings />} />
-        <Route path="/baby-shower" element={<BabyShower />} />
-        <Route path="/event-management" element={<Events />} />
-        <Route path="/event-management/:slug" element={<Events />} />
-        <Route path="/services" element={<Services />} />
-        <Route path="/services/:slug" element={<Services />} />
+      {/* Public Routes */}
+      <Route path="/" element={<Home />} />
+      <Route path="/decorations" element={<Decoration />} />
+      <Route path="/decorations/:slug" element={<Decoration />} />
+      <Route path="/giftings" element={<Gifting />} />
+      <Route path="/giftings/:slug" element={<Gifting />} />
+      <Route path="/artists" element={<Artist />} />
+      <Route path="/catering" element={<Caterings />} />
+      <Route path="/baby-shower" element={<BabyShower />} />
+      <Route path="/event-management" element={<Events />} />
+      <Route path="/event-management/:slug" element={<Events />} />
+      <Route path="/services" element={<Services />} />
+      <Route path="/services/:slug" element={<Services />} />
 
-        {/* Product Details */}
-        <Route path="/decorations/service/:slug" element={<DecorationsDetailsPage />} />
-        <Route path="/gifts/e-commerce/:slug" element={<GiftsDetailsPage />} />
-        <Route path="/event-management/service/:slug" element={<EventManagementDetailsPage />} />
-        <Route path="/artist/service/:slug" element={<ArtistManagementDetailsPage />} />
-        <Route path="/event-catering/service/:slug" element={<CateringEventsDetailsPage />} />
+      {/* Product Details */}
+      <Route path="/decorations/service/:slug" element={<DecorationsDetailsPage />} />
+      <Route path="/gifts/e-commerce/:slug" element={<GiftsDetailsPage />} />
+      <Route path="/event-management/service/:slug" element={<EventManagementDetailsPage />} />
+      <Route path="/artist/service/:slug" element={<ArtistManagementDetailsPage />} />
+      <Route path="/event-catering/service/:slug" element={<CateringEventsDetailsPage />} />
 
-        {/* Auth Routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/forget-password" element={<ForgetPassword />} />
+      {/* Auth Routes */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
+      <Route path="/forget-password" element={<ForgetPassword />} />
 
-        {/* Utility Pages */}
-        <Route path="/help" element={<HelpCentre />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route path="/about" element={<AboutUs />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/terms" element={<TermsOfService />} />
-        <Route path="/refunds" element={<RefundPolicy />} />
+      {/* Utility Pages */}
+      <Route path="/help" element={<HelpCentre />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/about" element={<AboutUs />} />
+      <Route path="/privacy" element={<PrivacyPolicy />} />
+      <Route path="/terms" element={<TermsOfService />} />
+      <Route path="/refunds" element={<RefundPolicy />} />
 
-        {/* Protected Routes */}
-        <Route path="/cart" element={isAuthenticated ? <Cart /> : <Navigate to="/login" />} />
-        <Route path="/checkout" element={isAuthenticated ? <CheckoutPage /> : <Navigate to="/login" />} />
-        <Route path="/checkout/:id" element={isAuthenticated ? <CustomizedCheckoutPage /> : <Navigate to="/login" />} />
-        <Route path="/wishlist" element={isAuthenticated ? <WishlistPage /> : <Navigate to="/login" />} />
-        <Route path="/profile" element={isAuthenticated ? <Profile /> : <Navigate to="/login" />} />
-        <Route path="/order/:orderId" element={isAuthenticated ? <Order /> : <Navigate to="/login" />} />
-        <Route path="/profile/:orderId" element={isAuthenticated ? <ProfileOrderConfirmation /> : <Navigate to="/login" />} />
-        <Route path="/profile/custom/:orderId" element={isAuthenticated ? <ProfileCustomOrderConfirmation /> : <Navigate to="/login" />} />
-      
+      {/* Protected Routes */}
+      <Route element={<AuthMiddleware />}>
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<CheckoutPage />} />
+        <Route path="/checkout/:id" element={<CustomizedCheckoutPage />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/order/:orderId" element={<Order />} />
+        <Route path="/profile/:orderId" element={<ProfileOrderConfirmation />} />
+        <Route path="/profile/custom/:orderId" element={<ProfileCustomOrderConfirmation />} />
+      </Route>
     </Routes>
   );
 };

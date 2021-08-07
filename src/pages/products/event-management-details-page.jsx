@@ -562,7 +562,7 @@ const EventManagementDetailsPage = () => {
                             <ShoppingCart size={20} />
                             <span className="font-medium text-sm">Book Now</span>
                           </>
-                        )}
+                        )}z
                       </button>
                     )}
 

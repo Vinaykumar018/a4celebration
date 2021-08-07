@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import {
   format,
   parse,
@@ -8,7 +9,6 @@ import {
   isBefore,
   setHours,
   setMinutes,
-  startOfDay,
   isSameDay
 } from 'date-fns';
 import { FaLock } from 'react-icons/fa';
@@ -18,8 +18,38 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [timeSlots, setTimeSlots] = useState([]);
   const [timezone] = useState('IST');
+  const [apiDate, setApiDate] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const dateInputRef = useRef(null);
+
+  // Fetch current India time from timeapi.io
+  useEffect(() => {
+    const fetchCurrentTime = async () => {
+      try {
+        const response = await axios.get('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Kolkata');
+        const { year, month, day, hour, minute } = response.data;
+        
+        // Create date object from API response (month is 1-12 in the API)
+        const currentDate = new Date(year, month - 1, day, hour, minute);
+        setApiDate(currentDate);
+        
+        // Set both min date and selected date to API date
+        const formattedDate = format(currentDate, 'yyyy-MM-dd');
+        
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching time:', error);
+        // Fallback - shouldn't normally happen
+        const now = new Date();
+        setApiDate(now);
+        setSelectedDate(format(now, 'yyyy-MM-dd'));
+        setIsLoading(false);
+      }
+    };
+
+    fetchCurrentTime();
+  }, []);
 
   const handleInputClick = () => {
     if (PIN !== false && dateInputRef.current) {
@@ -27,17 +57,15 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
     }
   };
 
-
   // Generate time slots based on selected date
   useEffect(() => {
-    if (!selectedDate || PIN === false) {
+    if (!selectedDate || PIN === false || !apiDate) {
       setTimeSlots([]);
       return;
     }
 
     const date = parse(selectedDate, 'yyyy-MM-dd', new Date());
-    const now = new Date();
-    const isCurrentDay = isSameDay(date, now);
+    const isCurrentDay = isSameDay(date, apiDate);
 
     // Define operating hours (10 AM to 10 PM)
     const dayStart = setHours(setMinutes(date, 0), 10); // 10:00 AM
@@ -48,7 +76,7 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
 
     // If today, skip the next available slot (add 3 hours to current time)
     if (isCurrentDay) {
-      const nextAvailable = addHours(now, 3);
+      const nextAvailable = addHours(apiDate, 3); // Use apiDate instead of local time
       if (isBefore(nextAvailable, dayStart)) {
         currentSlotStart = dayStart;
       } else if (isAfter(nextAvailable, dayEnd)) {
@@ -83,13 +111,13 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
     }
 
     setTimeSlots(slots);
-    setSelectedSlot(null); // Reset selection when date changes
-  }, [selectedDate, PIN]);
+    setSelectedSlot(null);
+  }, [selectedDate, PIN, apiDate]);
 
   const handleDateChange = (e) => {
     if (PIN === false) return;
     setSelectedDate(e.target.value);
-    onTimeSlotSelect(null); // Clear selection when date changes
+    onTimeSlotSelect(null);
   };
 
   const handleSlotSelect = (slot) => {
@@ -105,6 +133,10 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
     });
   };
 
+  if (isLoading) {
+    return <div className="text-center py-4">Loading time information...</div>;
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col relative">
@@ -112,7 +144,7 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
           <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
-          Select Date 
+          Select Date (IST)
         </label>
 
         <div className="relative">
@@ -123,7 +155,7 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
             value={selectedDate}
             onChange={handleDateChange}
             onClick={handleInputClick}
-            min={format(new Date(), 'yyyy-MM-dd')}
+            min={apiDate ? format(apiDate, 'yyyy-MM-dd') : ''}
             disabled={PIN === false}
             className={`px-4 py-1.5 border rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition shadow-sm w-full ${PIN === false
               ? 'border-gray-200 bg-gray-50 cursor-not-allowed pr-8 sm:pr-20 md:pr-8'
@@ -134,7 +166,6 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
             <FaLock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-amber-500" />
           )}
         </div>
-
       </div>
 
       {timeSlots.length > 0 ? (
@@ -160,7 +191,7 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
         </div>
       ) : selectedDate ? (
         <p className="text-gray-500">
-          {isToday(parse(selectedDate, 'yyyy-MM-dd', new Date()))
+          {apiDate && isToday(parse(selectedDate, 'yyyy-MM-dd', apiDate))
             ? "No more available slots for today. Please select another date."
             : "No available slots for the selected date."}
         </p>
