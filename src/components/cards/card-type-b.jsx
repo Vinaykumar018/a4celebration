@@ -8,14 +8,14 @@ import "swiper/css/pagination"
 import { FaStar, FaStarHalfAlt, FaRegStar, FaHeart, FaArrowRight } from "react-icons/fa"
 import { Autoplay, Pagination } from "swiper/modules"
 import { EyeIcon } from "lucide-react"
-
+// serviceLinkPrefix = "/product"
 
 const CardTypeB = ({
   title = "Featured Decorations",
   description = "Explore our wide range of decoration services",
   services = [],
   baseImageUrl = "/placeholder.svg?height=200&width=300",
-  serviceLinkPrefix = "/service",
+  serviceLinkPrefix = "/product",
   themeColor = "#ff7e00",
   showRating = true,
   showPrice = true,
@@ -64,26 +64,26 @@ const CardTypeB = ({
   return (
     <section className="bg-white px-5 rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="container-fluid mx-auto px-6">
-      <div className="heading_wrapper mb-6">
-  <div className="my-12 mb-4">
-    <div>
-      <a href="#" target="_blank" className="cursor-default pointer-events-none">
-        <div className="text-[rgb(94,15,77)]">
-          <div className="flex justify-between items-center">
-            <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
-              {section}
-            </h2>
+        <div className="heading_wrapper mb-6">
+          <div className="my-12 mb-4">
+            <div>
+              <a href="#" target="_blank" className="cursor-default pointer-events-none">
+                <div className="text-[rgb(94,15,77)]">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
+                      {section}
+                    </h2>
 
-            <div className="flex items-center gap-2 text-pink-600 hover:text-pink-800 cursor-pointer text-sm sm:text-base font-medium">
-              <Link to={sectionSlug}><span>View All</span></Link>
-              <EyeIcon className="h-5 w-5" />
+                    <div className="flex items-center gap-2 text-pink-600 hover:text-pink-800 cursor-pointer text-sm sm:text-base font-medium">
+                      <Link to={sectionSlug}><span>View All</span></Link>
+                      <EyeIcon className="h-5 w-5" />
+                    </div>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
         </div>
-      </a>
-    </div>
-  </div>
-</div>
 
         <Swiper
           modules={[Autoplay, Pagination]}
@@ -93,7 +93,7 @@ const CardTypeB = ({
           }}
           spaceBetween={30}
           slidesPerView={4}
-         
+
           breakpoints={{
             320: {
               slidesPerView: 1,
@@ -136,7 +136,7 @@ const CardTypeB = ({
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                      
+
                       {/* Price Badge */}
                       {showPrice && (
                         <div className="absolute bottom-3 left-3 bg-white/90 px-3 py-1 rounded-lg shadow-sm">
@@ -189,7 +189,7 @@ const CardTypeB = ({
               </div>
             </SwiperSlide>
           ))}
-          
+
           <div className="swiper-pagination !bottom-0"></div>
         </Swiper>
       </div>

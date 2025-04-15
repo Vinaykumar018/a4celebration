@@ -27,7 +27,7 @@ const RoutesComponent = () => {
 
       <Route path="/events" element={<Events></Events>} />
       
-      <Route path="/product" element={<ProductDetailsPage></ProductDetailsPage>} />
+      <Route  path="/product/:slug" element={<ProductDetailsPage></ProductDetailsPage>} />
 
 
 

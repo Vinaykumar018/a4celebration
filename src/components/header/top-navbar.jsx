@@ -10,7 +10,8 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import logo from "../../assets/cherishx-logo-website.png";
+// import logo from "../../assets/cherishx-logo-website.png";
+ import logo from "../../assets/A4 Celebration 1 (3).png";
 
 const TopNavbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);

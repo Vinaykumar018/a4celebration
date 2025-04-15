@@ -1,9 +1,8 @@
 import React from 'react';
 import CategoryTopBanner from './category-top-banner';
 import CategoryWiseFilter from './CategoryWiseFilter';
-import CategoryWiseProduct from './category-wise-product';
-import ProductSection1 from '../../../components/product/product-section-1'
 
+import CategoryWiseFeed from '../../../components/category-wise-feed/category-wise-feed';
 const Decorations = () => {
   return (
     <div className="container mx-auto px-4 py-6">
@@ -17,7 +16,7 @@ const Decorations = () => {
 
         {/* 8 columns for products */}
         <div className="md:col-span-9">
-        <ProductSection1></ProductSection1>
+        <CategoryWiseFeed></CategoryWiseFeed>
         </div>
       </div>
     </div>

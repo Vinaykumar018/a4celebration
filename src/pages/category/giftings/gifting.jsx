@@ -2,7 +2,7 @@ import React from 'react';
 import CategoryTopBanner from './category-top-banner';
 import CategoryWiseFilter from './CategoryWiseFilter';
 import CategoryWiseProduct from './category-wise-product';
-import ProductSection1 from '../../../components/product/product-section-1'
+import CategoryWiseFeed from '../../../components/product/product-section-1'
 
 const Events = () => {
   return (
@@ -17,7 +17,7 @@ const Events = () => {
 
         {/* 8 columns for products */}
         <div className="md:col-span-9">
-        <ProductSection1></ProductSection1>
+        <CategoryWiseFeed></CategoryWiseFeed>
         </div>
       </div>
     </div>

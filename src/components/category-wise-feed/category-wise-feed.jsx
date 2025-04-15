@@ -1,7 +1,8 @@
-import CardTypeA from "../cards/card-type-a";
-import img1 from '../../assets/decoration/1687938112_original.avif'
 
-const ProductSection1 = () => {
+import img1 from '../../assets/decoration/1687938112_original.avif'
+import SimpleCard1 from "../cards/simple-card-1";
+
+const CategoryWiseFeed = () => {
   const services = [
     {
       id: 1,
@@ -63,16 +64,16 @@ const ProductSection1 = () => {
 
 
   return (
-    <CardTypeA
-      title="Decorations"
+    <SimpleCard1
+    
       description="Explore our spiritual services"
       services={services}
       baseImageUrl={img1}
       themeColor="#f472b6"
-      section="Decorations"
-      sectionSlug="/decorations"
+    
+     
       ctaText="Book Now"
     />
   );
 };
-export default ProductSection1;
+export default CategoryWiseFeed;

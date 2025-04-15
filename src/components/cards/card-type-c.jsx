@@ -12,7 +12,7 @@ const CardTypeC = ({
   description = "Explore our wide range of services",
   services = [],
   baseImageUrl = "",
-  serviceLinkPrefix = "/service",
+  serviceLinkPrefix = "/product",
   themeColor = "#ff7e00",
   showRating = true,
   showPrice = true,
@@ -53,26 +53,26 @@ const CardTypeC = ({
   return (
     <section className="bg-white px-5 rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="container-fluid mx-auto px-6">
-      <div className="heading_wrapper mb-6">
-  <div className="my-12 mb-4">
-    <div>
-      <a href="#" target="_blank" className="cursor-default pointer-events-none">
-        <div className="text-[rgb(94,15,77)]">
-          <div className="flex justify-between items-center">
-            <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
-              {section}
-            </h2>
+        <div className="heading_wrapper mb-6">
+          <div className="my-12 mb-4">
+            <div>
+              <a href="#" target="_blank" className="cursor-default pointer-events-none">
+                <div className="text-[rgb(94,15,77)]">
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
+                      {section}
+                    </h2>
 
-            <div className="flex items-center gap-2 text-pink-600 hover:text-pink-800 cursor-pointer text-sm sm:text-base font-medium">
-              <Link to={sectionSlug}><span>View All</span></Link>
-              <EyeIcon className="h-5 w-5" />
+                    <div className="flex items-center gap-2 text-pink-600 hover:text-pink-800 cursor-pointer text-sm sm:text-base font-medium">
+                      <Link to={sectionSlug}><span>View All</span></Link>
+                      <EyeIcon className="h-5 w-5" />
+                    </div>
+                  </div>
+                </div>
+              </a>
             </div>
           </div>
         </div>
-      </a>
-    </div>
-  </div>
-</div>
 
         <Swiper
           modules={[Autoplay, Pagination]}
@@ -82,7 +82,7 @@ const CardTypeC = ({
           }}
           spaceBetween={30}
           slidesPerView={4}
-        
+
           breakpoints={{
             320: {
               slidesPerView: 1,
@@ -109,7 +109,7 @@ const CardTypeC = ({
                 <Link to={`${serviceLinkPrefix}/${service.slug}`} className="block h-full">
                   <motion.div
                     className="h-full bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-                    style={{ 
+                    style={{
                       borderBottom: `3px solid ${themeColor}`,
                     }}
                     whileHover={{ scale: 1.02 }}
@@ -153,7 +153,7 @@ const CardTypeC = ({
                         <motion.button
                           className="w-full py-2 px-4 rounded-md uppercase font-medium text-sm tracking-wide text-white transition-colors duration-300"
                           style={{ backgroundColor: themeColor }}
-                          whileHover={{ 
+                          whileHover={{
                             backgroundColor: '#e67300',
                             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
                           }}

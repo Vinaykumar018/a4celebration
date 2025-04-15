@@ -20,7 +20,7 @@ export default function CategoryTopBanner() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
         {/* Content */}
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6">
+        {/* <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center px-6">
           <div className="transform translate-y-10 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 space-y-6">
             
             <h2 className="text-3xl md:text-5xl font-bold text-yellow-300 drop-shadow-lg flex items-center justify-center gap-2">
@@ -33,7 +33,7 @@ export default function CategoryTopBanner() {
               Book Now
             </button>
           </div>
-        </div>
+        </div> */}
 
       </div>
     </div>
