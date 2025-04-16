@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Phone, Check, Star } from "lucide-react";
-import img1 from '../../assets/services/1727611247_original (1).avif'
+import img1 from '../../assets/services/1727611247_original (1).avif';
 
 export default function AboutDetails() {
   const cities = ["Kanpur", "Noida", "Delhi", "Mumbai", "Pune"];
@@ -11,7 +11,6 @@ export default function AboutDetails() {
 
   useEffect(() => {
     const city = cities[index];
-
     if (isDeleting) {
       if (charIndex > 0) {
         setTimeout(() => setCharIndex((prev) => prev - 1), 100);
@@ -26,16 +25,15 @@ export default function AboutDetails() {
         setTimeout(() => setIsDeleting(true), 1000);
       }
     }
-
     setCurrentCity(city.substring(0, charIndex));
   }, [charIndex, isDeleting, index, cities]);
 
   return (
-    <div className="mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-pink-50">
+    <div className="mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-pink-50 google-font">
       <div className="container mx-auto px-4">
         {/* Header with logo */}
         <header className="mb-8">
-          <div className="text-pink-600 font-bold text-3xl flex items-center">
+          <div className="text-pink-600 font-bold text-3xl flex items-center font-playfair">
             <span className="bg-pink-600 text-white p-2 rounded-lg mr-2">
               <Phone size={24} />
             </span>
@@ -47,7 +45,7 @@ export default function AboutDetails() {
         <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-8">
           {/* Left side content */}
           <div className="space-y-6">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold font-playfair">
               <span className="text-gray-800">Creating Unforgettable</span>{" "}
               <span className="text-pink-600">Celebrations</span>{" "}
               <br />
@@ -63,22 +61,17 @@ export default function AboutDetails() {
               </p>
 
               <div className="space-y-3">
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mt-1 mr-2 flex-shrink-0" />
-                  <span>Verified and experienced event professionals</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mt-1 mr-2 flex-shrink-0" />
-                  <span>Transparent pricing with no hidden charges</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mt-1 mr-2 flex-shrink-0" />
-                  <span>Customized services for all event types</span>
-                </div>
-                <div className="flex items-start">
-                  <Check className="text-pink-500 mt-1 mr-2 flex-shrink-0" />
-                  <span>Easy online booking and scheduling</span>
-                </div>
+                {[
+                  "Verified and experienced event professionals",
+                  "Transparent pricing with no hidden charges",
+                  "Customized services for all event types",
+                  "Easy online booking and scheduling"
+                ].map((text, idx) => (
+                  <div key={idx} className="flex items-start">
+                    <Check className="text-pink-500 mt-1 mr-2 flex-shrink-0" />
+                    <span>{text}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -103,23 +96,23 @@ export default function AboutDetails() {
                 "CelebrationHub transformed our wedding into a fairy tale. Their decor team was amazing
                 and the catering service was exceptional."
               </p>
-              <p className="text-gray-800 font-medium mt-2">- Priya S., Delhi</p>
+              <p className="text-gray-800 font-medium mt-2 font-playfair">- Priya S., Delhi</p>
             </div>
           </div>
 
           {/* Right side img */}
           <div className="hidden lg:block relative">
             <img
-              src={img1} // Replace with your celebration-themed image
+              src={img1}
               alt="Event team setting up decorations"
               className="w-full h-auto object-contain rounded-xl shadow-lg"
             />
-            <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-md border border-pink-100">
-              <div className="text-3xl font-bold text-pink-600">500+</div>
+            <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-md border border-pink-100 text-center">
+              <div className="text-3xl font-bold text-pink-600 font-playfair">500+</div>
               <div className="text-gray-600">Event Professionals</div>
             </div>
-            <div className="absolute -top-6 -right-6 bg-pink-600 text-white p-4 rounded-xl shadow-md">
-              <div className="text-3xl font-bold">15</div>
+            <div className="absolute -top-6 -right-6 bg-pink-600 text-white p-4 rounded-xl shadow-md text-center">
+              <div className="text-3xl font-bold font-playfair">15</div>
               <div>Cities Served</div>
             </div>
           </div>
@@ -127,22 +120,17 @@ export default function AboutDetails() {
 
         {/* Stats section - for mobile */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 lg:hidden">
-          <div className="bg-white p-4 rounded-lg shadow-sm text-center border-t-4 border-pink-500">
-            <div className="text-2xl font-bold text-gray-800">500+</div>
-            <div className="text-gray-600 text-sm">Event Professionals</div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm text-center border-t-4 border-pink-500">
-            <div className="text-2xl font-bold text-gray-800">50+</div>
-            <div className="text-gray-600 text-sm">Service Types</div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm text-center border-t-4 border-pink-500">
-            <div className="text-2xl font-bold text-gray-800">15</div>
-            <div className="text-gray-600 text-sm">Cities</div>
-          </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm text-center border-t-4 border-pink-500">
-            <div className="text-2xl font-bold text-gray-800">1200+</div>
-            <div className="text-gray-600 text-sm">Events Served</div>
-          </div>
+          {[
+            { value: "500+", label: "Event Professionals" },
+            { value: "50+", label: "Service Types" },
+            { value: "15", label: "Cities" },
+            { value: "1200+", label: "Events Served" }
+          ].map((stat, idx) => (
+            <div key={idx} className="bg-white p-4 rounded-lg shadow-sm text-center border-t-4 border-pink-500">
+              <div className="text-2xl font-bold text-gray-800 font-playfair">{stat.value}</div>
+              <div className="text-gray-600 text-sm">{stat.label}</div>
+            </div>
+          ))}
         </div>
       </div>
     </div>

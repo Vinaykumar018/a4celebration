@@ -1,5 +1,5 @@
 import React from 'react';
-import img1 from '../../assets/banner/1680x400_Banner-4_Birthday-Celebrations_Desktop_20240930_132612.avif';
+import img1 from '../../assets/banner/corporate-event-planner.webp';
 import { motion } from 'framer-motion';
 
 const Banner2 = () => {

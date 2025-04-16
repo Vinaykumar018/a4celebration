@@ -2,7 +2,7 @@ import React from 'react';
 import CategoryTopBanner from './category-top-banner';
 import CategoryWiseFilter from './CategoryWiseFilter';
 import CategoryWiseProduct from './category-wise-product';
-import CategoryWiseFeed from '../../../components/product/product-section-1'
+import CategoryWiseFeed from '../../../components/category-wise-feed/category-wise-feed';
 
 const Events = () => {
   return (

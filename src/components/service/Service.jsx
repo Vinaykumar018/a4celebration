@@ -110,7 +110,7 @@ const Services = () => {
     <section className="bg-gradient-to-b from-pink-50 to-white py-16 px-4">
       <div className="container mx-auto max-w-7xl">
 
-
+<h1>hello</h1>
         <motion.div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
           variants={containerVariants}
@@ -143,9 +143,9 @@ const Services = () => {
 
                   <div className="px-3 py-2 text-center bg-white flex-grow flex flex-col justify-center py">
                     <h3
-                      className="text-xl font-extrabold  text-[#8B4513] tracking-wide  
+                      className="text-xl font-extrabold  text-[#8B4513] tracking-wide google-font  
 "
-                      style={{ fontFamily: 'Roboto, sans-serif', textTransform: "uppercase" }}
+                      style={{ textTransform: "uppercase" }}
                     >
                       {service.title}
                     </h3>

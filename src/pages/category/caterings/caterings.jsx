@@ -3,7 +3,7 @@ import CategoryTopBanner from './category-top-banner';
 import CategoryWiseFilter from './CategoryWiseFilter';
 import CategoryWiseProduct from './category-wise-product';
 import ProductSection1 from '../../../components/product/product-section-1'
-import CategoryWiseFeed from '../../../components/product/product-section-1'
+import CategoryWiseFeed from '../../../components/category-wise-feed/category-wise-feed';
 const Caterings = () => {
   return (
     <div className="container mx-auto px-4 py-6">
