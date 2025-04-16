@@ -3,7 +3,7 @@ import Slider from '../components/slider/Slider';
 import Service from '../components/service/Service';
 import AvailableCities from '../components/service/AvailableCities';
 import AboutDetails from '../components/service/AboutDetails';
-import Banner1 from '../components/banner/Banner1';
+import Banner1 from '../components/banner/banner1';
 import FeaturedServices from '../components/cards/card-type-a';
 import MyComponent from '../components/product/product-section-1';
 import ProductSection2 from '../components/product/product-section-2';
