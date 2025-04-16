@@ -110,9 +110,9 @@ const Services = () => {
     <section className="bg-gradient-to-b from-pink-50 to-white py-16 px-4">
       <div className="container mx-auto max-w-7xl">
 
-<h1>hello</h1>
+
         <motion.div
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           animate="visible"

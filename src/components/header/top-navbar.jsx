@@ -21,6 +21,7 @@ const TopNavbar = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCreateAccountModalOpen, setIsCreateAccountModalOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false); // State for City Modal
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
@@ -90,7 +91,16 @@ const TopNavbar = () => {
 
       {/* Mobile Icons & Menu */}
       <div className="md:hidden flex items-center gap-3">
+      <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
         <Search className="h-5 w-5 text-gray-700 hover:text-rose-500" />
+      </button>
+      {isSearchOpen && (
+         <input
+         type="text"
+         placeholder="What are you celebrating?"
+         className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent"
+       />
+      )}
         <Link to="/wishlist">
           <Heart className="h-5 w-5 text-gray-700 hover:text-rose-500" />
         </Link>
@@ -127,7 +137,7 @@ const TopNavbar = () => {
           <Link to="/cart" className="flex items-center text-gray-700 hover:text-rose-500">
             <ShoppingCart className="h-5 w-5 mr-2" /> Cart
           </Link>
-          <div className="flex items-center text-gray-700 hover:text-rose-500">
+          <div className="flex items-center text-gray-700 hover:text-rose-500" onClick={handleOpenModal}>
             <MapPin className="h-5 w-5 mr-2 text-rose-500" /> Kanpur
           </div>
         </div>

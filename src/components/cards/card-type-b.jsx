@@ -96,11 +96,11 @@ const CardTypeB = ({
 
           breakpoints={{
             320: {
-              slidesPerView: 1,
+              slidesPerView: 2,
               spaceBetween: 20,
             },
             640: {
-              slidesPerView: 2,
+              slidesPerView: 3,
               spaceBetween: 30,
             },
             768: {
