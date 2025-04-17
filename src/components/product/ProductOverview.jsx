@@ -36,7 +36,7 @@ const ProductOverview = () => {
         }
       `}</style>
 
-      <div className="w-full mt-2 font-poppins">
+      <div className="w-full mt-2 font-poppins bg-pink-50">
         <h2 className="mb-6 text-center text-2xl font-bold text-pink-700 font-playfair">
           Product Overview
         </h2>

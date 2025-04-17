@@ -26,7 +26,7 @@ const WhyChooseUs = () => {
   
 
   return (
-    <section className="bg-white px-5 rashi_wrapper mt-2 mt-8 pb-8" id="zodiac_Sign">
+    <section className="px-5 rashi_wrapper mt-2 mt-8 pb-8 bg-pink-50" id="zodiac_Sign">
       <div className="container mx-auto px-12">
         <div className="heading_wrapper " style={{ marginBottom: "40px" }}>
         <h2

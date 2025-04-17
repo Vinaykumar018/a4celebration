@@ -100,17 +100,18 @@ const Cart = () => {
     </div>
 
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-2">
-          <ShoppingBag className="h-8 w-12 text-pink-300" />
-          <h1 className="text-3xl font-bold text-pink-800">Your Sacred Cart</h1>
-        </div>
-        <Link to="/">
-          <button className="border border-pink-300 text-pink-700 hover:bg-pink-100 px-4 py-2 rounded">
-            Continue Shopping
-          </button>
-        </Link>
-      </div>
+    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
+  <div className="flex items-center gap-2">
+    <ShoppingBag className="h-8 w-12 text-pink-300" />
+    <h1 className="text-2xl sm:text-3xl font-bold text-pink-800">Your Sacred Cart</h1>
+  </div>
+  <Link to="/" className="self-start sm:self-auto">
+    <button className="border border-pink-300 text-pink-700 hover:bg-pink-100 px-4 py-2 rounded">
+      Continue Shopping
+    </button>
+  </Link>
+</div>
+
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Cart Items */}

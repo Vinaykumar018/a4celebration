@@ -62,8 +62,8 @@ const CardTypeB = ({
   }
 
   return (
-    <section className="bg-white px-5 rashi_wrapper mt-2" id="zodiac_Sign">
-      <div className="container-fluid mx-auto px-6">
+    <section className="bg-pink rashi_wrapper mt-2" id="zodiac_Sign">
+      <div className="container-fluid mx-auto md:px-6 sm:px-0 px-0 lg:px-6">
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
             <div>
@@ -198,3 +198,90 @@ const CardTypeB = ({
 }
 
 export default CardTypeB
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React from "react";
+// import { Swiper, SwiperSlide } from "swiper/react";
+// import { Autoplay, Navigation, Pagination } from "swiper/modules";
+// import "swiper/css";
+// import "swiper/css/navigation";
+// import "swiper/css/pagination";
+// import { Check } from "lucide-react";
+
+// import img1 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
+// import img2 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
+// import img3 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
+
+// const slides = [
+//   {
+//     image: img1,
+//     title: "Premium Decoration 1",
+//     features: ["Feature one", "Feature two", "Feature three"],
+//   },
+//   {
+//     image: img2,
+//     title: "Elegant Setup 2",
+//     features: ["Feature A", "Feature B"],
+//   },
+//   {
+//     image: img3,
+//     title: "Traditional Theme 3",
+//     features: ["Custom lighting", "Creative decor"],
+//   },
+// ];
+
+// export default function Slider() {
+//   return (
+//     <div className="w-full overflow-hidden w-full h-[60vh] sm:h-[70vh] md:h-[75vh] lg:h-[80vh] overflow-hidden h-auto">
+//       <Swiper
+//         modules={[Autoplay, Navigation, Pagination]}
+//         autoplay={{ delay: 3000 }}
+//         spaceBetween={0}
+//         slidesPerView={1}
+//         loop
+//         pagination={{ clickable: true }}
+      
+//         className="w-full h-auto"
+//       >
+//         {slides.map((slide, index) => (
+//           <SwiperSlide key={index} className="w-full sm:h-auto h-full">
+//             <div className="relative w-full sm:h-auto h-full">
+//               {/* Overlay */}
+//               <div className="absolute inset-0  z-10"></div>
+
+//               {/* Image */}
+//               <img
+//                 src={"https://jusst4you.com/wp-content/uploads/2024/01/1-9-1.png"}
+//                 alt={slide.title || "Slide Image"}
+//                 className="object-cover w-full sm:h-auto h-full"
+//                 loading="lazy"
+//               />
+
+//               {/* Content */}
+//               <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 sm:px-10 md:px-16 lg:px-24">
+               
+//               </div>
+//             </div>
+//           </SwiperSlide>
+//         ))}
+//       </Swiper>
+//     </div>
+//   );
+// }

@@ -1,45 +1,32 @@
 import React from 'react';
-import img1 from '../../assets/banner/proposal-banner-desktop-.webp';
 import { motion } from 'framer-motion';
+
+// Image sources for Banner3
+const desktopImg = 'http://sdmntprsouthcentralus.oaiusercontent.com/files/00000000-98b4-61f7-94e8-34d9f2b1ba0c/raw?se=2025-04-17T10%3A19%3A27Z&sp=r&sv=2024-08-04&sr=b&scid=b765a622-d783-595a-9565-261f26d4b6a3&skoid=a3336399-497e-45e5-8f28-4b88ecca3d1f&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-04-16T21%3A27%3A56Z&ske=2025-04-17T21%3A27%3A56Z&sks=b&skv=2024-08-04&sig=OTxT%2BGF0ebYNU9sIH9d%2By/5Jq1xdDUXQzwdPREDQBDA%3D';
+const mobileImg = 'https://jusst4you.com/wp-content/uploads/2025/04/proposal-banner-768x384.webp';
 
 const Banner3 = () => {
   return (
-    <div className="relative w-full overflow-hidden group mt-8 px-4 sm:px-6 lg:px-8">
-      {/* Container with max-width and centering */}
-      <div className="relative w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] rounded-xl md:rounded-2xl overflow-hidden shadow-xl">
-        {/* Gradient overlay for better text readability */}
-        <div className="absolute inset-0 z-10  rounded-[inherit]"></div>
-        
-        {/* Banner Image with smooth hover effect */}
-        <motion.img
-          src={img1}
-          alt="Birthday Celebrations Banner"
-          className="object-cover w-full h-full"
-          loading="eager"
-          decoding="async"
-          width="1680"
-          height="400"
+    <div className="px-3 mt-6">
+      <div className="w-full rounded-3xl overflow-hidden shadow-lg">
+        <motion.picture
           initial={{ scale: 1 }}
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-        />
-        
-        {/* Banner Content - Centered with animation */}
-        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="max-w-3xl"
-          >
-           
-          
-          </motion.div>
-        </div>
+          transition={{ duration: 0.5, ease: 'easeInOut' }}
+          className="block w-full"
+        >
+          {/* Desktop Source */}
+          <source media="(min-width: 769px)" srcSet={desktopImg} />
+          {/* Mobile Source */}
+          <source media="(max-width: 768px)" srcSet={mobileImg} />
+          {/* Fallback image */}
+          <img
+            src={desktopImg}
+            alt="Proposal Banner"
+            className="w-full h-[45vw] sm:h-[22.8vw] object-fill rounded-3xl"
+            loading="lazy"
+          />
+        </motion.picture>
       </div>
-      
-      {/* Decorative elements */}
-      <div className="absolute-bottom-2 left-0 right-0 h-4 bg-gradient-to-t from-pink-100 to-transparent z-0"></div>
     </div>
   );
 };

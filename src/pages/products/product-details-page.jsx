@@ -44,7 +44,7 @@ const ProductDetailsPage = () => {
   return (
     <>
       <style>{styles}</style>
-      <div className="bg-gradient-to-b from-pink-50 to-white font-poppins">
+      <div className="bg-gradient-to-b bg-pink-50 font-poppins">
         {/* Special Offer Ribbon */}
         <div className="bg-gradient-to-r from-pink-400 to-rose-500 text-white py-2 px-4 text-center text-sm font-medium flex items-center justify-center gap-2">
           <Gift className="h-4 w-4" />
@@ -90,7 +90,9 @@ const ProductDetailsPage = () => {
                   </div>
                 ))}
               </div>
-              <ProductOverview />
+              <div className="hidden sm:hidden md:block">
+  <ProductOverview />
+</div>
             </div>
 
             {/* Product Details */}
@@ -188,13 +190,20 @@ const ProductDetailsPage = () => {
               <div className="space-y-4">
                 <PincodeDeliveryChecker />
                 <DeliveryInfo />
+                <div className="block md:hidden">
+  <ProductOverview />
+</div>
+
               </div>
             </div>
           </div>
 
           <h2 className="text-3xl font-bold text-center google-font mt-8">
-        Related Products
-      </h2>
+  <span className="border-b-[1vw] border-pink-700 rounded-md inline-block">
+    Related Products
+  </span>
+</h2>
+
 
           <div className="space-y-6">
             <RelatedProductSection1 />

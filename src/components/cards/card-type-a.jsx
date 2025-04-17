@@ -51,8 +51,8 @@ const CardTypeA = ({
   };
 
   return (
-    <section className="bg-white px-5 rashi_wrapper mt-2" id="zodiac_Sign">
-      <div className="container-fluid mx-auto px-6">
+    <section className="bg-pink-50 md:px-0 sm:px-4 px-4 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
+      <div className="container-fluid mx-auto md:px-6 sm:px-0 px-0 lg:px-6">
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
             <div>

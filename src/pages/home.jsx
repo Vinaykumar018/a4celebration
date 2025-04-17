@@ -21,6 +21,7 @@ import CustomerReviewSlider from '../components/service/CustomerReviewSlider';
 const Home = () => {
   return (
     <>
+    <div className='bg-pink-50'>
       <Slider></Slider>
       <Service></Service>
       <AvailableCities></AvailableCities>
@@ -37,7 +38,7 @@ const Home = () => {
      <CustomerReviewSlider></CustomerReviewSlider>
      <WhyChooseUs></WhyChooseUs>
    
-     
+     </div>
       
       
 

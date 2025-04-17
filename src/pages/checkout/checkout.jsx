@@ -73,18 +73,21 @@ export default function CheckoutPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 py-8 relative">
-          <div className="flex justify-between items-center mb-6">
-            <div className="flex items-center gap-2">
-              <Lotus className="h-8 w-8 text-rose-600" />
-              <h1 className="text-3xl font-bold text-rose-800 font-playfair">Celebration Checkout</h1>
-            </div>
-            <Link to="/cart">
-              <button className="border-2 border-rose-300 text-rose-700 hover:bg-rose-50 px-4 py-2 rounded-lg flex items-center shadow-sm transition-all hover:shadow-md">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Return to Cart
-              </button>
-            </Link>
-          </div>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
+  <div className="flex items-center gap-2">
+    <Lotus className="h-8 w-8 text-rose-600" />
+    <h1 className="text-2xl sm:text-3xl font-bold text-rose-800 font-playfair">
+      Celebration Checkout
+    </h1>
+  </div>
+  <Link to="/cart" className="self-start sm:self-auto">
+    <button className="border-2 border-rose-300 text-rose-700 hover:bg-rose-50 px-4 py-2 rounded-lg flex items-center shadow-sm transition-all hover:shadow-md">
+      <ArrowLeft className="mr-2 h-4 w-4" />
+      Return to Cart
+    </button>
+  </Link>
+</div>
+
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Order Summary (Top on mobile, right on desktop) */}

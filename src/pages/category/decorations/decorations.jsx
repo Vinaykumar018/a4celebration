@@ -5,7 +5,7 @@ import CategoryWiseFilter from './CategoryWiseFilter';
 import CategoryWiseFeed from '../../../components/category-wise-feed/category-wise-feed';
 const Decorations = () => {
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container py-3">
       <CategoryTopBanner />
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-6">

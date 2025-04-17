@@ -70,7 +70,7 @@ const ProductSection2 = () => {
       baseImageUrl={img1}
       themeColor="#f472b6"
       section="Giftings"
-      section-slug="decorations"
+      section-slug="/decorations"
       ctaText="Book Now"
     />
   );
