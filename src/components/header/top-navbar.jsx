@@ -90,14 +90,14 @@ const TopNavbar = () => {
       </div>
 
       {/* Mobile Icons & Menu */}
-      <div className="md:hidden flex items-center gap-3">
+      <div className="md:hidden flex items-center gap-2">
       <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
         <Search className="h-5 w-5 text-gray-700 hover:text-rose-500" />
       </button>
       {isSearchOpen && (
          <input
          type="text"
-         placeholder="What are you celebrating?"
+         placeholder="Search..."
          className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent"
        />
       )}

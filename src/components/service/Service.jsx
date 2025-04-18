@@ -143,7 +143,7 @@ const Services = () => {
 
                   <div className="px-3 py-2 text-center bg-white flex-grow flex flex-col justify-center py">
                     <h3
-                      className="text-xl font-extrabold  text-[#8B4513] tracking-wide google-font  
+                      className="text-md font-extrabold  text-[#8B4513] tracking-wide google-font  
 "
                       style={{ textTransform: "uppercase" }}
                     >
