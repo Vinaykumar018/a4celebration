@@ -167,20 +167,15 @@ const TopNavbar = () => {
       {/* Mobile Slideout Menu */}
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-white shadow-md z-20 p-4 flex flex-col space-y-4 md:hidden">
-          <button
-            onClick={() => {
-              setIsMobileMenuOpen(false);
-              setIsLoginModalOpen(true);
-            }}
-            className="flex items-center text-gray-700 hover:text-rose-500"
-          >
-            </button>
-            {/* <User  className="h-5 w-5 mr-2" /> Log In */}
-
-
-              {isAuthenticated ? (
+          
+          {isAuthenticated ? (
         <Link
           to="/profile"
+
+          onClick={() => {
+            setIsMobileMenuOpen(false);
+            
+          }}
           className="flex items-center text-gray-700 hover:text-rose-500">
           <FaUser/>
           <span
@@ -190,14 +185,17 @@ const TopNavbar = () => {
           </span>
         </Link>
       ) : (
-        <button
-          onClick={() => setIsLoginModalOpen(true)}
-          className="flex items-center hover:text-rose-500 cursor-pointer"
-        >
-          <User className="h-5 w-5" />
-        </button>
-      )}
           
+          <button
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              setIsLoginModalOpen(true);
+            }}
+            className="flex items-center text-gray-700 hover:text-rose-500"
+          >
+            <User  className="h-5 w-5 mr-2" /> Log In
+          </button>
+      )}
           <Link to="/help" className="flex items-center text-gray-700 hover:text-rose-500">
             <HelpCircle className="h-5 w-5 mr-2" /> Help Center
           </Link>
