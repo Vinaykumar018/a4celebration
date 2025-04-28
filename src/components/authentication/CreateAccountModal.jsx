@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, User, X } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { createUser } from '../../services/auth/auth'; // Adjust the import path as needed
 
-const CreateAccountModal = ({ open, onClose, onSuccess,onSwitchToLogin }) => {
+const CreateAccountModal = ({ open, onClose, onSuccess, onSwitchToLogin }) => {
   const [formData, setFormData] = useState({
-    fullname: "",
+    username: "", // Changed from fullname to username
     email: "",
     password: ""
   });
@@ -23,17 +24,26 @@ const CreateAccountModal = ({ open, onClose, onSuccess,onSwitchToLogin }) => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    // Simulate account creation
-    setTimeout(() => {
+    try {
+      const response = await createUser({
+        email: formData.email,
+        password: formData.password,
+        username: formData.username // Using username instead of fullname
+      });
+
       toast.success("Account Created Successfully!");
-      setLoading(false);
       onClose();
-      if (onSuccess) onSuccess();
-    }, 1000);
+      onSwitchToLogin();
+      if (onSuccess) onSuccess(response.data);
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error(error.response?.data?.message || "Registration failed. Please try again.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -70,21 +80,21 @@ const CreateAccountModal = ({ open, onClose, onSuccess,onSwitchToLogin }) => {
 
           <div className="p-6 space-y-4">
             <form className="space-y-4" onSubmit={handleSubmit}>
-              {/* Full Name */}
+              {/* Username (changed from Full Name) */}
               <div className="space-y-2">
-                <label htmlFor="fullname" className="text-sm font-medium text-pink-800">
-                  Full Name <span className="text-red-500">*</span>
+                <label htmlFor="username" className="text-sm font-medium text-pink-800">
+                  Username <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <User className="absolute left-3 top-2.5 h-5 w-5 text-pink-500" />
                   <input
-                    id="fullname"
-                    name="fullname"
+                    id="username"
+                    name="username"
                     type="text"
-                    value={formData.fullname}
+                    value={formData.username}
                     onChange={handleInputChange}
                     className="w-full pl-10 pr-3 text-gray-500 py-2.5 rounded-lg border border-amber-200 bg-amber-50 focus:border-pink-300 focus:ring-pink-300"
-                    placeholder="John Doe"
+                    placeholder="johndoe"
                     required
                   />
                 </div>
@@ -152,20 +162,20 @@ const CreateAccountModal = ({ open, onClose, onSuccess,onSwitchToLogin }) => {
                 )}
               </button>
            
-<div className="text-center pt-4 border-t border-amber-200">
-  <p className="text-sm text-pink-700">
-    Already have an account?{" "}
-    <button
+              <div className="text-center pt-4 border-t border-amber-200">
+                <p className="text-sm text-pink-700">
+                  Already have an account?{" "}
+                  <button
                     onClick={() => {
                       onClose();
-                      onSwitchToLogin(); // Call the function to switch to Login Modal
+                      onSwitchToLogin();
                     }}
                     className="font-medium text-pink-600 hover:text-pink-800 hover:underline"
                   >
                     Sign In
                   </button>
-  </p>
-</div>
+                </p>
+              </div>
             </form>
           </div>
         </div>

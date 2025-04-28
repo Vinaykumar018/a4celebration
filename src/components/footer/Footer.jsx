@@ -8,7 +8,7 @@ const Footer = () => {
                     <div class="nk-top-footer">
                         <div class="nk-footer-one">
                             <div class="space-y-3">
-                                <img class="h-40 object-contain" src="https://deificindia.com/namonamah/assets/image/logo/namonamah.png" alt="" />
+                                <img class="h-40 object-contain" src="/src/assets/A4%20Celebration%201%20(3).png" alt="" />
                                 <p class="text-sm">Subscribe to our newsletter</p>
                                 <form class="pr-5">
                                     <div class="relative">

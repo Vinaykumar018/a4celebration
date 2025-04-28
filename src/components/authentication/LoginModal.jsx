@@ -1,10 +1,11 @@
- import React, { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, X } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { loginUser } from "../../services/auth/auth"; // Adjust the import path as needed
 
-const LoginModal = ({ open, onClose, onSuccess ,onCreateAccount }) => {
+const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,27 +20,34 @@ const LoginModal = ({ open, onClose, onSuccess ,onCreateAccount }) => {
     setShowPassword(!showPassword);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setWrongPassword(false);
 
-    // Static demo behavior
-    setTimeout(() => {
-      if (formData.email && formData.password === "demo123") {
-        // Demo success case
-        localStorage.setItem("userEmail", formData.email);
-        localStorage.setItem("isLoggedIn", "true");
-        toast.success("Login Successful (Demo)");
-        onClose();
-        if (onSuccess) onSuccess();
-      } else {
-        // Demo failure case
-        setWrongPassword(true);
-        toast.error("Use 'demo123' as password for demo");
-      }
+    try {
+      const response = await loginUser({
+        email: formData.email,
+        password: formData.password
+      });
+
+      // Store user data or token as needed
+      localStorage.setItem("userEmail", formData.email);
+      localStorage.setItem("isLoggedIn", "true");
+      
+      localStorage.setItem("userId", response.data._id); // Assuming the API returns a token
+
+      toast.success("Login Successful!");
+      onClose();
+      if (onSuccess) onSuccess(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error("Login error:", error);
+      setWrongPassword(true);
+      toast.error(error.response?.data?.message || "Login failed. Please check your credentials.");
+    } finally {
       setLoading(false);
-    }, 1000);
+    }
   };
 
   if (!open) return null;
@@ -121,7 +129,7 @@ const LoginModal = ({ open, onClose, onSuccess ,onCreateAccount }) => {
                     value={formData.password}
                     onChange={handleInputChange}
                     className="w-full pl-10 pr-10 text-gray-500 py-2.5 rounded-lg border border-amber-200 bg-amber-50 focus:border-pink-300 focus:ring-pink-300"
-                    placeholder="Use 'demo123'"
+                    placeholder="Enter your password"
                     required
                   />
                   <button
@@ -138,7 +146,7 @@ const LoginModal = ({ open, onClose, onSuccess ,onCreateAccount }) => {
                 </div>
                 {wrongPassword && (
                   <p className="text-sm text-red-500 mt-2">
-                    Use 'demo123' as password for demo
+                    Invalid email or password
                   </p>
                 )}
               </div>
@@ -177,7 +185,7 @@ const LoginModal = ({ open, onClose, onSuccess ,onCreateAccount }) => {
                     Signing In...
                   </div>
                 ) : (
-                  "Sign In "
+                  "Sign In"
                 )}
               </button>
             </form>
@@ -207,21 +215,21 @@ const LoginModal = ({ open, onClose, onSuccess ,onCreateAccount }) => {
                   d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"
                 ></path>
               </svg>
-              Sign in with Google 
+              Sign in with Google
             </button>
 
             <div className="text-center pt-4 border-t border-amber-200">
               <p className="text-sm text-pink-700">
                 Don&apos;t have an account?{" "}
                 <button
-                onClick={() => {
-                  onClose();
-                  onCreateAccount(); // Call the function to open Create Account Modal
-                }}
-                className="font-medium text-pink-600 hover:text-pink-800 hover:underline"
-              >
-                Create Account 
-              </button>
+                  onClick={() => {
+                    onClose();
+                    onCreateAccount();
+                  }}
+                  className="font-medium text-pink-600 hover:text-pink-800 hover:underline"
+                >
+                  Create Account
+                </button>
               </p>
             </div>
           </div>

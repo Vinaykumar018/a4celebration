@@ -14,8 +14,13 @@ import LoginModal from "../authentication/LoginModal"; // Adjust the import path
 import logo from "../../assets/A4 Celebration 1 (3).png";
 import CreateAccountModal from "../authentication/CreateAccountModal";
 import CityModal from "../locations/CityModal"; // Ensure you import CityModal
-
+import { useSelector } from 'react-redux';
+import { FaUser } from "react-icons/fa6";
 const TopNavbar = () => {
+
+
+  const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
+  console.log(isAuthenticated)
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -44,6 +49,10 @@ const TopNavbar = () => {
     console.log("Login successful!");
   };
 
+  const sanitizePath = (path) => {
+    if (!path) return "";
+    return path.replace(/\\/g, '/').replace(/\/\/+/g, '/');
+  };
   return (
     <div className={`w-full bg-white flex items-center justify-between px-4 py-2 ${isScrolled ? "shadow-md" : ""}`}>
       {/* Left Logo */}
@@ -77,12 +86,51 @@ const TopNavbar = () => {
         <Link to="/cart" className="hover:text-rose-500 cursor-pointer flex items-center">
           <ShoppingCart className="h-5 w-5" />
         </Link>
+        {isAuthenticated ? (
+        <Link
+          to="/profile"
+          className="flex flex-col items-center hover:text-rose-500 cursor-pointer"
+          style={{
+            textAlign: 'center',  // Centers content horizontally
+            display: 'flex',  // Flexbox to stack the image and text vertically
+            alignItems: 'center',  // Centers both the image and text horizontally
+          }}
+        >
+
+          {
+            console.log("http://localhost:3000/"+userData.data.profile_image )
+          }
+          <div
+            style={{
+              backgroundImage: `url(${"http://localhost:3000/" + sanitizePath(userData.data.profile_image)})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              width: '35px',  // Adjust width as needed
+              height: '35px',  // Adjust height as needed
+              borderRadius: '50%',  // Circular image
+            }}
+          ></div>
+          <span
+            style={{
+              fontSize: '8px',  // Small font size
+              fontWeight: '100',  // Thin font weight
+              marginTop: '4px',  // Add small space between image and text
+              color: 'inherit',  // Inherits the hover color from the parent Link
+              display: 'inline',  // Optional, keeps the text inline within the block
+            }}
+          >
+            Hi, {userData?.data?.username}
+          </span>
+        </Link>
+      ) : (
         <button
           onClick={() => setIsLoginModalOpen(true)}
           className="flex items-center hover:text-rose-500 cursor-pointer"
         >
-          <User  className="h-5 w-5" />
+          <User className="h-5 w-5" />
         </button>
+      )}
+    
         <div className="flex items-center hover:text-rose-500 cursor-pointer" onClick={handleOpenModal}>
           <MapPin className="h-5 w-5 text-rose-500" />
           <span className="ml-1 text-sm font-medium">KANPUR</span>
@@ -126,8 +174,30 @@ const TopNavbar = () => {
             }}
             className="flex items-center text-gray-700 hover:text-rose-500"
           >
-            <User  className="h-5 w-5 mr-2" /> Log In
-          </button>
+            </button>
+            {/* <User  className="h-5 w-5 mr-2" /> Log In */}
+
+
+              {isAuthenticated ? (
+        <Link
+          to="/profile"
+          className="flex items-center text-gray-700 hover:text-rose-500">
+          <FaUser/>
+          <span
+           
+          className="ml-2">
+            Hi, {userData?.data?.username}
+          </span>
+        </Link>
+      ) : (
+        <button
+          onClick={() => setIsLoginModalOpen(true)}
+          className="flex items-center hover:text-rose-500 cursor-pointer"
+        >
+          <User className="h-5 w-5" />
+        </button>
+      )}
+          
           <Link to="/help" className="flex items-center text-gray-700 hover:text-rose-500">
             <HelpCircle className="h-5 w-5 mr-2" /> Help Center
           </Link>
