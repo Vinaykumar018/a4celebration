@@ -9,6 +9,7 @@ import Service from './components/service/Service';
 import Footer from './components/footer/Footer'
 import { useDispatch } from 'react-redux';
 import { fetchUserData } from './redux/userSlice';
+import ScrollToTop from './components/service/ScrollToTop';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
     <>
 
       <Router>
+      <ScrollToTop />
         <Navbar></Navbar>
 
         <RoutesComponent />

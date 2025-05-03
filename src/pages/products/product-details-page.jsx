@@ -4,6 +4,7 @@ import DeliveryInfo from '../../components/delivery/DeliveryInfo';
 import PincodeDeliveryChecker from '../../components/delivery/Delivery-date';
 import ProductOverview from '../../components/product/ProductOverview';
 import RelatedProductSection1 from '../../components/related-products-feed/related-product-section-1';
+import { useLocation } from 'react-router-dom';
 
 // Add this in your main CSS file or at the top of your component
 const styles = `
@@ -32,13 +33,22 @@ const styles = `
 `;
 
 const ProductDetailsPage = () => {
+
+
+  
+
+
+  const location = useLocation();
+  const { serviceData, sectionData } = location.state;
+  console.log(sectionData,serviceData)
   const [mainImage, setMainImage] = useState(
-    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080'
+    "http://localhost:3000/"+serviceData.featured_image
+    
   );
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const changeImage = (src) => {
-    setMainImage(src);
+    setMainImage("http://localhost:3000/"+src);
   };
 
   return (
@@ -68,19 +78,14 @@ const ProductDetailsPage = () => {
                 </div>
               </div>
               <div className="flex gap-4 py-4 justify-center overflow-x-auto">
-                {[
-                  'https://images.unsplash.com/photo-1505751171710-1f6d0ace5a85?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwxMnx8aGVhZHBob25lfGVufDB8MHx8fDE3MjEzMDM2OTB8MA&ixlib=rb-4.0.3&q=80&w=1080',
-                  'https://images.unsplash.com/photo-1484704849700-f032a568e944?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw0fHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080',
-                  'https://images.unsplash.com/photo-1496957961599-e35b69ef5d7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHw4fHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080',
-                  'https://images.unsplash.com/photo-1528148343865-51218c4a13e6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w0NzEyNjZ8MHwxfHNlYXJjaHwzfHxoZWFkcGhvbmV8ZW58MHwwfHx8MTcyMTMwMzY5MHww&ixlib=rb-4.0.3&q=80&w=1080'
-                ].map((src, index) => (
+                {serviceData.other_images.map((src, index) => (
                   <div 
                     key={index} 
                     className={`relative size-16 sm:size-20 rounded-lg cursor-pointer transition-all duration-300 border-2 ${mainImage === src ? 'border-pink-500 scale-105' : 'border-pink-100'}`}
                     onClick={() => changeImage(src)}
                   >
                     <img
-                      src={src}
+                      src={"http://localhost:3000/"+src}
                       alt={`Thumbnail ${index + 1}`}
                       className="w-full h-full object-cover rounded-md"
                     />
@@ -97,7 +102,11 @@ const ProductDetailsPage = () => {
 
             {/* Product Details */}
             <div className="w-full md:w-1/2 px-4">
-              <h2 className="text-3xl font-bold mb-2 font-playfair text-rose-800">Premium Wireless Headphones</h2>
+              <h2 className="text-3xl font-bold mb-2 font-playfair text-rose-800">{serviceData.name}
+
+
+              {console.log(serviceData.name)}
+              </h2>
               <p className="text-pink-600 mb-4">SKU: WH1000XM4</p>
               
               <div className="mb-4 flex items-center">
@@ -124,24 +133,7 @@ const ProductDetailsPage = () => {
                 headphones. Perfect for music lovers and frequent travelers. 🎧✨
               </p>
 
-              <div className="mb-6 p-4 bg-pink-50 rounded-xl border-2 border-pink-100">
-                <h3 className="text-lg font-semibold mb-2 text-rose-800">Color Options:</h3>
-                <div className="flex space-x-3">
-                  {['Black', 'Silver', 'Rose Gold'].map((color, index) => (
-                    <button 
-                      key={index}
-                      className={`w-10 h-10 rounded-full focus:outline-none border-2 ${index === 0 ? 'border-pink-500' : 'border-transparent'}`}
-                      style={{
-                        backgroundColor: 
-                          color === 'Black' ? '#000' : 
-                          color === 'Silver' ? '#c0c0c0' : 
-                          '#e0bfb8'
-                      }}
-                      title={color}
-                    ></button>
-                  ))}
-                </div>
-              </div>
+              
 
               <div className="mb-6 p-4 bg-pink-50 rounded-xl border-2 border-pink-100">
                 <label htmlFor="quantity" className="block text-sm font-medium text-rose-800 mb-1">
