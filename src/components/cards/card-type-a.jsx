@@ -52,6 +52,8 @@ const CardTypeA = ({
     },
   };
 
+  console.log(services.category_name)
+
   return (
     <section className="bg-pink-50 md:px-0 sm:px-4 px-4 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="container-fluid mx-auto md:px-6 sm:px-0 px-0 lg:px-6">
@@ -110,7 +112,7 @@ const CardTypeA = ({
             const words = service.name.split(" ");
             return (
               <SwiperSlide key={index}>
-                <Link to={`${sectionSlug}/${service.slug_url}`} className="block"  state={{ 
+                <Link to={`${sectionSlug}/service/${service.slug_url}`} className="block"  state={{ 
                           serviceData: service,
                           sectionData: section 
                         }}>
@@ -145,7 +147,7 @@ const CardTypeA = ({
                       )}
 
                       <Link
-                      to={`${sectionSlug}/${service.slug_url}`} 
+                      to={`${sectionSlug}/service/${service.slug_url}`} 
                         className="inline-block text-xs px-3 py-1.5 rounded-md uppercase text-white transition-colors duration-300"
                         style={{ backgroundColor: themeColor }}
                         state={{ 

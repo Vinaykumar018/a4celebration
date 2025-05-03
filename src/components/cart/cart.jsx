@@ -3,56 +3,51 @@ import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Trash2, ShoppingBag, Gift, Info, Calendar, Clock } from "lucide-react";
+import { useCart } from '../../hooks/cartHook';
 
 const Cart = () => {
+
+  const { 
+    cartItems, 
+    cartTotal, 
+    itemCount,
+    removeFromCart,
+    updateQuantity,
+    clearCart
+  } = useCart();
+  console.log(cartItems)
   const navigate = useNavigate();
   const [promoCode, setPromoCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const currencySymbol = "₹";
   
   // Static dummy cart data
-  const [cartItems, setCartItems] = useState([
-    {
-      _id: "1",
-      product_name: "Sacred Rudraksha Mala",
-      product_image: "https://jusst4you.com/wp-content/uploads/2025/01/2-4-768x768.webp",
-      product_amount: 1299,
-      quantity: 1,
-      pooja_date: "2023-07-15",
-      pooja_time: "10:00 AM",
-      in_stock: true
-    },
-    {
-      _id: "2",
-      product_name: "Divine Brass Diya Set",
-      product_image: "http://cheetah.cherishx.com/uploads/1713933002_original.jpg?format=avif&width=640&height=640",
-      product_amount: 599,
-      quantity: 2,
-      pooja_date: "2023-07-16",
-      pooja_time: "06:30 PM",
-      in_stock: true
-    },
-    {
-      _id: "3",
-      product_name: "Blessed Sandalwood Incense",
-      product_image: "https://cheetah.cherishx.com/uploads/1718648065_original.jpg?format=avif&width=640&height=640",
-      product_amount: 249,
-      quantity: 3,
-      pooja_date: "2023-07-14",
-      pooja_time: "08:00 AM",
-      in_stock: true
-    }
-  ]);
+  // const [cartItems, setCartItems] = useState([
+  //   {
+  //     _id: "1",
+  //     product_name: "Sacred Rudraksha Mala",
+  //     product_image: "https://jusst4you.com/wp-content/uploads/2025/01/2-4-768x768.webp",
+  //     product_amount: 1299,
+  //     quantity: 1,
+  //     pooja_date: "2023-07-15",
+  //     pooja_time: "10:00 AM",
+  //     in_stock: true
+  //   },
+   
+  // ]);
 
   // Function to remove an item from the cart
   const handleRemoveItem = (itemId) => {
-    setCartItems(cartItems.filter((item) => item._id !== itemId));
+    console.log(itemId)
+    removeFromCart((item) => item._id !== itemId)
+    
     toast.success("Item removed from cart");
   };
 
   // Function to empty the cart
   const handleEmptyCart = () => {
-    setCartItems([]);
+    removeFromCart()
+    
     toast.success("Cart emptied");
   };
 
@@ -136,7 +131,8 @@ const Cart = () => {
                   <div className="absolute top-2 right-2">
                     <button
                       className="text-gray-500 hover:text-red-500 hover:bg-red-50 p-2 rounded-full"
-                      onClick={() => handleRemoveItem(item._id)}
+                      onClick={() => handleRemoveItem(item.serviceData._id
+                        )}
                     >
                       <Trash2 className="h-5 w-5" />
                     </button>

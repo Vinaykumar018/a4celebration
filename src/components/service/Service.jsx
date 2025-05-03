@@ -1,71 +1,17 @@
-
-
 import { motion } from "framer-motion"
 import { Link } from "react-router-dom"
 import { ChevronRight } from "lucide-react"
-
-// In a real implementation, you would import actual images
-// This is a placeholder for demonstration
-import img1 from '../../assets/categories/Anniversary.webp';
-import img2 from '../../assets/categories/Baby-Shower.webp';
-import img3 from '../../assets/categories/Baby-Welcome.webp';
-import img4 from '../../assets/categories/Bacheloratte.webp';
-import img5 from '../../assets/categories/Birthday.webp';
-import img6 from '../../assets/categories/ProPosal.webp';
-
+import { useSelector, useDispatch } from "react-redux"
+import { fetchCategories } from '../../redux/categoriesSlice'
+import { useEffect } from "react"
 
 const Services = () => {
-  const services = [
-    {
-      image: img1,
-      title: "Anniversary",
-      featured: true,
-      url: "decoration",
-      description: "Celebrate your special milestones with elegant decor",
-    },
-    {
-      image: img6,
-      title: "Proposal",
-      url: "decoration",
-      description: "Create magical moments for the perfect question",
-    },
-    {
-      image: img3,
-      title: "Birthday",
-      url: "decoration",
-      description: "Make every birthday a memorable celebration",
-    },
-    {
-      image: img4,
-      title: "Bachelorette",
-      url: "decoration",
-      description: "Unforgettable pre-wedding celebrations",
-    },
-    {
-      image: img5,
-      title: "Wedding",
-      url: "decoration",
-      description: "Your dream wedding, perfectly executed",
-    },
-    {
-      image: img6,
-      title: "Decoration",
-      url: "decoration",
-      description: "Professional events with a touch of elegance",
-    },
-    {
-      image: img2,
-      title: "Baby Shower",
-      url: "decoration",
-      description: "Welcoming new life with style and joy",
-    },
-    {
-      image: img2,
-      title: "Graduation",
-      url: "decoration",
-      description: "Celebrate achievements with memorable events",
-    },
-  ]
+  const dispatch = useDispatch()
+  const { categories, loading, error } = useSelector((state) => state.categories)
+
+  useEffect(() => {
+    dispatch(fetchCategories())
+  }, [dispatch])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -106,26 +52,54 @@ const Services = () => {
     },
   }
 
+  // Function to get image URL
+  const getImageUrl = (imagePath) => {
+    return imagePath ? `http://localhost:3000/${imagePath.replace(/\\/g, '/')}` : '/placeholder.svg'
+  }
+
+  if (loading) {
+    return (
+      <section className="bg-gradient-to-b from-pink-50 to-white py-16 px-4">
+        <div className="container mx-auto max-w-7xl text-center">
+          <p>Loading categories...</p>
+        </div>
+      </section>
+    )
+  }
+
+  if (error) {
+    return (
+      <section className="bg-gradient-to-b from-pink-50 to-white py-16 px-4">
+        <div className="container mx-auto max-w-7xl text-center text-red-500">
+          <p>Error loading categories: {error}</p>
+        </div>
+      </section>
+    )
+  }
+
   return (
     <section className="bg-gradient-to-b from-pink-50 to-white py-16 px-4">
       <div className="container mx-auto max-w-7xl">
-
-
         <motion.div
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
         >
-          {services.map((service, index) => (
-            <motion.div key={index} variants={itemVariants} whileHover="hover" className="group">
-              <Link to={service.url} className="block h-full">
+          {categories.map((category) => (
+            <motion.div 
+              key={category._id} 
+              variants={itemVariants} 
+              whileHover="hover" 
+              className="group"
+            >
+              <Link to={`/${category.slug_url}`} className="block h-full">
                 <div className="bg-pink-50 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 h-full flex flex-col max-w-[280px] mx-auto w-full">
                   <div className="relative overflow-hidden aspect-square p-3 pt-4 bg-pink-50">
                     <motion.div className="w-full h-full" variants={imageVariants}>
                       <img
-                        src={service.image || "/placeholder.svg"}
-                        alt={service.title}
+                        src={getImageUrl(category.category_image)}
+                        alt={category.category_name}
                         className="w-full h-full object-cover rounded-2xl"
                       />
                     </motion.div>
@@ -141,18 +115,18 @@ const Services = () => {
                     </motion.div>
                   </div>
 
-                  <div className="px-3 py-2 text-center bg-white flex-grow flex flex-col justify-center py">
+                  <div className="px-3 py-2 text-center bg-white flex-grow flex flex-col justify-center">
                     <h3
-                      className="text-md font-extrabold  text-[#8B4513] tracking-wide google-font  
-"
+                      className="text-md font-extrabold text-[#8B4513] tracking-wide google-font"
                       style={{ textTransform: "uppercase" }}
                     >
-                      {service.title}
+                      {category.category_name}
                     </h3>
+                    
                   </div>
 
-
-                  {service.featured && (
+                  {/* Popular badge - you can customize the condition */}
+                  {category.status === "1" && (
                     <div className="absolute top-5 right-5 z-10">
                       <span className="bg-pink-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium shadow-md">
                         Popular

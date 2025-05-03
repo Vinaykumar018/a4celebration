@@ -1,6 +1,8 @@
 import { FaArrowDown, FaBook, FaInfoCircle } from 'react-icons/fa';
 
-const ProductOverview = () => {
+const ProductOverview = (data) => {
+  console.log(data.description)
+ 
   const productDetails = {
     long_description: `
       <p>Celebrate your special occasion with our beautifully designed celebration gifts and decorations! Our collection includes everything you need to make your event unforgettable. From elegant floral arrangements to vibrant balloons, we've got it all covered!</p>
@@ -54,13 +56,7 @@ const ProductOverview = () => {
               <p className="mb-2 text-lg font-semibold text-pink-600">
                 The Decoration Kit includes:
               </p>
-              <ul className="list-disc pl-6">
-                <li>Floral Arrangements</li>
-                <li>Vibrant Balloons</li>
-                <li>Tablecloths and Centerpieces</li>
-                <li>Fairy Lights and Garlands</li>
-                <li>Gift Wrapping Supplies</li>
-              </ul>
+             {data.description}
               <p className="mt-4 text-sm italic text-red-600">
                 <FaInfoCircle className="inline mr-2 text-yellow-600" />
                 Note: If you choose "Without Kit" option, you'll need to arrange the materials yourself.
@@ -82,11 +78,8 @@ const ProductOverview = () => {
                   The Decoration Kit includes:
                 </p>
                 <ul className="list-disc pl-6">
-                  <li>Floral Arrangements</li>
-                  <li>Vibrant Balloons</li>
-                  <li>Tablecloths and Centerpieces</li>
-                  <li>Fairy Lights and Garlands</li>
-                  <li>Gift Wrapping Supplies</li>
+                 <li>{data.description
+}</li>
                 </ul>
                 <p className="mt-4 text-sm italic text-red-600">
                   <FaInfoCircle className="inline mr-2 text-yellow-600" />

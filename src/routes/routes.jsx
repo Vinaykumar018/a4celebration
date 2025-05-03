@@ -23,6 +23,7 @@ import RegisterPage from "../pages/auth/RegisterPage";
 import Profile from "../pages/auth/Profile";
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
+import DecorationsDetailsPage from "../pages/products/decorations-details-page";
 const RoutesComponent = () => {
 
 
@@ -33,13 +34,14 @@ const RoutesComponent = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/decoration" element={<Decoration />} />
+      <Route path="/decorations" element={<Decoration />} />
       <Route path="/giftings" element={<Gifting />} />
       <Route path="/artists" element={<Artist />} />
       <Route path="/catering" element={<Caterings />} />
       <Route path="/baby-shower" element={<BabyShower />} />
       <Route path="/events" element={<Events />} />
-      <Route path="/decorations/:slug" element={<ProductDetailsPage />} />
+      <Route path="/decorations/service/:slug" element={<DecorationsDetailsPage />} />
+      
       <Route path="/cart" element={<Cart />} />
       <Route path="/help" element={<HelpCentre />} />
       <Route path="/login" element={<LoginPage></LoginPage>} />

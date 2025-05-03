@@ -1,8 +1,23 @@
 
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts,removeProduct } from '../../redux/productSlice';
+import { useEffect } from "react";
 import img1 from '../../assets/decoration/1687938112_original.avif'
 import SimpleCard1 from "../cards/simple-card-1";
 
 const CategoryWiseFeed = () => {
+
+
+  const dispatch = useDispatch();
+ 
+  const { products, loading, error } = useSelector((state) => state.products);
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+  console.log(products)
+
   const services = [
     {
       id: 1,
@@ -66,13 +81,14 @@ const CategoryWiseFeed = () => {
   return (
     <SimpleCard1
     
-      description="Explore our spiritual services"
-      services={services}
-      baseImageUrl={img1}
-      themeColor="#f472b6"
-    
-     
-      ctaText="Book Now"
+    title="Decorations"
+          description="Explore our spiritual services"
+          services={products}
+          baseImageUrl={img1}
+          themeColor="#f472b6"
+          section="Decorations"
+      sectionSlug="/decorations"
+          ctaText="Book Now"
     />
   );
 };

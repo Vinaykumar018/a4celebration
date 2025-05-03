@@ -58,7 +58,7 @@ const SimpleCard1 = ({
     <div>
       <a href="#" target="_blank" className="cursor-default pointer-events-none">
        
-      { sectionSlug ||section  &&
+      {/* { sectionSlug ||section  &&
         <div className="text-[rgb(94,15,77)]">
           
           <div className="flex justify-between items-center">
@@ -72,7 +72,7 @@ const SimpleCard1 = ({
             </div> 
           </div>
         </div>
-}
+} */}
       </a>
     </div>
   </div>
@@ -84,7 +84,10 @@ const SimpleCard1 = ({
     const words = service.name.split(" ");
     return (
       <div key={index}>
-        <Link to={`${serviceLinkPrefix}/${service.slug}`} className="block">
+        <Link to={`${sectionSlug}/service/${service.slug_url}`} className="block" state={{ 
+                          serviceData: service,
+                          sectionData: section 
+                        }}>
 
           <div
             className="rashi_sign_box bg-white shadow-md rounded-lg overflow-hidden transition-transform duration-300 p-2"
@@ -92,11 +95,11 @@ const SimpleCard1 = ({
           >
             {/* Image Section */}
             <div className="sign_box_img flex justify-center mb-2">
-              <img
-                src={baseImageUrl}
-                alt={service.name}
-                className="object-cover rounded-lg"
-              />
+            <img
+  src={`${"http://localhost:3000/"+service.featured_image}`}
+  alt={service.name}
+  className="object-cover rounded-lg h-40 w-full"
+/>
             </div>
 
             {/* Content Section */}
