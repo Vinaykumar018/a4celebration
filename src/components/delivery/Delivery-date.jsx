@@ -1,81 +1,58 @@
 import React, { useState } from "react";
+import { Lock } from 'lucide-react';
 
-const PincodeDeliveryChecker = () => {
-  const [pincode, setPincode] = useState("");
-  const [deliveryDate, setDeliveryDate] = useState(null);
+const PincodeDeliveryChecker = ({ onDeliveryAvailable ,pincode, setPincode }) => {
+  
+  const [isDeliverable, setIsDeliverable] = useState(null);
   const [error, setError] = useState("");
 
-  const checkDeliveryDate = () => {
+  const checkDelivery = () => {
     if (!pincode || pincode.length !== 6 || isNaN(Number(pincode))) {
       setError("Please enter a valid 6-digit pincode.");
-      setDeliveryDate(null);
+      setIsDeliverable(null);
+      onDeliveryAvailable(false); // Notify parent that delivery is not available
       return;
     }
 
-    const simulatedDeliveryDays = Math.floor(Math.random() * 6) + 2;
-    setDeliveryDate(simulatedDeliveryDays);
+    // Your delivery logic here (example: even pincodes are deliverable)
+    const deliverable = Number(pincode) % 2 === 0;
+    setIsDeliverable(deliverable);
+    onDeliveryAvailable(deliverable); // Notify parent of availability
     setError("");
   };
 
   return (
-    <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+    <div className="w-full mx-auto mb-1 text-left font-poppins bg-pink-50 p-1 rounded-lg">
+      <p className="text-lg font-bold mb-1 text-pink-700 font-playfair">
+        🚚 Check Service Availability
+      </p>
 
-        .font-poppins {
-          font-family: 'Poppins', sans-serif;
-        }
-
-        .font-playfair {
-          font-family: 'Playfair Display', serif;
-        }
-
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-
-        .product-shadow {
-          box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.2);
-        }
-      `}</style>
-
-      <div className="w-full mx-auto mb-6 text-left font-poppins bg-pink-50 p-4 rounded-lg shadow-sm">
-        <p className="text-xl font-bold mb-4 text-pink-700 font-playfair">
-          🚚 Check Delivery Date
-        </p>
-
-        <div className="flex border border-pink-300 rounded-lg overflow-hidden shadow product-shadow">
-          <input
-            type="text"
-            placeholder="Enter Your City Pincode"
-            maxLength={6}
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-            className="flex-1 px-4 py-2 outline-none rounded-l-lg bg-white text-pink-700 placeholder-pink-400"
-          />
-          <button
-            onClick={checkDeliveryDate}
-            className="px-5 py-2 bg-pink-600 text-white font-semibold hover:bg-pink-700 transition-colors duration-200"
-          >
-            Check
-          </button>
-        </div>
-
-        <div className="min-h-[20px] mt-2">
-          {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
-          {deliveryDate && (
-            <p className="text-sm text-green-600 mt-2 animate-pulse">
-              🎉 Estimated delivery time: {deliveryDate} days
-            </p>
-          )}
-        </div>
+      <div className="flex border border-pink-300 rounded-lg overflow-hidden shadow product-shadow">
+        <input
+          type="text"
+          placeholder="Enter Your City Pincode"
+          maxLength={6}
+          value={pincode}
+          onChange={(e) => setPincode(e.target.value)}
+          className="flex-1 px-4 py-2 outline-none rounded-l-lg bg-white text-pink-700 placeholder-pink-400 text-sm"
+        />
+        <button
+          onClick={checkDelivery}
+          className="px-5 py-2 bg-pink-600 text-white font-semibold hover:bg-pink-700 transition-colors duration-200 text-sm"
+        >
+          Check
+        </button>
       </div>
-    </>
+
+      <div className="min-h-[10px]">
+        {error && <p className="text-sm text-red-600 mt-2">{error}</p>}
+        {isDeliverable !== null && (
+          <p className={`text-sm mt-2 ${isDeliverable ? 'text-green-600' : 'text-red-600'}`}>
+            {isDeliverable ? "✅ Available for delivery" : "❌ Not available for delivery"}
+          </p>
+        )}
+      </div>
+    </div>
   );
 };
 

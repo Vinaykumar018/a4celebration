@@ -29,8 +29,8 @@ const Cart = () => {
   //     product_image: "https://jusst4you.com/wp-content/uploads/2025/01/2-4-768x768.webp",
   //     product_amount: 1299,
   //     quantity: 1,
-  //     pooja_date: "2023-07-15",
-  //     pooja_time: "10:00 AM",
+  //     service_date: "2023-07-15",
+  //     service_time: "10:00 AM",
   //     in_stock: true
   //   },
    
@@ -162,13 +162,13 @@ alt={item.product_name}
                               <Calendar className="h-4 w-4 text-pink-600" />
                               <p className="text-sm text-gray-700">
                                 <span className="font-medium">Booking Date:</span>{" "}
-                                {new Date(item.pooja_date).toLocaleDateString()}
+                                {new Date(item.service_date).toLocaleDateString()}
                               </p>
                             </div>
                             <div className="flex items-center gap-2">
                               <Clock className="h-4 w-4 text-pink-600" />
                               <p className="text-sm text-gray-700">
-                                <span className="font-medium">Booking Time:</span> {item.pooja_time}
+                                <span className="font-medium">Booking Time:</span> {item.service_time}
                               </p>
                             </div>
                           </div>

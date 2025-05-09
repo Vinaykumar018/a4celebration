@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import { useCart } from '../../hooks/cartHook';
 import { ToastContainer, toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import {TimeSlotPicker} from '../../components/delivery/DateTimePicker'
 
 
 const styles = `
@@ -42,42 +43,44 @@ const DecorationsDetailsPage = () => {
   const [mainImage, setMainImage] = useState(
     "http://localhost:3000/" + serviceData.featured_image
   );
+  const [isDeliveryAvailable, setIsDeliveryAvailable] = useState(false);
+  const [pincode, setPincode] = useState("");
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [quantity, setQuantity] = useState(1);
-
-
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
-  const [timePeriod, setTimePeriod] = useState('AM');
+  const [dateTime, setDateTime] = useState(null); // This will store the selected time slot
 
   const handleBookNow = () => {
-    console.log("hello")
-    if (!selectedDate || !selectedTime) {
-      toast.error('Please select both date and time');
+    if (!dateTime) {
+      toast.error('Please select a date and time slot');
       return;
     }
+
+
+    const formattedTime = `${dateTime.startTime} - ${dateTime.endTime}`;
+    
 
     console.log({
       productId: serviceData.product_id,
       productName: serviceData.name,
       price: serviceData.price,
       quantity,
-      date: selectedDate,
-      time: `${selectedTime} ${timePeriod}`,
-      image: mainImage, serviceData
-    })
+      date: dateTime.date,
+      time: formattedTime, // This now includes the time range (e.g., "2:00 PM - 5:00 PM")
+      image: mainImage, 
+      serviceData
+    });
+
     addToCart({
       _id: serviceData.product_id,
       product_name: serviceData.name,
       product_amount: serviceData.price,
       quantity,
-      pooja_date: selectedDate,
-      pooja_time: `${selectedTime} ${timePeriod}`,
+      service_date: dateTime.date,
+      service_time: formattedTime, // Using the formatted time range
       product_image: mainImage,
-      serviceData
-    });
-
-    toast.success('Added to cart!');
+      pinCode:pincode,
+      serviceData,
+    });toast.success('Added to cart!');
   };
 
   const changeImage = (src) => {
@@ -153,67 +156,7 @@ const DecorationsDetailsPage = () => {
                     </div>
                   )}
 
-                  {/* Date and Time Input Fields with AM/PM */}
-                  <div className="mt-6 space-y-4">
-                    {/* Date Input - Connected to selectedDate state */}
-                    <div className="flex flex-col">
-                      <label htmlFor="date" className="text-sm font-medium text-gray-700 mb-1 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        Select Date
-                      </label>
-                      <input
-                        type="date"
-                        id="date"
-                        value={selectedDate}
-                        onChange={(e) => setSelectedDate(e.target.value)}
-                        min={new Date().toISOString().split('T')[0]} // Prevent past dates
-                        className="px-4 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition shadow-sm hover:border-pink-300"
-                      />
-                    </div>
-
-                    {/* Time Input with AM/PM Toggle - Connected to selectedTime and timePeriod states */}
-                    <div className="flex flex-col">
-                      <label htmlFor="time" className="text-sm font-medium text-gray-700 mb-1 flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        Select Time
-                      </label>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="time"
-                          id="time"
-                          value={selectedTime}
-                          onChange={(e) => setSelectedTime(e.target.value)}
-                          className="px-4 py-2.5 border border-pink-200 rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition shadow-sm hover:border-pink-300 flex-1"
-                        />
-                        <div className="flex border border-pink-200 rounded-xl overflow-hidden shadow-sm">
-                          <button
-                            type="button"
-                            onClick={() => setTimePeriod('AM')}
-                            className={`px-3 py-2 text-sm font-medium ${timePeriod === 'AM'
-                                ? 'bg-pink-100 text-pink-700'
-                                : 'bg-white text-gray-700'
-                              } hover:bg-pink-200 transition`}
-                          >
-                            AM
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setTimePeriod('PM')}
-                            className={`px-3 py-2 text-sm font-medium ${timePeriod === 'PM'
-                                ? 'bg-pink-100 text-pink-700'
-                                : 'bg-white text-gray-700'
-                              } hover:bg-pink-200 transition`}
-                          >
-                            PM
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                
                 </div>
               </div>
 
@@ -224,12 +167,12 @@ const DecorationsDetailsPage = () => {
 
             {/* Product Details */}
             <div className="w-full md:w-1/2 px-4">
-              <h2 className="text-3xl font-bold mb-2 font-playfair text-rose-800">
+              <h2 className="text-3xl font-bold mb-1 font-playfair text-rose-800">
                 {serviceData.name}
               </h2>
 
               {/* SKU/Product ID */}
-              <div className="mb-4">
+              {/* <div className="mb-4">
                 <p className="text-pink-600">SKU: {serviceData.product_id}</p>
                 {serviceData.child_categories && serviceData.child_categories.length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-2">
@@ -240,11 +183,12 @@ const DecorationsDetailsPage = () => {
                     ))}
                   </div>
                 )}
-              </div>
+              </div> */}
+            
 
               {/* Pricing Section */}
-              <div className="mb-4 flex items-center">
-                <span className="text-3xl font-bold text-rose-700 mr-2">
+              <div className="mb-1 flex items-center">
+                <span className="text-2xl font-bold text-rose-700 mr-2">
                   {formatPrice(serviceData.price)}
                 </span>
                 {serviceData.isOffer && (
@@ -260,54 +204,69 @@ const DecorationsDetailsPage = () => {
               </div>
 
               {/* Rating Section - Placeholder since not in your data */}
-              <div className="flex items-center mb-4">
+              <div className="border border-gray-300 rounded-lg px-1 inline-flex items-center mb-2">
                 {[...Array(5)].map((_, index) => (
                   <Star
                     key={index}
                     className={`${index < 4 ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
-                    size={20}
+                    size={12}
                   />
                 ))}
-                <span className="ml-2 text-gray-600">4.5 (120 reviews)</span>
+                <span className="ml-1 text-gray-600 text-xs">4.5 | 120 reviews</span>
               </div>
 
               {/* Short Description */}
-              <p className="text-gray-700 mb-6 border-l-4 border-pink-300 pl-4 py-2 bg-pink-50 rounded-r-lg">
+              <p className="text-gray-700 mb-1 border-l-4 border-pink-300 pl-4 py-1 bg-pink-50 rounded-r-lg text-sm">
                 {serviceData.short_description || serviceData.description}
               </p>
 
               {/* Quantity Selector */}
 
+                {/* Date and Time Input Fields with AM/PM */}
+                <PincodeDeliveryChecker 
+        onDeliveryAvailable={setIsDeliveryAvailable} 
+        pincode={pincode} setPincode={setPincode}
+      />
+                <div className=" space-y-4">
+               
+          <TimeSlotPicker 
+            onTimeSlotSelect={(slot) => {
+              setDateTime(slot); // This will update with the full slot object
+            }}
+            PIN={isDeliveryAvailable}
+          />
+        </div>
+
 
               {/* Action Buttons */}
-              <div className="flex space-x-4 mb-6">
+              <div className="flex space-x-4 mt-8">
               <div className="relative">
-  <Link
-    className={`bg-gradient-to-r from-pink-500 to-rose-600 flex gap-2 items-center text-white px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all transform shadow-lg ${
-      !selectedDate || !selectedTime
-        ? 'opacity-50 cursor-not-allowed'
-        : 'hover:from-pink-600 hover:to-rose-700 hover:scale-[1.02] hover:shadow-xl'
-    }`}
-    onClick={(e) => {
-      if (!selectedDate || !selectedTime) {
-        e.preventDefault();
-        toast.warning('Please select both date and time');
-      } else {
-        handleBookNow();
-      }
-    }}
-    to={(!selectedDate || !selectedTime) ? '#' : '/cart'}
-  >
-    <ShoppingCart size={20} />
-    Book Now
-  </Link>
+              <Link
+              className={`bg-gradient-to-r from-pink-500 to-rose-600 flex gap-2 items-center text-white px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all transform shadow-lg ${
+                !dateTime
+                  ? 'opacity-50 cursor-not-allowed'
+                  : 'hover:from-pink-600 hover:to-rose-700 hover:scale-[1.02] hover:shadow-xl'
+              }`}
+              onClick={(e) => {
+                if (!dateTime) {
+                  e.preventDefault();
+                  toast.warning('Please select a date and time slot');
+                } else {
+                  handleBookNow();
+                }
+              }}
+              to={!dateTime ? '#' : '/cart'}
+            >
+              <ShoppingCart size={20} />
+              Book Now
+            </Link>
 
-  {/* Warning tooltip */}
-  {(!selectedDate || !selectedTime) && (
-    <div className="absolute -top-10 left-0 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded whitespace-nowrap">
-      Please select date and time
-    </div>
-  )}
+            {/* Warning tooltip */}
+            {!dateTime && (
+              <div className="absolute -top-7 left-0 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded whitespace-nowrap">
+                Please select date and time
+              </div>
+            )}
 </div>
                 <button
                   className={`flex gap-2 items-center px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all border-2 ${isWishlisted ? 'bg-pink-50 border-pink-500 text-pink-600' : 'border-pink-200 text-gray-800 hover:border-pink-300'}`}
@@ -338,7 +297,7 @@ const DecorationsDetailsPage = () => {
 
               {/* Delivery Information */}
               <div className="space-y-4">
-                <PincodeDeliveryChecker />
+               
                 <DeliveryInfo />
                 <div className="block md:hidden">
                   <ProductOverview description={serviceData.description} />

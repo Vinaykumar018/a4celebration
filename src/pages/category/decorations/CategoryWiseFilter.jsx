@@ -47,12 +47,12 @@ const CategoryWiseFilter = () => {
             <ul className="space-y-3">
               {['Balloons', 'Lights', 'Flowers', 'Candles'].map((category, index) => (
                 <li key={index}>
-                  <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-2 rounded transition-all duration-200">
+                  <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-1 rounded transition-all duration-200">
                     <input
                       type="checkbox"
                       className="h-5 w-5 text-blue-500 rounded focus:ring-blue-400"
                     />
-                    <span className="text-gray-700 text-sm font-bold font-playfair">{category}</span>
+                    <span className="text-gray-700 text-sm  font-sans">{category}</span>
                   </label>
                 </li>
               ))}
@@ -82,12 +82,12 @@ const CategoryWiseFilter = () => {
           <ul className="space-y-3">
             {['Under ₹500', '₹500 - ₹1000', '₹1000 - ₹2000', 'Above ₹2000'].map((range, index) => (
               <li key={index}>
-                <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-2 rounded transition-all duration-200">
+                <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-1 rounded transition-all duration-200">
                   <input
                     type="checkbox"
                     className="h-5 w-5 text-green-500 rounded focus:ring-green-400"
                   />
-                  <span className="text-gray-700 text-sm font-bold font-playfair">{range}</span>
+                  <span className="text-gray-700 text-sm font-sans">{range}</span>
                 </label>
               </li>
             ))}
@@ -116,12 +116,12 @@ const CategoryWiseFilter = () => {
           <ul className="space-y-3">
             {[5, 4, 3, 2].map((stars) => (
               <li key={stars}>
-                <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-2 rounded transition-all duration-200">
+                <label className="flex items-center space-x-3 cursor-pointer hover:bg-gray-100 p-1 rounded transition-all duration-200">
                   <input
                     type="checkbox"
                     className="h-5 w-5 text-yellow-500 rounded focus:ring-yellow-400"
                   />
-                  <span className="text-gray-700 text-sm font-bold flex items-center gap-1 font-playfair">
+                  <span className="text-gray-700 text-sm flex items-center gap-1 font-sans">
                     {[...Array(stars)].map((_, i) => (
                       <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                     ))}

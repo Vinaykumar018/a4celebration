@@ -3,6 +3,8 @@ import img1 from '../../assets/decoration/1687938112_original.avif'
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchProducts,removeProduct } from '../../redux/productSlice';
 import { useEffect } from "react";
+
+
 const ProductSection1 = () => {
  
 

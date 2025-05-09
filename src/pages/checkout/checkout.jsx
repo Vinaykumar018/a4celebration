@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Gift, NotebookIcon as Lotus, Info, Calendar, Clock, MapPin, Sparkles, PartyPopper, Heart } from "lucide-react";
 import { UserOrderDetails } from "./UserOrderDetails";
+import { useCart } from '../../hooks/cartHook';
+import { useDispatch, useSelector } from "react-redux";
+
 
 // Add this in your main CSS file or at the top of your component
 const styles = `
@@ -34,19 +37,34 @@ const styles = `
 `;
 
 export default function CheckoutPage() {
+
+const { 
+    cartItems, 
+    cartTotal, 
+    itemCount,
+    removeFromCart,
+    updateQuantity,
+    clearCart
+  } = useCart();
+  const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
+  
+  console.log(userData.data)
+  console.log(cartItems)
   const currencySymbol = "₹";
-  const cartItems = [
-    {
-      _id: "1",
-      product_name: "Wedding Pooja Package 🎉",
-      product_image: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
-      product_amount: 100,
-      quantity: 1,
-      pooja_date: new Date().toISOString(),
-      pooja_time: "10:00 AM",
-      isSamagri: true
-    }
-  ];
+  // const cartItems = [
+  //   {
+  //     _id: "1",
+  //     product_name: "Wedding Pooja Package 🎉",
+  //     product_image: "https://images.unsplash.com/photo-1520854221256-17451cc331bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80",
+  //     product_amount: 100,
+  //     quantity: 1,
+  //     pooja_date: new Date().toISOString(),
+  //     pooja_time: "10:00 AM",
+  //     isSamagri: true
+  //   }
+  // ];
+
+  
 
   return (
     <>
