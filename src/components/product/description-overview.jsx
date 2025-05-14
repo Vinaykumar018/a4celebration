@@ -1,6 +1,8 @@
+
 import { FaArrowDown, FaBook, FaInfoCircle } from 'react-icons/fa';
 
-const ProductOverview = (descriptionPart) => {
+const DescriptionOverview = (descriptionPart) => {
+  console.log("my description part",descriptionPart)
 
   
  
@@ -51,7 +53,7 @@ const ProductOverview = (descriptionPart) => {
         </h2>
 
         <div className="rounded-lg shadow-sm divide-y bg-pink-50 product-shadow">
-          <details className="px-4">
+          <details className="px-4" open>
             <summary className="py-4 font-medium cursor-pointer text-black flex justify-between items-center">
               <span className="flex items-center gap-2">
                 <FaBook className="text-pink-500" />
@@ -64,7 +66,7 @@ const ProductOverview = (descriptionPart) => {
               <div
               
         className="description text-xs"
-        dangerouslySetInnerHTML={{ __html: decodeHTML(descriptionPart) }}
+        dangerouslySetInnerHTML={{ __html: decodeHTML(descriptionPart.description) }}
       />
               <p className="mt-4 text-sm italic text-red-600">
                 <FaInfoCircle className="inline mr-2 text-yellow-600" />
@@ -73,7 +75,7 @@ const ProductOverview = (descriptionPart) => {
             </div>
           </details>
 
-          {productDetails.pooja_Samegristatus === "1" && (
+          {/* {productDetails.pooja_Samegristatus === "1" && (
             <details className="px-4">
               <summary className="py-4 font-medium cursor-pointer text-black flex justify-between items-center">
                 <span className="flex items-center gap-2">
@@ -94,11 +96,11 @@ const ProductOverview = (descriptionPart) => {
                 </p>
               </div>
             </details>
-          )}
+          )} */}
         </div>
       </div>
     </>
   );
 };
 
-export default ProductOverview;
+export default DescriptionOverview;

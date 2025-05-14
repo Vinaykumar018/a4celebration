@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import { Heart, ShoppingCart, Star, ChevronRight, Gift, Sparkles } from 'lucide-react';
 import DeliveryInfo from '../../components/delivery/DeliveryInfo';
 import PincodeDeliveryChecker from '../../components/delivery/Delivery-date';
-import ProductOverview from '../../components/product/ProductOverview';
+
 import RelatedProductSection1 from '../../components/related-products-feed/related-product-section-1';
 import { useLocation } from 'react-router-dom';
 import { useCart } from '../../hooks/cartHook';
 import { ToastContainer, toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
-import {TimeSlotPicker} from '../../components/delivery/DateTimePicker'
+import { TimeSlotPicker } from '../../components/delivery/DateTimePicker'
+import DescriptionOverview from '../../components/product/description-overview';
+import KitsOverview from '../../components/product/kits-overview';
+import { useDispatch, useSelector } from "react-redux";
 
 
 const styles = `
@@ -38,8 +41,9 @@ const styles = `
 
 const DecorationsDetailsPage = () => {
   const location = useLocation();
-  const { addToCart } = useCart();
   const { serviceData, sectionData } = location.state;
+  const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
+  
   const [mainImage, setMainImage] = useState(
     "http://localhost:3000/" + serviceData.featured_image
   );
@@ -47,8 +51,10 @@ const DecorationsDetailsPage = () => {
   const [pincode, setPincode] = useState("");
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [quantity, setQuantity] = useState(1);
-  const [dateTime, setDateTime] = useState(null); // This will store the selected time slot
+  const [dateTime, setDateTime] = useState(null);
+  const { cart, addToCart } = useCart(); // This will store 
 
+    
   const handleBookNow = () => {
     if (!dateTime) {
       toast.error('Please select a date and time slot');
@@ -57,7 +63,21 @@ const DecorationsDetailsPage = () => {
 
 
     const formattedTime = `${dateTime.startTime} - ${dateTime.endTime}`;
-    
+
+     const cartItem = {
+    product_id: serviceData.product_id,
+    product_name: serviceData.name,
+    quantity,
+    service_date: dateTime.date,
+    service_time: formattedTime,
+    pinCode: pincode,
+  };
+
+  const cartPayload = {
+    userID: userData?.data?._id,
+    items: [cartItem]
+  };
+
 
     console.log({
       productId: serviceData.product_id,
@@ -66,21 +86,11 @@ const DecorationsDetailsPage = () => {
       quantity,
       date: dateTime.date,
       time: formattedTime, // This now includes the time range (e.g., "2:00 PM - 5:00 PM")
-      image: mainImage, 
+      image: mainImage,
       serviceData
     });
 
-    addToCart({
-      _id: serviceData.product_id,
-      product_name: serviceData.name,
-      product_amount: serviceData.price,
-      quantity,
-      service_date: dateTime.date,
-      service_time: formattedTime, // Using the formatted time range
-      product_image: mainImage,
-      pinCode:pincode,
-      serviceData,
-    });toast.success('Added to cart!');
+    addToCart(cartPayload); toast.success('Added to cart!');
   };
 
   const changeImage = (src) => {
@@ -102,6 +112,13 @@ const DecorationsDetailsPage = () => {
       maximumFractionDigits: 0
     }).format(price);
   };
+
+
+  const [descriptionPart, kitPart] = serviceData.description.split('kit:');
+
+
+
+
 
   return (
     <>
@@ -156,12 +173,27 @@ const DecorationsDetailsPage = () => {
                     </div>
                   )}
 
-                
+
                 </div>
               </div>
 
               <div className="hidden sm:hidden md:block">
-                <ProductOverview description={serviceData.description} />
+
+                <DescriptionOverview description={descriptionPart} />
+                {/* Special Offer Box */}
+                {serviceData.isOffer && (
+                  <div className="mb-6 p-4 bg-white rounded-xl border-2 border-pink-100 shadow-sm mt-6">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Sparkles className="text-pink-500" size={18} />
+                      <h3 className="font-semibold text-rose-800">Celebration Special!</h3>
+                    </div>
+                    <p className="text-sm text-gray-700">
+                      {serviceData.status === 'active'
+                        ? "Free gift wrapping and personalized message included with every order this season! 🎁"
+                        : "Special limited-time offer for this product!"}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -184,7 +216,7 @@ const DecorationsDetailsPage = () => {
                   </div>
                 )}
               </div> */}
-            
+
 
               {/* Pricing Section */}
               <div className="mb-1 flex items-center">
@@ -222,52 +254,51 @@ const DecorationsDetailsPage = () => {
 
               {/* Quantity Selector */}
 
-                {/* Date and Time Input Fields with AM/PM */}
-                <PincodeDeliveryChecker 
-        onDeliveryAvailable={setIsDeliveryAvailable} 
-        pincode={pincode} setPincode={setPincode}
-      />
-                <div className=" space-y-4">
-               
-          <TimeSlotPicker 
-            onTimeSlotSelect={(slot) => {
-              setDateTime(slot); // This will update with the full slot object
-            }}
-            PIN={isDeliveryAvailable}
-          />
-        </div>
+              {/* Date and Time Input Fields with AM/PM */}
+              <PincodeDeliveryChecker
+                onDeliveryAvailable={setIsDeliveryAvailable}
+                pincode={pincode} setPincode={setPincode}
+              />
+              <div className=" space-y-4">
+
+                <TimeSlotPicker
+                  onTimeSlotSelect={(slot) => {
+                    setDateTime(slot); // This will update with the full slot object
+                  }}
+                  PIN={isDeliveryAvailable}
+                />
+              </div>
 
 
               {/* Action Buttons */}
               <div className="flex space-x-4 mt-8">
-              <div className="relative">
-              <Link
-              className={`bg-gradient-to-r from-pink-500 to-rose-600 flex gap-2 items-center text-white px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all transform shadow-lg ${
-                !dateTime
-                  ? 'opacity-50 cursor-not-allowed'
-                  : 'hover:from-pink-600 hover:to-rose-700 hover:scale-[1.02] hover:shadow-xl'
-              }`}
-              onClick={(e) => {
-                if (!dateTime) {
-                  e.preventDefault();
-                  toast.warning('Please select a date and time slot');
-                } else {
-                  handleBookNow();
-                }
-              }}
-              to={!dateTime ? '#' : '/cart'}
-            >
-              <ShoppingCart size={20} />
-              Book Now
-            </Link>
+                <div className="relative">
+                  <Link
+                    className={`bg-gradient-to-r from-pink-500 to-rose-600 flex gap-2 items-center text-white px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all transform shadow-lg ${!dateTime
+                        ? 'opacity-50 cursor-not-allowed'
+                        : 'hover:from-pink-600 hover:to-rose-700 hover:scale-[1.02] hover:shadow-xl'
+                      }`}
+                    onClick={(e) => {
+                      if (!dateTime) {
+                        e.preventDefault();
+                        toast.warning('Please select a date and time slot');
+                      } else {
+                        handleBookNow();
+                      }
+                    }}
+                    to={!dateTime ? '#' : '/cart'}
+                  >
+                    <ShoppingCart size={20} />
+                    Book Now
+                  </Link>
 
-            {/* Warning tooltip */}
-            {!dateTime && (
-              <div className="absolute -top-7 left-0 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded whitespace-nowrap">
-                Please select date and time
-              </div>
-            )}
-</div>
+                  {/* Warning tooltip */}
+                  {!dateTime && (
+                    <div className="absolute -top-7 left-0 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded whitespace-nowrap">
+                      Please select date and time
+                    </div>
+                  )}
+                </div>
                 <button
                   className={`flex gap-2 items-center px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all border-2 ${isWishlisted ? 'bg-pink-50 border-pink-500 text-pink-600' : 'border-pink-200 text-gray-800 hover:border-pink-300'}`}
                   onClick={() => setIsWishlisted(!isWishlisted)}
@@ -280,27 +311,16 @@ const DecorationsDetailsPage = () => {
                 </button>
               </div>
 
-              {/* Special Offer Box */}
-              {serviceData.isOffer && (
-                <div className="mb-6 p-4 bg-white rounded-xl border-2 border-pink-100 shadow-sm">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Sparkles className="text-pink-500" size={18} />
-                    <h3 className="font-semibold text-rose-800">Celebration Special!</h3>
-                  </div>
-                  <p className="text-sm text-gray-700">
-                    {serviceData.status === 'active'
-                      ? "Free gift wrapping and personalized message included with every order this season! 🎁"
-                      : "Special limited-time offer for this product!"}
-                  </p>
-                </div>
-              )}
+
+
+              <KitsOverview data={kitPart} ></KitsOverview>
 
               {/* Delivery Information */}
               <div className="space-y-4">
-               
+
                 <DeliveryInfo />
                 <div className="block md:hidden">
-                  <ProductOverview description={serviceData.description} />
+                  <DescriptionOverview description={descriptionPart} />
                 </div>
               </div>
             </div>

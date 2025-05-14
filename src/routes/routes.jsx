@@ -24,6 +24,7 @@ import Profile from "../pages/auth/Profile";
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import DecorationsDetailsPage from "../pages/products/decorations-details-page";
+import Order from "../pages/orders/order";
 const RoutesComponent = () => {
 
 
@@ -63,6 +64,12 @@ const RoutesComponent = () => {
         path="/wishlist"
         element={
           isAuthenticated ? <WishlistPage /> : <Navigate to="/login" />
+        }
+      />
+      <Route
+        path="/order/:orderId"
+        element={
+          isAuthenticated ? <Order /> : <Navigate to="/login" />
         }
       />
 
