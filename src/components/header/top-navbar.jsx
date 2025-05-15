@@ -87,50 +87,50 @@ const TopNavbar = () => {
           <ShoppingCart className="h-5 w-5" />
         </Link>
         {isAuthenticated ? (
-        <Link
-          to="/profile"
-          className="flex flex-col items-center hover:text-rose-500 cursor-pointer"
-          style={{
-            textAlign: 'center',  // Centers content horizontally
-            display: 'flex',  // Flexbox to stack the image and text vertically
-            alignItems: 'center',  // Centers both the image and text horizontally
-          }}
-        >
-
-          {
-            console.log("http://localhost:3000/"+userData.data.profile_image )
-          }
-          <div
+          <Link
+            to="/profile"
+            className="flex flex-col items-center hover:text-rose-500 cursor-pointer"
             style={{
-              backgroundImage: `url(${"http://localhost:3000/" + sanitizePath(userData.data.profile_image)})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              width: '35px',  // Adjust width as needed
-              height: '35px',  // Adjust height as needed
-              borderRadius: '50%',  // Circular image
-            }}
-          ></div>
-          <span
-            style={{
-              fontSize: '8px',  // Small font size
-              fontWeight: '100',  // Thin font weight
-              marginTop: '4px',  // Add small space between image and text
-              color: 'inherit',  // Inherits the hover color from the parent Link
-              display: 'inline',  // Optional, keeps the text inline within the block
+              textAlign: 'center',  // Centers content horizontally
+              display: 'flex',  // Flexbox to stack the image and text vertically
+              alignItems: 'center',  // Centers both the image and text horizontally
             }}
           >
-            Hi, {userData?.data?.username}
-          </span>
-        </Link>
-      ) : (
-        <button
-          onClick={() => setIsLoginModalOpen(true)}
-          className="flex items-center hover:text-rose-500 cursor-pointer"
-        >
-          <User className="h-5 w-5" />
-        </button>
-      )}
-    
+
+            {
+              console.log("http://localhost:3000/" + userData.data.profile_image)
+            }
+            <div
+              style={{
+                backgroundImage: `url(${"http://localhost:3000/" + sanitizePath(userData.data.profile_image)})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                width: '35px',  // Adjust width as needed
+                height: '35px',  // Adjust height as needed
+                borderRadius: '50%',  // Circular image
+              }}
+            ></div>
+            <span
+              style={{
+                fontSize: '8px',  // Small font size
+                fontWeight: '100',  // Thin font weight
+                marginTop: '4px',  // Add small space between image and text
+                color: 'inherit',  // Inherits the hover color from the parent Link
+                display: 'inline',  // Optional, keeps the text inline within the block
+              }}
+            >
+              Hi, {userData?.data?.username}
+            </span>
+          </Link>
+        ) : (
+          <button
+            onClick={() => setIsLoginModalOpen(true)}
+            className="flex items-center hover:text-rose-500 cursor-pointer"
+          >
+            <User className="h-5 w-5" />
+          </button>
+        )}
+
         <div className="flex items-center hover:text-rose-500 cursor-pointer" onClick={handleOpenModal}>
           <MapPin className="h-5 w-5 text-rose-500" />
           <span className="ml-1 text-sm font-medium">KANPUR</span>
@@ -139,16 +139,16 @@ const TopNavbar = () => {
 
       {/* Mobile Icons & Menu */}
       <div className="md:hidden flex items-center gap-2">
-      <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
-        <Search className="h-5 w-5 text-gray-700 hover:text-rose-500" />
-      </button>
-      {isSearchOpen && (
-         <input
-         type="text"
-         placeholder="Search..."
-         className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent"
-       />
-      )}
+        <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
+          <Search className="h-5 w-5 text-gray-700 hover:text-rose-500" />
+        </button>
+        {isSearchOpen && (
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent"
+          />
+        )}
         <Link to="/wishlist">
           <Heart className="h-5 w-5 text-gray-700 hover:text-rose-500" />
         </Link>
@@ -167,35 +167,35 @@ const TopNavbar = () => {
       {/* Mobile Slideout Menu */}
       {isMobileMenuOpen && (
         <div className="absolute top-full left-0 w-full bg-white shadow-md z-20 p-4 flex flex-col space-y-4 md:hidden">
-          
-          {isAuthenticated ? (
-        <Link
-          to="/profile"
 
-          onClick={() => {
-            setIsMobileMenuOpen(false);
-            
-          }}
-          className="flex items-center text-gray-700 hover:text-rose-500">
-          <FaUser/>
-          <span
-           
-          className="ml-2">
-            Hi, {userData?.data?.username}
-          </span>
-        </Link>
-      ) : (
-          
-          <button
-            onClick={() => {
-              setIsMobileMenuOpen(false);
-              setIsLoginModalOpen(true);
-            }}
-            className="flex items-center text-gray-700 hover:text-rose-500"
-          >
-            <User  className="h-5 w-5 mr-2" /> Log In
-          </button>
-      )}
+          {isAuthenticated ? (
+            <Link
+              to="/profile"
+
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+
+              }}
+              className="flex items-center text-gray-700 hover:text-rose-500">
+              <FaUser />
+              <span
+
+                className="ml-2">
+                Hi, {userData?.data?.username}
+              </span>
+            </Link>
+          ) : (
+
+            <button
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                setIsLoginModalOpen(true);
+              }}
+              className="flex items-center text-gray-700 hover:text-rose-500"
+            >
+              <User className="h-5 w-5 mr-2" /> Log In
+            </button>
+          )}
           <Link to="/help" className="flex items-center text-gray-700 hover:text-rose-500">
             <HelpCircle className="h-5 w-5 mr-2" /> Help Center
           </Link>

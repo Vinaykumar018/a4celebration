@@ -2,6 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 const API_KEY = import.meta.env.VITE_API_KEY;
+const API_URL = import.meta.env.VITE_API_URL 
 
 export const userSlice = createSlice({
   name: 'user',
@@ -37,7 +38,7 @@ export const { startLoading, setUserData, setError, logout } = userSlice.actions
 export const fetchUserData = (userId) => async (dispatch) => {
   dispatch(startLoading());
   try {
-    const response = await axios.get(`http://localhost:3000/api/user/get-user/${userId}`, {
+    const response = await axios.get(`${API_URL}user/get-user/${userId}`, {
       headers: {
         Authorization: `Bearer ${API_KEY}`,
         'Content-Type': 'application/json',

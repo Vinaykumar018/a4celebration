@@ -87,10 +87,10 @@ const Services = () => {
           animate="visible"
         >
           {categories.map((category) => (
-            <motion.div 
-              key={category._id} 
-              variants={itemVariants} 
-              whileHover="hover" 
+            <motion.div
+              key={category._id}
+              variants={itemVariants}
+              whileHover="hover"
               className="group"
             >
               <Link to={`/${category.slug_url}`} className="block h-full">
@@ -122,7 +122,7 @@ const Services = () => {
                     >
                       {category.category_name}
                     </h3>
-                    
+
                   </div>
 
                   {/* Popular badge - you can customize the condition */}

@@ -43,7 +43,7 @@ const DecorationsDetailsPage = () => {
   const location = useLocation();
   const { serviceData, sectionData } = location.state;
   const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
-  
+
   const [mainImage, setMainImage] = useState(
     "http://localhost:3000/" + serviceData.featured_image
   );
@@ -54,7 +54,7 @@ const DecorationsDetailsPage = () => {
   const [dateTime, setDateTime] = useState(null);
   const { cart, addToCart } = useCart(); // This will store 
 
-    
+
   const handleBookNow = () => {
     if (!dateTime) {
       toast.error('Please select a date and time slot');
@@ -64,19 +64,19 @@ const DecorationsDetailsPage = () => {
 
     const formattedTime = `${dateTime.startTime} - ${dateTime.endTime}`;
 
-     const cartItem = {
-    product_id: serviceData.product_id,
-    product_name: serviceData.name,
-    quantity,
-    service_date: dateTime.date,
-    service_time: formattedTime,
-    pinCode: pincode,
-  };
+    const cartItem = {
+      product_id: serviceData.product_id,
+      product_name: serviceData.name,
+      quantity,
+      service_date: dateTime.date,
+      service_time: formattedTime,
+      pinCode: pincode,
+    };
 
-  const cartPayload = {
-    userID: userData?.data?._id,
-    items: [cartItem]
-  };
+    const cartPayload = {
+      userID: userData?.data?._id,
+      items: [cartItem]
+    };
 
 
     console.log({
@@ -275,8 +275,8 @@ const DecorationsDetailsPage = () => {
                 <div className="relative">
                   <Link
                     className={`bg-gradient-to-r from-pink-500 to-rose-600 flex gap-2 items-center text-white px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all transform shadow-lg ${!dateTime
-                        ? 'opacity-50 cursor-not-allowed'
-                        : 'hover:from-pink-600 hover:to-rose-700 hover:scale-[1.02] hover:shadow-xl'
+                      ? 'opacity-50 cursor-not-allowed'
+                      : 'hover:from-pink-600 hover:to-rose-700 hover:scale-[1.02] hover:shadow-xl'
                       }`}
                     onClick={(e) => {
                       if (!dateTime) {

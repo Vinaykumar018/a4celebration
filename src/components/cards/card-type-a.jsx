@@ -8,7 +8,7 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import { EyeIcon } from 'lucide-react';
 
 const CardTypeA = ({
-  
+
   services = [],
   themeColor = "#ff7e00",
   showRating = true,
@@ -19,9 +19,9 @@ const CardTypeA = ({
 }) => {
 
 
-  
 
-  console.log(section,services)
+
+  console.log(section, services)
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 !== 0;
@@ -112,21 +112,21 @@ const CardTypeA = ({
             const words = service.name.split(" ");
             return (
               <SwiperSlide key={index}>
-                <Link to={`${sectionSlug}/service/${service.slug_url}`} className="block"  state={{ 
-                          serviceData: service,
-                          sectionData: section 
-                        }}>
+                <Link to={`${sectionSlug}/service/${service.slug_url}`} className="block" state={{
+                  serviceData: service,
+                  sectionData: section
+                }}>
                   <div
                     className="rashi_sign_box bg-white shadow-md rounded-lg overflow-hidden transition-transform duration-300 p-2"
                     style={{ borderRadius: "16px", border: `1px ${themeColor} solid` }}
                   >
                     {/* Image Section */}
                     <div className="sign_box_img flex justify-center mb-2">
-                    <img
-  src={`${"http://localhost:3000/"+service.featured_image}`}
-  alt={service.name}
-  className="object-cover rounded-lg h-40 w-full"
-/>
+                      <img
+                        src={`${"http://localhost:3000/" + service.featured_image}`}
+                        alt={service.name}
+                        className="object-cover rounded-lg h-40 w-full"
+                      />
 
                     </div>
 
@@ -147,12 +147,12 @@ const CardTypeA = ({
                       )}
 
                       <Link
-                      to={`${sectionSlug}/service/${service.slug_url}`} 
+                        to={`${sectionSlug}/service/${service.slug_url}`}
                         className="inline-block text-xs px-3 py-1.5 rounded-md uppercase text-white transition-colors duration-300"
                         style={{ backgroundColor: themeColor }}
-                        state={{ 
+                        state={{
                           serviceData: service,
-                          sectionData: section 
+                          sectionData: section
                         }}
                       >
                         {ctaText}

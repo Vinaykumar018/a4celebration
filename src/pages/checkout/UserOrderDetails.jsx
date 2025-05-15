@@ -11,7 +11,7 @@ import axios from "axios";
 import {  useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { useCart } from '../../hooks/cartHook';
-import { placeOrder } from "../../services/order/order-api";
+import { placeOrder } from "../../services/decoration-orders/order-api";
 export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) => {
   
 

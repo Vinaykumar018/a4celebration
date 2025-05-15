@@ -10,10 +10,10 @@ Modal.setAppElement('#root')
 
 
 const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
-  console.log(userData ,"from the edit profile modal")
+  console.log(userData, "from the edit profile modal")
   const [formData, setFormData] = useState({
     username: userData?.username,
-    email: userData?.email ,
+    email: userData?.email,
     mobile: userData?.mobile || "",
     address: userData?.address || "",
     city: userData?.city || "",
@@ -38,27 +38,27 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
       }));
     }
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const multipartFormData = new FormData();
     for (const key in formData) {
       if (formData[key]) {
         multipartFormData.append(key, formData[key]);
       }
     }
-  
+
     updateUser(multipartFormData, userData._id);
     onRequestClose();
   };
-  
+
 
   return (
-    <Modal 
-      isOpen={isOpen} 
+    <Modal
+      isOpen={isOpen}
       onRequestClose={onRequestClose}
-      
+
       style={{
         overlay: {
           position: 'fixed',
@@ -91,15 +91,15 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
       closeTimeoutMS={200}
     >
       <div className="relative">
-        <button 
+        <button
           onClick={onRequestClose}
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-2xl"
         >
           &times;
         </button>
-        
+
         <h2 className="text-xl font-bold text-center text-pink-600 mb-4">Edit Profile</h2>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
             { label: "Username", name: "username", type: "text", value: formData.username },
@@ -137,7 +137,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
               )}
             </div>
           ))}
-          
+
           <div className="flex flex-col space-y-1 sm:col-span-2">
             <label className="text-xs font-medium text-gray-600">Profile Image</label>
             <input
@@ -175,7 +175,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
 // Then define the Profile component
 const Profile = () => {
   const { userData } = useSelector((state) => state.user);
-  const user = userData?.data; 
+  const user = userData?.data;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const dispatch = useDispatch();
@@ -189,12 +189,12 @@ const Profile = () => {
 
   const navigate = useNavigate();
 
-  function handleLogout(){
+  function handleLogout() {
     console.log("logout")
     localStorage.clear()
     dispatch(logout());
     navigate('/login');
-   
+
   }
 
   return (
@@ -207,9 +207,9 @@ const Profile = () => {
           <div className="flex flex-row justify-between px-4 pb-4 xl:pb-0">
             <div className="flex flex-auto space-x-1.5 sm:space-x-3">
               <div className="h-11 w-11 sm:h-20 sm:w-20">
-                <img 
-                  className="border-primary-500 h-full w-full rounded-full border-2 p-[3px]" 
-                  src={"http://localhost:3000/"+user?.profile_image ||"https://png.pngtree.com/png-clipart/20231019/original/pngtree-user-profile-avatar-png-image_13369990.png"} 
+                <img
+                  className="border-primary-500 h-full w-full rounded-full border-2 p-[3px]"
+                  src={"http://localhost:3000/" + user?.profile_image || "https://png.pngtree.com/png-clipart/20231019/original/pngtree-user-profile-avatar-png-image_13369990.png"}
                   alt="Profile"
                 />
               </div>
@@ -257,20 +257,20 @@ const Profile = () => {
               <div className="flex flex-auto items-center justify-between px-4">
                 <div className="text-base font-semibold sm:text-lg">Personal Details</div>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-  <button 
-    onClick={() => setIsEditModalOpen(true)}
-    className="w-36 sm:w-48 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
-  >
-    Edit Profile
-  </button>
+                  <button
+                    onClick={() => setIsEditModalOpen(true)}
+                    className="w-36 sm:w-48 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+                  >
+                    Edit Profile
+                  </button>
 
-  <button 
-    onClick={handleLogout}
-    className="w-36 sm:w-48 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
-  >
-    Logout
-  </button>
-</div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-36 sm:w-48 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+                  >
+                    Logout
+                  </button>
+                </div>
 
               </div>
               <div className="w-full border-b border-gray-400"></div>
@@ -354,7 +354,7 @@ const Profile = () => {
         onRequestClose={() => setIsEditModalOpen(false)}
         userData={user}
       />
-      
+
     </section>
   );
 };

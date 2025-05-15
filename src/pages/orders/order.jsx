@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getOrderById } from '../../services/order/order-api';
+import { getOrderById } from '../../services/decoration-orders/order-api';
 import { CheckCircle, Truck, CreditCard, Package, User, MapPin, Calendar, Clock } from "lucide-react"
 
 export default function OrderConfirmation() {

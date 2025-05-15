@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom"; 
 import { Search, ShoppingCart, Heart, User, MapPin, HelpCircle, ChevronDown } from "lucide-react";
-import logo from '../../assets/cherishx-logo-website.png'
+import logo from '../../assets/A4 Celebration 1 (3).png'
 import TopNavbar from "./top-navbar";
 import BottomNavbar from "./bottom-navbar";
 export default function Navbar() {

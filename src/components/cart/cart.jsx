@@ -6,36 +6,60 @@ import { Trash2, ShoppingBag, Gift, Info, Calendar, Clock } from "lucide-react";
 
 import { useDispatch } from "react-redux";
 import useUserCartData from "../../hooks/useUserCartData";
- import { useCart } from '../../hooks/cartHook';
-
+import { useCart } from '../../hooks/cartHook';
 
 const Cart = () => {
-  const { cartItems, isLoading } = useUserCartData();
-   const { cart, clearCart,removeItem} = useCart();
- 
-  
-  
+  const { cartItems: initialCartItems, isLoading } = useUserCartData();
+  const [cartItems, setCartItems] = useState([]);
+  const { cart, clearCart, removeItem } = useCart();
+
   const navigate = useNavigate();
   const [promoCode, setPromoCode] = useState("");
-  
   const currencySymbol = "₹";
 
+  // Initialize cart items when they load
+  useEffect(() => {
+    if (initialCartItems) {
+      setCartItems(initialCartItems);
+    }
+  }, [initialCartItems]);
 
-
-console.log(cartItems)
-
-//GET USER ID
-//GET CART DATA FROM DATABASE
-//COMBINE CART DATA WITH COMPLETE DATA IN A STATE NAMED CARTITEMS
-
- 
   const handleCheckout = () => {
-    navigate("/checkout")
+    navigate("/checkout");
   };
 
-  const handleRemoveItem = (itemId) => {
-    // Dummy function to handle item removal
-    console.log("Remove item with ID:", itemId);
+  const handleRemoveItem = async (itemId) => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const userId = localStorage.getItem("userId");
+
+    if (isLoggedIn && userId) {
+      try {
+        await removeItem(userId, itemId);
+        // Update local state instead of reloading
+        setCartItems(prevItems => prevItems.filter(item => item.product_id !== itemId));
+        toast.success("Item removed from cart");
+      } catch (error) {
+        toast.error("Failed to remove item");
+        console.error("Error removing item:", error);
+      }
+    }
+  };
+
+  const handleClearCart = async () => {
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const userId = localStorage.getItem("userId");
+
+    if (isLoggedIn && userId) {
+      try {
+        await clearCart(userId);
+        // Update local state instead of reloading
+        setCartItems([]);
+        toast.success("Cart cleared successfully");
+      } catch (error) {
+        toast.error("Failed to clear cart");
+        console.error("Error clearing cart:", error);
+      }
+    }
   };
 
   return (
@@ -93,7 +117,7 @@ console.log(cartItems)
                     <div className="absolute top-2 right-2">
                       <button
                         className="text-gray-500 hover:text-red-500 hover:bg-red-50 p-2 rounded-full"
-                        onClick={() => handleRemoveItem(item._id)}
+                        onClick={() => handleRemoveItem(item.product_id)}
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>
@@ -102,7 +126,7 @@ console.log(cartItems)
                       <div className="flex flex-col md:flex-row gap-6">
                         <div className="relative h-32 w-32 mx-auto md:mx-0 rounded-lg overflow-hidden border-2 border-pink-200 bg-white">
                           <img
-                            src={"http://localhost:3000/"+item.featured_image}
+                            src={"http://localhost:3000/" + item.featured_image}
                             alt={item.product_name}
                             className="object-cover w-full h-full"
                           />
@@ -247,7 +271,7 @@ console.log(cartItems)
 
                   <button
                     className="w-full border border-pink-200 text-pink-700 hover:bg-pink-100 px-6 py-2 rounded"
-                    onClick={() => console.log("Empty cart function not implemented")}
+                    onClick={handleClearCart}
                     disabled={cartItems.length === 0}
                   >
                     Empty Cart

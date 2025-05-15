@@ -35,20 +35,20 @@ const styles = `
 const ProductDetailsPage = () => {
 
 
-  
+
 
 
   const location = useLocation();
   const { serviceData, sectionData } = location.state;
-  console.log(sectionData,serviceData)
+  console.log(sectionData, serviceData)
   const [mainImage, setMainImage] = useState(
-    "http://localhost:3000/"+serviceData.featured_image
-    
+    "http://localhost:3000/" + serviceData.featured_image
+
   );
   const [isWishlisted, setIsWishlisted] = useState(false);
 
   const changeImage = (src) => {
-    setMainImage("http://localhost:3000/"+src);
+    setMainImage("http://localhost:3000/" + src);
   };
 
   return (
@@ -79,13 +79,13 @@ const ProductDetailsPage = () => {
               </div>
               <div className="flex gap-4 py-4 justify-center overflow-x-auto">
                 {serviceData.other_images.map((src, index) => (
-                  <div 
-                    key={index} 
+                  <div
+                    key={index}
                     className={`relative size-16 sm:size-20 rounded-lg cursor-pointer transition-all duration-300 border-2 ${mainImage === src ? 'border-pink-500 scale-105' : 'border-pink-100'}`}
                     onClick={() => changeImage(src)}
                   >
                     <img
-                      src={"http://localhost:3000/"+src}
+                      src={"http://localhost:3000/" + src}
                       alt={`Thumbnail ${index + 1}`}
                       className="w-full h-full object-cover rounded-md"
                     />
@@ -96,8 +96,8 @@ const ProductDetailsPage = () => {
                 ))}
               </div>
               <div className="hidden sm:hidden md:block">
-  <ProductOverview />
-</div>
+                <ProductOverview />
+              </div>
             </div>
 
             {/* Product Details */}
@@ -105,10 +105,10 @@ const ProductDetailsPage = () => {
               <h2 className="text-3xl font-bold mb-2 font-playfair text-rose-800">{serviceData.name}
 
 
-              {console.log(serviceData.name)}
+                {console.log(serviceData.name)}
               </h2>
               <p className="text-pink-600 mb-4">SKU: WH1000XM4</p>
-              
+
               <div className="mb-4 flex items-center">
                 <span className="text-3xl font-bold text-rose-700 mr-2">$349.99</span>
                 <span className="text-gray-500 line-through">$399.99</span>
@@ -116,24 +116,24 @@ const ProductDetailsPage = () => {
                   Save 12% ✨
                 </span>
               </div>
-              
+
               <div className="flex items-center mb-4">
                 {[...Array(5)].map((_, index) => (
-                  <Star 
-                    key={index} 
-                    className={`${index < 4 ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`} 
-                    size={20} 
+                  <Star
+                    key={index}
+                    className={`${index < 4 ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
+                    size={20}
                   />
                 ))}
                 <span className="ml-2 text-gray-600">4.5 (120 reviews)</span>
               </div>
-              
+
               <p className="text-gray-700 mb-6 border-l-4 border-pink-300 pl-4 py-2 bg-pink-50 rounded-r-lg">
                 Experience premium sound quality and industry-leading noise cancellation with these wireless
                 headphones. Perfect for music lovers and frequent travelers. 🎧✨
               </p>
 
-              
+
 
               <div className="mb-6 p-4 bg-pink-50 rounded-xl border-2 border-pink-100">
                 <label htmlFor="quantity" className="block text-sm font-medium text-rose-800 mb-1">
@@ -157,13 +157,13 @@ const ProductDetailsPage = () => {
                   <ShoppingCart size={20} />
                   Add to Cart
                 </button>
-                <button 
+                <button
                   className={`flex gap-2 items-center px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-300 focus:ring-offset-2 transition-all border-2 ${isWishlisted ? 'bg-pink-50 border-pink-500 text-pink-600' : 'border-pink-200 text-gray-800 hover:border-pink-300'}`}
                   onClick={() => setIsWishlisted(!isWishlisted)}
                 >
-                  <Heart 
-                    size={20} 
-                    className={isWishlisted ? 'fill-pink-600 text-pink-600' : ''} 
+                  <Heart
+                    size={20}
+                    className={isWishlisted ? 'fill-pink-600 text-pink-600' : ''}
                   />
                   Wishlist
                 </button>
@@ -183,18 +183,18 @@ const ProductDetailsPage = () => {
                 <PincodeDeliveryChecker />
                 <DeliveryInfo />
                 <div className="block md:hidden">
-  <ProductOverview />
-</div>
+                  <ProductOverview />
+                </div>
 
               </div>
             </div>
           </div>
 
           <h2 className="text-3xl font-bold text-center google-font mt-8">
-  <span className="border-b-[1vw] border-pink-700 rounded-md inline-block">
-    Related Products
-  </span>
-</h2>
+            <span className="border-b-[1vw] border-pink-700 rounded-md inline-block">
+              Related Products
+            </span>
+          </h2>
 
 
           <div className="space-y-6">
