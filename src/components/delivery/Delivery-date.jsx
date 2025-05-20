@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Lock } from 'lucide-react';
 
-const PincodeDeliveryChecker = ({ onDeliveryAvailable ,pincode, setPincode }) => {
-  
+const PincodeDeliveryChecker = ({ onDeliveryAvailable, pincode, setPincode }) => {
+
   const [isDeliverable, setIsDeliverable] = useState(null);
   const [error, setError] = useState("");
 

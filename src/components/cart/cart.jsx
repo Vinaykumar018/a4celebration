@@ -12,6 +12,7 @@ const Cart = () => {
   const { cartItems: initialCartItems, isLoading } = useUserCartData();
   const [cartItems, setCartItems] = useState([]);
   const { cart, clearCart, removeItem } = useCart();
+  console.log(cartItems, "of the user")
 
   const navigate = useNavigate();
   const [promoCode, setPromoCode] = useState("");
@@ -282,7 +283,7 @@ const Cart = () => {
               <div className="border-pink-200 rounded-lg p-4">
                 <div className="flex items-center justify-center gap-4 flex-wrap">
                   <img src="https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/visa-1024.png" alt="Visa" width={40} height={30} />
-                  <img src="http://cdn3.iconfinder.com/data/icons/payment-method-1/64/_Mastercard-1024.png" alt="Mastercard" width={40} height={30} />
+                  <img src="https://cdn3.iconfinder.com/data/icons/payment-method-1/64/_Mastercard-1024.png" alt="Mastercard" width={40} height={30} />
                   <img src="https://cdn3.iconfinder.com/data/icons/payment-method-1/64/_Paypal-01-1024.png" alt="PayPal" width={40} height={30} />
                   <img src="https://cdn4.iconfinder.com/data/icons/circle-payment/32/payment_001-rupay-128.png" alt="RuPay" width={40} height={30} />
                   <img src="https://economictimes.indiatimes.com/thumb/msid-74960608,width-1200,height-900,resizemode-4,imgsize-49172/upi-twitter.jpg?from=mdr" alt="UPI" width={40} height={30} />

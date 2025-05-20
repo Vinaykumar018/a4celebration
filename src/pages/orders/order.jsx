@@ -67,25 +67,22 @@ export default function OrderConfirmation() {
         {/* Success Animation */}
         <div className="flex flex-col items-center justify-center mb-8 pt-8">
           <div
-            className={`mb-4 transform transition-all duration-700 ease-out ${
-              isLoaded ? "scale-100 opacity-100" : "scale-0 opacity-0"
-            }`}
+            className={`mb-4 transform transition-all duration-700 ease-out ${isLoaded ? "scale-100 opacity-100" : "scale-0 opacity-0"
+              }`}
           >
             <CheckCircle className="w-24 h-24 text-pink-500" />
           </div>
 
           <h1
-            className={`text-3xl md:text-4xl font-bold text-pink-700 text-center transform transition-all duration-500 delay-300 ${
-              isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-            }`}
+            className={`text-3xl md:text-4xl font-bold text-pink-700 text-center transform transition-all duration-500 delay-300 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+              }`}
           >
             Thank You for Your Order!
           </h1>
 
           <div
-            className={`mt-2 text-center transition-opacity duration-500 delay-500 ${
-              isLoaded ? "opacity-100" : "opacity-0"
-            }`}
+            className={`mt-2 text-center transition-opacity duration-500 delay-500 ${isLoaded ? "opacity-100" : "opacity-0"
+              }`}
           >
             <p className="text-lg text-gray-600">
               Your order <span className="font-semibold text-pink-600">{orderData?.order_id || 'N/A'}</span> has been confirmed
@@ -95,9 +92,8 @@ export default function OrderConfirmation() {
 
         {/* Order Status */}
         <div
-          className={`transform transition-all duration-500 delay-700 ${
-            isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-          }`}
+          className={`transform transition-all duration-500 delay-700 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+            }`}
         >
           <div className="mb-6 border border-pink-200 rounded-lg shadow-md overflow-hidden">
             <div className="bg-pink-50 p-4 border-b border-pink-200">
@@ -110,14 +106,13 @@ export default function OrderConfirmation() {
               <div className="flex flex-col md:flex-row md:items-center justify-between">
                 <div className="flex items-center mb-2 md:mb-0">
                   <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      getStatusColor(orderData?.orderDetails?.order_status)
-                    } capitalize`}
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(orderData?.orderDetails?.order_status)
+                      } capitalize`}
                   >
                     {orderData?.orderDetails?.order_status || 'Unknown'}
                   </span>
                   <span className="ml-2 text-sm text-gray-500">
-                    Last updated: {orderData?.orderDetails?.lastUpdated ? 
+                    Last updated: {orderData?.orderDetails?.lastUpdated ?
                       new Date(orderData.orderDetails.lastUpdated).toLocaleString() : 'N/A'}
                   </span>
                 </div>
@@ -132,9 +127,8 @@ export default function OrderConfirmation() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* User Details */}
           <div
-            className={`transform transition-all duration-500 delay-[800ms] ${
-              isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-            }`}
+            className={`transform transition-all duration-500 delay-[800ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+              }`}
           >
             <div className="border border-pink-200 rounded-lg shadow-sm h-full">
               <div className="bg-pink-50 p-4 border-b border-pink-200">
@@ -157,9 +151,8 @@ export default function OrderConfirmation() {
 
           {/* Shipping Details */}
           <div
-            className={`transform transition-all duration-500 delay-[900ms] ${
-              isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-            }`}
+            className={`transform transition-all duration-500 delay-[900ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+              }`}
           >
             <div className="border border-pink-200 rounded-lg shadow-sm h-full">
               <div className="bg-pink-50 p-4 border-b border-pink-200">
@@ -183,9 +176,8 @@ export default function OrderConfirmation() {
 
           {/* Delivery Details */}
           <div
-            className={`transform transition-all duration-500 delay-[1000ms] ${
-              isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-            }`}
+            className={`transform transition-all duration-500 delay-[1000ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+              }`}
           >
             <div className="border border-pink-200 rounded-lg shadow-sm h-full">
               <div className="bg-pink-50 p-4 border-b border-pink-200">
@@ -213,9 +205,8 @@ export default function OrderConfirmation() {
 
           {/* Payment Details */}
           <div
-            className={`transform transition-all duration-500 delay-[1100ms] ${
-              isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-            }`}
+            className={`transform transition-all duration-500 delay-[1100ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+              }`}
           >
             <div className="border border-pink-200 rounded-lg shadow-sm h-full">
               <div className="bg-pink-50 p-4 border-b border-pink-200">
@@ -232,9 +223,8 @@ export default function OrderConfirmation() {
                   <p className="text-sm text-gray-600">
                     <span className="font-medium">Payment Status:</span>
                     <span
-                      className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${
-                        getStatusColor(orderData?.paymentDetails?.transactionStatus)
-                      }`}
+                      className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${getStatusColor(orderData?.paymentDetails?.transactionStatus)
+                        }`}
                     >
                       {orderData?.paymentDetails?.transactionStatus || 'Unknown'}
                     </span>
@@ -247,9 +237,8 @@ export default function OrderConfirmation() {
 
         {/* Order Items */}
         <div
-          className={`mt-6 transform transition-all duration-500 delay-[1200ms] ${
-            isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-          }`}
+          className={`mt-6 transform transition-all duration-500 delay-[1200ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+            }`}
         >
           <div className="border border-pink-200 rounded-lg shadow-md">
             <div className="bg-pink-50 p-4 border-b border-pink-200">
@@ -307,9 +296,8 @@ export default function OrderConfirmation() {
 
         {/* Next Steps */}
         <div
-          className={`mt-8 mb-12 text-center transform transition-all duration-500 delay-[1300ms] ${
-            isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-          }`}
+          className={`mt-8 mb-12 text-center transform transition-all duration-500 delay-[1300ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+            }`}
         >
           <p className="text-gray-600 mb-4">
             We'll notify you when your order ships. You can track your order status anytime.

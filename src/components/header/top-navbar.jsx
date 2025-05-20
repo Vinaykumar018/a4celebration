@@ -16,6 +16,7 @@ import CreateAccountModal from "../authentication/CreateAccountModal";
 import CityModal from "../locations/CityModal"; // Ensure you import CityModal
 import { useSelector } from 'react-redux';
 import { FaUser } from "react-icons/fa6";
+import unknown from '../../assets/profile/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg'
 const TopNavbar = () => {
 
 
@@ -98,11 +99,15 @@ const TopNavbar = () => {
           >
 
             {
-              console.log("http://localhost:3000/" + userData.data.profile_image)
+              console.log(userData.data.profile_image, "user profile image")
             }
+
             <div
               style={{
-                backgroundImage: `url(${"http://localhost:3000/" + sanitizePath(userData.data.profile_image)})`,
+                backgroundImage: `url(${userData.data.profile_image
+                  ? "http://localhost:3000/" + sanitizePath(userData.data.profile_image)
+                  : unknown
+                  })`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 width: '35px',  // Adjust width as needed

@@ -25,6 +25,8 @@ import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import DecorationsDetailsPage from "../pages/products/decorations-details-page";
 import Order from "../pages/orders/order";
+import EventManagementDetailsPage from "../pages/products/event-management-details-page";
+import GiftsDetailsPage from "../pages/products/gifts-details-page";
 const RoutesComponent = () => {
 
 
@@ -35,19 +37,25 @@ const RoutesComponent = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/decorations" element={<Decoration />} />
+        <Route path="/decorations" element={<Decoration />} />
+      <Route path="/decorations/:slug" element={<Decoration />} />
       <Route path="/giftings" element={<Gifting />} />
       <Route path="/artists" element={<Artist />} />
       <Route path="/catering" element={<Caterings />} />
       <Route path="/baby-shower" element={<BabyShower />} />
-      <Route path="/events" element={<Events />} />
+      <Route path="/event-management" element={<Events />} />
       <Route path="/decorations/service/:slug" element={<DecorationsDetailsPage />} />
+       <Route path="/gifts/e-commerce/:slug" element={<GiftsDetailsPage />} />
       
-      <Route path="/cart" element={<Cart />} />
+      <Route path="/cart" element={
+          isAuthenticated ? <Cart /> : <Navigate to="/login" />
+        } />
       <Route path="/help" element={<HelpCentre />} />
       <Route path="/login" element={<LoginPage></LoginPage>} />
       <Route path="/register" element={<RegisterPage></RegisterPage>} />
       <Route path="/profile" element={<Profile></Profile>} />
+
+      <Route path="/event-management/service/:slug" element={<EventManagementDetailsPage />} />
 
 
       {/* Protected Routes */}

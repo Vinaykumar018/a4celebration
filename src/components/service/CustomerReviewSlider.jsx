@@ -79,19 +79,19 @@ const renderStars = (rating) => {
 const CustomerReviewSlider = () => {
   return (
     <section className="px-2 py-6 bg-gray-100 mt-8 bg-pink-50">
-    <h2
-  className="text-center text-4xl sm:text-5xl font-bold tracking-wide mb-8 text-pink-600"
-  style={{ fontFamily: "'Bebas Neue', sans-serif" }}
->
-  Customer Reviews
-</h2>
+      <h2
+        className="text-center text-4xl sm:text-5xl font-bold tracking-wide mb-8 text-pink-600"
+        style={{ fontFamily: "'Bebas Neue', sans-serif" }}
+      >
+        Customer Reviews
+      </h2>
 
 
       <Swiper
         modules={[Autoplay, Pagination]}
         autoplay={{ delay: 3000 }}
         spaceBetween={10}
-        
+
         breakpoints={{
           320: { slidesPerView: 1 },
           640: { slidesPerView: 2 },

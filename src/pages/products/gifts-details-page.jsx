@@ -40,7 +40,7 @@ const styles = `
   }
 `;
 
-const DecorationsDetailsPage = () => {
+const GiftsDetailsPage = () => {
   const navigate = useNavigate()
   const location = useLocation();
   const { serviceData, sectionData } = location.state;
@@ -348,4 +348,4 @@ const DecorationsDetailsPage = () => {
   );
 };
 
-export default DecorationsDetailsPage;
+export default GiftsDetailsPage;

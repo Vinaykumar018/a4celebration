@@ -1,466 +1,534 @@
-import { ArrowLeft, Gift, NotebookIcon as Lotus, Info, Calendar, Clock, MapPin, Sparkles, PartyPopper, Heart,Navigation,Home, Flag } from "lucide-react";
-import React from "react";
+import { ArrowLeft, Gift, NotebookIcon as Lotus, Info, Calendar, Clock, MapPin, Sparkles, PartyPopper, Heart, Navigation, Home, Flag } from "lucide-react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { User,Phone,Mail } from "lucide-react";
-import RazorPayIcon from '../../assets/payment/razorpay-icon (1).svg'
-import Upi from '../../assets/payment/upi.svg'
-import Cod from '../../assets/payment/reshot-icon-cash-on-delivery-5UB8T6KGXR.svg'
-import axios from "axios";
-import {  useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import { User, Phone, Mail } from "lucide-react";
+import RazorPayIcon from '../../assets/payment/razorpay-icon (1).svg';
+import Upi from '../../assets/payment/upi.svg';
+import Cod from '../../assets/payment/reshot-icon-cash-on-delivery-5UB8T6KGXR.svg';
 import { useCart } from '../../hooks/cartHook';
 import { placeOrder } from "../../services/decoration-orders/order-api";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+
 export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) => {
-  
-
-
-   
-
     const [isOpen2, setIsOpen2] = useState(false);
     const [isOpen1, setIsOpen1] = useState(false);
-    const { cart, clearCart} = useCart(); // This will store
-    console.log(cart) 
-const navigate=useNavigate()
+    const { cart, clearCart } = useCart();
+    const navigate = useNavigate();
 
-  // Extracting the first item from cartItems for display
-  const cartItem = cartItems[0] || {};
+    // State for input fields
+    const [username, setUsername] = useState(userData?.username || '');
+    const [contactNumber, setContactNumber] = useState(userData?.mobile || '');
+    const [email, setEmail] = useState(userData?.email || '');
+    const [aptSuite, setAptSuite] = useState(userData?.address || '');
+    const [streetAddress, setStreetAddress] = useState(userData?.address || '');
+    const [city, setCity] = useState(userData?.city || '');
+    const [zipCode, setZipCode] = useState(userData?.pincode || '');
+    const [country, setCountry] = useState(userData?.country || '');
+    const [specialNote, setSpecialNote] = useState('');
+    const [paymentMethod, setPaymentMethod] = useState("COD");
+
 
 
     const transformToOrderSchema = () => {
-    // Calculate total amount
-    const totalAmount = cartItems.reduce(
-      (sum, item) => sum + (item.price * item.quantity),
-      0
-    );
+        const totalAmount = cartItems.reduce(
+            (sum, item) => sum + (item.price * item.quantity),
+            0
+        );
 
-    // Prepare the order object
-    const orderData = {
-      userDetails: {
-        userId: userData._id,
-        username: userData.username,
-        contactNumber: userData.mobile,
-        email: userData.email
-      },
-      addressDetails: {
-        home_address: userData.address.split(',')[1]?.trim() || userData.address,
-        street_address: userData.address.split(',')[0]?.trim() || userData.address,
-        city_address: userData.city,
-        pincode: userData.pincode
-      },
-      productDetails: cartItems.map(item => ({
-        productId: item.product_id,
-        productName: item.name,
-        amount: item.price,
-        quantity: item.quantity
-      })),
-      paymentDetails: {
-        totalAmount: totalAmount,
-        transactionId: null,
-        transactionStatus: 'pending',
-        transactionDate: null,
-        paymentMethodType: "COD",
-      },
-      orderDetails: {
-        order_status: 'processing',
-        order_requested_date: new Date().toISOString().split('T')[0],
-        order_requested_time: new Date().toTimeString().split(' ')[0],
-        products: cartItems.map(item => ({
-          productId: item.product_id,
-          quantity: item.quantity
-        })),
-        lastUpdated: new Date()
-      },
-      deliveryNotes: `Service requested for ${cartItem.service_date} between ${cartItem.service_time}`,
-      discountApplied: 0,
-      shippingMethod: 'Standard Delivery'
+        const orderData = {
+            userDetails: {
+                userId: userData._id,
+                username: username,
+                contactNumber: contactNumber,
+                email: email
+            },
+            addressDetails: {
+                home_address: aptSuite,
+                street_address: streetAddress,
+                city_address: city,
+                pincode: zipCode
+            },
+            productDetails: cartItems.map(item => ({
+                productId: item.product_id,
+                productName: item.name,
+                amount: item.price,
+                quantity: item.quantity
+            })),
+            paymentDetails: {
+                totalAmount: totalAmount,
+                transactionId: null,
+                transactionStatus: 'pending',
+                transactionDate: null,
+                paymentMethodType: paymentMethod,
+            },
+            orderDetails: {
+                order_status: 'processing',
+                order_requested_date: new Date().toISOString().split('T')[0],
+                order_requested_time: new Date().toTimeString().split(' ')[0],
+                products: cartItems.map(item => ({
+                    productId: item.product_id,
+                    quantity: item.quantity
+                })),
+                lastUpdated: new Date()
+            },
+            deliveryNotes: `Service requested for ${cartItems[0]?.service_date} between ${cartItems[0]?.service_time}`,
+            discountApplied: 0,
+            shippingMethod: 'Standard Delivery'
+        };
+
+        return orderData;
     };
 
-    return orderData;
-  };
+    const handlePlaceOrder = async (event) => {
+        event.preventDefault();
+        const orderData = transformToOrderSchema();
+
+        try {
+            if (paymentMethod === "razorpay") {
+                // Create order on backend first
+                const response = await placeOrder(orderData);
+
+
+                const { order, razorpayOrderId } = response.data;
+
+
+
+                // Initialize Razorpay payment
+                const options = {
+                    key: import.meta.env.VITE_RAZORPAY_KEY,
+                    amount: orderData.paymentDetails.totalAmount * 100,
+                    currency: "INR",
+                    name: "A4 CELEBRATION",
+                    description: "Order Payment",
+                    order_id: razorpayOrderId,
+                    handler: async function (response) {
+                        try {
+                            const verificationResponse = await axios.post(
+                                `${import.meta.env.VITE_API_URL}orders/verify-payment`,
+                                {
+                                    order_id: order.order_id,
+                                    razorpayOrderId: razorpayOrderId,
+                                    payment_id: response.razorpay_payment_id,
+                                    signature: response.razorpay_signature
+                                },
+                                {
+                                    headers: {
+                                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZpbmF5IiwiaWF0IjoxNzQ0OTY2MzI0fQ.bHVez4j2ksigzKlm7G3G7OlzrlkgAIwN6cPZySRvdCI'
+                                    }
+                                }
+                            );
+
+
+
+                            if (verificationResponse.data.status === 'success') {
+                                toast.success("Payment Successful");
+                                // Add a small delay before navigation
+                                setTimeout(() => {
+                                    clearCart(userData._id);
+                                    navigate(`/order/${order.order_id}`);
+                                }, 2000);
+                            }
+                        } catch (error) {
+                            toast.error("Payment failed");
+                            console.error('Payment verification failed:', error);
+                            alert(error.response?.data?.message || 'Payment verification failed. Please contact support.');
+                        }
+                    },
+                    prefill: { name: username, email, contact: contactNumber },
+                    theme: { color: "#F37254" },
+                    modal: {
+                        ondismiss: function () {
+                            alert('Payment window closed. Your order is not confirmed.');
+                        }
+                    }
+                };
+
+                const razorpay = new window.Razorpay(options);
+                razorpay.open();
+            } else {
+
+                const response = await placeOrder(orderData);
+
+                clearCart(userData._id);
+                navigate(`/order/${response.data.order.order_id}`);
+            }
+        } catch (error) {
+            console.error('Order failed:', error);
+            alert('Order placement failed. Please try again.');
+        }
+    };
 
 
 
 
- const handlePlaceOrder = async (event) => {
-  event.preventDefault();
+    return (
+        < form className="space-y-6" onSubmit={handlePlaceOrder}>
+            <ToastContainer />
+            {/* Customer Details */}
+            <div className="border-2 border-rose-200 rounded-xl shadow-lg bg-white overflow-hidden">
+                <div
+                    className="bg-gradient-to-r from-rose-100 to-pink-100 border-b border-rose-200 p-4 cursor-pointer"
+                    onClick={() => setIsOpen1(!isOpen1)}
+                >
+                    <h2 className="text-rose-800 flex items-center justify-between gap-2 font-playfair text-lg">
+                        <span className="flex items-center gap-2">
+                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white text-sm">
+                                1
+                            </span>
+                            Your Celebration Details ✨
+                        </span>
+                        {isOpen1 ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                    </h2>
+                </div>
 
-  const orderData = transformToOrderSchema();
-  console.log("orderdata", orderData);
+                {/* Summary view when closed */}
+                {!isOpen1 && (
+                    <div className="p-4 bg-rose-10">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-rose-800">
+                            <div className="flex items-center gap-2">
+                                <User className="h-4 w-4 text-rose-600" />
+                                <span className="font-medium">Name:</span>
+                                <span>{username || 'Not provided'}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Phone className="h-4 w-4 text-rose-600" />
+                                <span className="font-medium">Phone:</span>
+                                <span>{contactNumber || 'Not provided'}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <Mail className="h-4 w-4 text-rose-600" />
+                                <span className="font-medium">Email:</span>
+                                <span>{email || 'Not provided'}</span>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
-  try {
-    const data = await placeOrder(orderData);
-    clearCart(userData._id);
-    navigate("/order/" + data.data.order_id);
-  } catch (error) {
-    if (error.response) {
-      console.error('Order failed:', error.response.data.message);
-    } else {
-      console.error('Network error:', error.message);
-    }
-  }
-};
+                {isOpen1 && (
+                    <div className="p-6 space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label htmlFor="username" className="text-rose-800 font-medium">
+                                    Full Name <span className="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    id="username"
+                                    name="username"
+                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    required
+                                    placeholder="Your beautiful name"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label htmlFor="contactNumber" className="text-rose-800 font-medium">
+                                    Phone <span className="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    id="contactNumber"
+                                    name="contactNumber"
+                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    required
+                                    placeholder="Where we can reach you"
+                                    value={contactNumber}
+                                    onChange={(e) => setContactNumber(e.target.value)}
+                                />
+                            </div>
+                        </div>
 
-  
-
-
-  return (
-    <form className="space-y-6" onSubmit={handlePlaceOrder}>
-      {/* Customer Details */}
-      <div className="border-2 border-rose-200 rounded-xl shadow-lg bg-white overflow-hidden">
-         <div 
-        className="bg-gradient-to-r from-rose-100 to-pink-100 border-b border-rose-200 p-4 cursor-pointer"
-        onClick={() => setIsOpen1(!isOpen1)}
-      >
-        <h2 className="text-rose-800 flex items-center justify-between gap-2 font-playfair text-lg">
-          <span className="flex items-center gap-2">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white text-sm">
-              1
-            </span>
-            Your Celebration Details ✨
-          </span>
-          {isOpen1 ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-        </h2>
-      </div>
-
-
-
-      {/* Summary view when closed */}
-      {!isOpen1 && (
-        <div className="p-4 bg-rose-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-rose-800">
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4 text-rose-600" />
-              <span className="font-medium">Name:</span>
-              <span>{userData?.username || 'Not provided'}</span>
+                        <div className="space-y-2">
+                            <label htmlFor="email" className="text-rose-800 font-medium">
+                                Email Address <span className="text-rose-500">*</span>
+                            </label>
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                required
+                                placeholder="For booking confirmation 💌"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                )}
             </div>
-            <div className="flex items-center gap-2">
-              <Phone className="h-4 w-4 text-rose-600" />
-              <span className="font-medium">Phone:</span>
-              <span>{userData?.mobile || 'Not provided'}</span>
+
+            {/* Shipping Address */}
+            <div className="border-2 border-rose-200 rounded-xl shadow-lg bg-white overflow-hidden">
+                <div
+                    className="bg-gradient-to-r from-rose-100 to-pink-100 border-b border-rose-200 p-4 cursor-pointer"
+                    onClick={() => setIsOpen2(!isOpen2)}
+                >
+                    <h2 className="text-rose-800 flex items-center justify-between gap-2 font-playfair text-lg">
+                        <span className="flex items-center gap-2">
+                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white text-sm">
+                                2
+                            </span>
+                            Celebration Venue 🏡
+                        </span>
+                        {isOpen2 ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                    </h2>
+                </div>
+
+                {!isOpen2 && (
+                    <div className="p-4 bg-rose-10">
+                        <div className="space-y-3 text-sm text-rose-800">
+                            <div className="flex items-start gap-2">
+                                <Home className="h-4 w-4 mt-0.5 text-rose-600 flex-shrink-0" />
+                                <div>
+                                    <p className="font-medium">Address</p>
+                                    <p className="text-rose-700">
+                                        {aptSuite || 'Not provided'}
+                                        {city && `, ${city}`}
+                                        {zipCode && `, ${zipCode}`}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {country && (
+                                <div className="flex items-center gap-2">
+                                    <Flag className="h-4 w-4 text-rose-600" />
+                                    <span className="font-medium">Country:</span>
+                                    <span>{country}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {isOpen2 && (
+                    <div className="p-6 space-y-4">
+                        <div className="flex items-center gap-2 mb-4">
+                            <MapPin className="h-5 w-5 text-rose-600" />
+                            <p className="text-sm text-rose-800">Where should we bring the celebration magic?</p>
+                        </div>
+
+                        <div className="space-y-2">
+                            <label htmlFor="aptSuite" className="text-rose-800 font-medium">
+                                Apt/Suite/Building <span className="text-rose-500">*</span>
+                            </label>
+                            <input
+                                id="aptSuite"
+                                name="aptSuite"
+                                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                required
+                                placeholder="Your celebration spot"
+                                value={aptSuite}
+                                onChange={(e) => setAptSuite(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="space-y-2">
+                            <label htmlFor="streetAddress" className="text-rose-800 font-medium">
+                                Street Address <span className="text-rose-500">*</span>
+                            </label>
+                            <input
+                                id="streetAddress"
+                                name="streetAddress"
+                                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                required
+                                placeholder="Where the party's at!"
+                                value={streetAddress}
+                                onChange={(e) => setStreetAddress(e.target.value)}
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label htmlFor="city" className="text-rose-800 font-medium">
+                                    City/Town <span className="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    id="city"
+                                    name="city"
+                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    required
+                                    placeholder="Your city of joy"
+                                    value={city}
+                                    onChange={(e) => setCity(e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label htmlFor="zipCode" className="text-rose-800 font-medium">
+                                    Zip/Postal Code <span className="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    id="zipCode"
+                                    name="zipCode"
+                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    required
+                                    placeholder="Postal code"
+                                    value={zipCode}
+                                    onChange={(e) => setZipCode(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                                <label htmlFor="country" className="text-rose-800 font-medium">
+                                    Country <span className="text-rose-500">*</span>
+                                </label>
+                                <input
+                                    id="country"
+                                    name="country"
+                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    required
+                                    placeholder="Your country"
+                                    value={country}
+                                    onChange={(e) => setCountry(e.target.value)}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
-            <div className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-rose-600" />
-              <span className="font-medium">Email:</span>
-              <span>{userData?.email || 'Not provided'}</span>
+
+            {/* Special Notes */}
+            <div className="border-2 border-rose-200 rounded-xl shadow-lg bg-white overflow-hidden">
+                <div className="bg-gradient-to-r from-rose-100 to-pink-100 border-b border-rose-200 p-4">
+                    <h2 className="text-rose-800 flex items-center gap-2 font-playfair text-lg">
+                        <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white text-sm">
+                            3
+                        </span>
+                        Special Celebration Wishes 💫
+                    </h2>
+                </div>
+                <div className="p-6">
+                    <div className="space-y-2">
+                        <textarea
+                            id="specialNote"
+                            name="specialNote"
+                            className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all min-h-[120px]"
+                            placeholder="Tell us about your celebration dreams, special rituals, or anything we should know to make it perfect..."
+                            value={specialNote}
+                            onChange={(e) => setSpecialNote(e.target.value)}
+                        />
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      )}
-      
-      {isOpen1 && (
-        <div className="p-6 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label htmlFor="username" className="text-rose-800 font-medium">
-                Full Name <span className="text-rose-500">*</span>
-              </label>
-              <input
-                id="username"
-                name="username"
-                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
-                required
-                placeholder="Your beautiful name"
-                defaultValue={userData?.username} // Populate with userData
-              />
+
+            {/* Payment Method Selection */}
+            <div className="mb-6">
+                <div className="p-6 space-y-4 bg-white border-2 border-rose-200 rounded-xl shadow-sm">
+                    <h3 className="text-lg font-semibold text-gray-800">Select Payment Method</h3>
+
+                    {/* Razorpay Option */}
+                    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-rose-300 transition-colors">
+                        <input
+                            type="radio"
+                            id="razorpay"
+                            name="payment"
+                            value="razorpay"
+                            checked={paymentMethod === "razorpay"}
+                            onChange={() => setPaymentMethod("razorpay")}
+                            className="text-rose-600 border-2 border-rose-300 focus:ring-rose-200"
+                        />
+                        <label htmlFor="razorpay" className="flex items-center space-x-3 cursor-pointer w-full">
+                            <div className="bg-blue-50 p-2 rounded-lg">
+                                <img src={RazorPayIcon} alt="Razorpay" style={{ width: '100px' }} className="w-8 h-8" />
+                            </div>
+                            <div>
+                                <p className="font-medium text-gray-800">Razorpay</p>
+                                <p className="text-sm text-gray-500">Credit/Debit Cards, UPI, Netbanking</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    {/* UPI Option */}
+                    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-rose-300 transition-colors">
+                        <input
+                            type="radio"
+                            id="upi"
+                            name="payment"
+                            value="upi"
+                            checked={paymentMethod === "upi"}
+                            onChange={() => setPaymentMethod("upi")}
+                            className="text-rose-600 border-2 border-rose-300 focus:ring-rose-200"
+                        />
+                        <label htmlFor="upi" className="flex items-center space-x-3 cursor-pointer w-full">
+                            <div className="bg-purple-50 p-2 rounded-lg">
+                                <img src={Upi} style={{ width: '100px' }} className="w-8 h-8" />
+                            </div>
+                            <div>
+                                <p className="font-medium text-gray-800">UPI</p>
+                                <p className="text-sm text-gray-500"> Google Pay, PhonePe, Paytm, BHIM</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    {/* Cash on Delivery Option */}
+                    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-rose-300 transition-colors">
+                        <input
+                            type="radio"
+                            id="cod"
+                            name="payment"
+                            value="cod"
+                            checked={paymentMethod === "cod"}
+                            onChange={() => setPaymentMethod("cod")}
+                            className="text-rose-600 border-2 border-rose-300 focus:ring-rose-200"
+                        />
+                        <label htmlFor="cod" className="flex items-center space-x-3 cursor-pointer w-full">
+                            <div className="bg-green-50 p-2 rounded-lg">
+                                <img src={Cod} style={{ width: '100px' }} className="w-8 h-8" />
+                            </div>
+                            <div>
+                                <p className="font-medium text-gray-800">Cash on Delivery</p>
+                                <p className="text-sm text-gray-500">Pay when you receive your order</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    {/* Terms and Conditions */}
+                    <div className="mb-6">
+                        <div className="p-6 space-y-4 bg-white border-rose-200 rounded-xl shadow-sm">
+                            <div className="flex items-start space-x-2">
+                                <input
+                                    type="checkbox"
+                                    id="terms"
+                                    className="text-rose-600 border-2 border-rose-300 rounded mt-1 focus:ring-rose-200"
+                                    required
+                                />
+                                <label htmlFor="terms" className="text-sm cursor-pointer">
+                                    I agree to the{" "}
+                                    <Link to="#" className="text-rose-600 hover:underline font-medium">
+                                        terms and conditions
+                                    </Link>{" "}
+                                    of this celebration booking
+                                </label>
+                            </div>
+
+                            <div className="flex items-start space-x-2">
+                                <input
+                                    type="checkbox"
+                                    id="offers"
+                                    className="text-rose-600 border-2 border-rose-300 rounded mt-1 focus:ring-rose-200"
+                                />
+                                <label htmlFor="offers" className="text-sm cursor-pointer">
+                                    Yes! I want to receive exclusive celebration offers and updates 💌
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div className="space-y-2">
-              <label htmlFor="contactNumber" className="text-rose-800 font-medium">
-                Phone <span className="text-rose-500">*</span>
-              </label>
-              <input
-                id="contactNumber"
-                name="contactNumber"
-                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
-                required
-                placeholder="Where we can reach you"
-                defaultValue={userData?.mobile} // Populate with userData
-              />
-            </div>
-          </div>
 
-          <div className="space-y-2">
-            <label htmlFor="email" className="text-rose-800 font-medium">
-              Email Address <span className="text-rose-500">*</span>
-            </label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
-              required
-              placeholder="For booking confirmation 💌"
-              defaultValue={userData?.email} // Populate with userData
-            />
-          </div>
-        </div>)}
-      </div>
-
-      {/* Shipping Address */}
-      <div className="border-2 border-rose-200 rounded-xl shadow-lg bg-white overflow-hidden">
-       
-         <div 
-        className="bg-gradient-to-r from-rose-100 to-pink-100 border-b border-rose-200 p-4 cursor-pointer"
-        onClick={() => setIsOpen2(!isOpen2)}
-      >
-        <h2 className="text-rose-800 flex items-center justify-between gap-2 font-playfair text-lg">
-          <span className="flex items-center gap-2">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white text-sm">
-              2
-            </span>
-             Celebration Venue 🏡
-          </span>
-          {isOpen2 ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-        </h2>
-      </div>
-
-
- {!isOpen2 && (
-        <div className="p-4 bg-rose-10">
-          <div className="space-y-3 text-sm text-rose-800">
-            <div className="flex items-start gap-2">
-              <Home className="h-4 w-4 mt-0.5 text-rose-600 flex-shrink-0" />
-              <div>
-                <p className="font-medium">Address</p>
-                <p className="text-rose-700">
-                  {userData?.address || 'Not provided'}
-                  {userData?.city && `, ${userData.city}`}
-                  {userData?.pincode && `, ${userData.pincode}`}
-                </p>
-              </div>
-            </div>
-            
-            {userData?.country && (
-              <div className="flex items-center gap-2">
-                <Flag className="h-4 w-4 text-rose-600" />
-                <span className="font-medium">Country:</span>
-                <span>{userData.country}</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {isOpen2 && (
-        <div className="p-6 space-y-4">
-          <div className="flex items-center gap-2 mb-4">
-            <MapPin className="h-5 w-5 text-rose-600" />
-            <p className="text-sm text-rose-800">Where should we bring the celebration magic?</p>
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="aptSuite" className="text-rose-800 font-medium">
-              Apt/Suite/Building <span className="text-rose-500">*</span>
-            </label>
-            <input
-              id="aptSuite"
-              name="aptSuite"
-              className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
-              required
-              placeholder="Your celebration spot"
-              defaultValue={userData?.address} // Populate with userData
-            />
-          </div>
-
-          <div className="space-y-2">
-            <label htmlFor="streetAddress" className="text-rose-800 font-medium">
-              Street Address <span className="text-rose-500">*</span>
-            </label>
-            <input
-              id="streetAddress"
-              name="streetAddress"
-              className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
-              required
-              placeholder="Where the party's at!"
-              defaultValue={userData?.address} // Populate with userData
-            />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label htmlFor="city" className="text-rose-800 font-medium">
-                City/Town <span className="text-rose-500">*</span>
-              </label>
-              <input
-                id="city"
-                name="city"
-                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
-                required
-                placeholder="Your city of joy"
-                defaultValue={userData?.city} // Populate with userData
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="zipCode" className="text-rose-800 font-medium">
-                Zip/Postal Code <span className="text-rose-500">*</span>
-              </label>
-              <input
-                id="zipCode"
-                name="zipCode"
-                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
-                required
-                placeholder="Postal code"
-                defaultValue={userData?.pincode} // Populate with userData
-              />
-            </div>
-          
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
-            <div className="space-y-2">
-              <label htmlFor="country" className="text-rose-800 font-medium">
-                Country <span className="text-rose-500">*</span>
-              </label>
-              <input
-                id="country"
-                name="country"
-                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
-                required
-                placeholder="Your country"
-                defaultValue={userData?.country} // Populate with userData
-              />
-            </div>
-          </div>
-        </div>
-      )}
-      </div>
-
-      {/* Special Notes */}
-      <div className="border-2 border-rose-200 rounded-xl shadow-lg bg-white overflow-hidden">
-        <div className="bg-gradient-to-r from-rose-100 to-pink-100 border-b border-rose-200 p-4">
-          <h2 className="text-rose-800 flex items-center gap-2 font-playfair text-lg">
-            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white text-sm">
-              3
-            </span>
-            Special Celebration Wishes 💫
-          </h2>
-        </div>
-        <div className="p-6">
-          <div className="space-y-2">
-            <textarea
-              id="specialNote"
-              name=" specialNote"
-              className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all min-h-[120px]"
-              placeholder="Tell us about your celebration dreams, special rituals, or anything we should know to make it perfect..."
-            />
-          </div>
-        </div>
-      </div>
-
-     
-
-      {/* Submit Button */}
-
-
-     <div className="mb-6">
-  <div className="p-6 space-y-4 bg-white border-2 border-rose-200 rounded-xl shadow-sm">
-    <h3 className="text-lg font-semibold text-gray-800">Select Payment Method</h3>
-    
-    {/* Razorpay Option */}
-    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-rose-300 transition-colors">
-      <input
-        type="radio"
-        id="razorpay"
-        name="payment"
-        value="razorpay"
-        className="text-rose-600 border-2 border-rose-300 focus:ring-rose-200"
-      />
-      <label htmlFor="razorpay" className="flex items-center space-x-3 cursor-pointer w-full">
-        <div className="bg-blue-50 p-2 rounded-lg">
-         <img src={RazorPayIcon} alt="Razorpay" style={{ width: '100px' }} className="w-8 h-8"/>
-        </div>
-        <div>
-          <p className="font-medium text-gray-800">Razorpay</p>
-          <p className="text-sm text-gray-500">Credit/Debit Cards, UPI, Netbanking</p>
-        </div>
-      </label>
-    </div>
-    
-    {/* UPI Option */}
-    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-rose-300 transition-colors">
-      <input
-        type="radio"
-        id="upi"
-        name="payment"
-        value="upi"
-        className="text-rose-600 border-2 border-rose-300 focus:ring-rose-200"
-      />
-      <label htmlFor="upi" className="flex items-center space-x-3 cursor-pointer w-full">
-        <div className="bg-purple-50 p-2 rounded-lg">
-         <img src={Upi} style={{ width: '100px' }} className="w-8 h-8"></img>
-        </div>
-        <div>
-          <p className="font-medium text-gray-800">UPI</p>
-          <p className="text-sm text-gray-500">Google Pay, PhonePe, Paytm, BHIM</p>
-        </div>
-      </label>
-    </div>
-    
-    {/* Cash on Delivery Option */}
-    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-rose-300 transition-colors">
-      <input
-        type="radio"
-        id="cod"
-        name="payment"
-        value="cod"
-        className="text-rose-600 border-2 border-rose-300 focus:ring-rose-200"
-      />
-      <label htmlFor="cod" className="flex items-center space-x-3 cursor-pointer w-full">
-        <div className="bg-green-50 p-2 rounded-lg">
-            <img src={Cod} style={{ width: '100px' }} className="w-8 h-8"></img>
-        </div>
-        <div>
-          <p className="font-medium text-gray-800">Cash on Delivery</p>
-          <p className="text-sm text-gray-500">Pay when you receive your order</p>
-        </div>
-      </label>
-    </div>
-    {/* Terms and Conditions */}
-      <div className="mb-6">
-        <div className="p-6 space-y-4 bg-white  border-rose-200 rounded-xl shadow-sm">
-          <div className="flex items-start space-x-2">
-            <input
-              type="checkbox"
-              id="terms"
-              className="text-rose-600 border-2 border-rose-300 rounded mt-1 focus:ring-rose-200"
-              required
-            />
-            <label htmlFor="terms" className="text-sm cursor-pointer">
-              I agree to the{" "}
-              <Link to="#" className="text-rose-600 hover:underline font-medium">
-                terms and conditions
-              </Link>{" "}
-              of this celebration booking
-            </label>
-          </div>
-
-          <div className="flex items-start space-x-2">
-            <input
-              type="checkbox"
-              id="offers"
-              className="text-rose-600 border-2 border-rose-300 rounded mt-1 focus:ring-rose-200"
-            />
-            <label htmlFor="offers" className="text-sm cursor-pointer">
-              Yes! I want to receive exclusive celebration offers and updates 💌
-            </label>
-          </div>
-        </div>
-      </div>
-  </div>
-   
-</div>
-
-{/* Submit Button */}
-<button
-  type="submit"
-  className="w-full py-4 text-lg rounded-xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2"
->
-  <Sparkles className="h-5 w-5"  />
-  Complete Your Celebration Booking
-  <Sparkles className="h-5 w-5" />
-</button>
-    </form>
-  );
+            {/* Submit Button */}
+            <button
+                type="submit"
+                className="w-full py-4 text-lg rounded-xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2"
+            >
+                <Sparkles className="h-5 w-5" />
+                Complete Your Celebration Booking
+                <Sparkles className="h-5 w-5" />
+            </button>
+        </form>
+    );
 };

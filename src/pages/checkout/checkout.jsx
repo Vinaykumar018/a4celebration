@@ -5,6 +5,7 @@ import { UserOrderDetails } from "./UserOrderDetails";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import useUserCartData from "../../hooks/useUserCartData";
+import { fetchUserData } from "../../redux/userSlice";
 
 
 
@@ -40,7 +41,20 @@ const styles = `
 
 export default function CheckoutPage() {
 
+
+
+  const dispatch = useDispatch();
   const userData = useSelector((state) => state.user.userData?.data);
+  useEffect(() => {
+
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userId = localStorage.getItem('userId');
+    if (isLoggedIn && userId) {
+      dispatch(fetchUserData(userId));
+    }
+  }, [dispatch, userData]);
+
+  console.log(userData)
   const { cartItems, isLoading } = useUserCartData();
   const currencySymbol = "₹";
 

@@ -1,16 +1,20 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { useDispatch, useSelector } from "react-redux";
 import { updateUser } from "../../services/auth/auth";
 import { logout } from "../../redux/userSlice";
 
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { fetchUserData } from "../../redux/userSlice";
 Modal.setAppElement('#root')
 
 
 
-const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
-  console.log(userData, "from the edit profile modal")
+const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
+
+
   const [formData, setFormData] = useState({
     username: userData?.username,
     email: userData?.email,
@@ -39,7 +43,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const multipartFormData = new FormData();
@@ -49,9 +53,34 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
       }
     }
 
-    updateUser(multipartFormData, userData._id);
-    onRequestClose();
+    try {
+      const response = await updateUser(multipartFormData, userData._id);
+
+
+      toast.success("Profile updated successfully!", {
+        position: "top-right",
+        autoClose: 2000,
+
+      });
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      // Close modal after 1 second to let user see the success message
+      setTimeout(() => {
+        onRequestClose();
+      }, 2000);
+
+    } catch (error) {
+      toast.error("Failed to update profile. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+
+      });
+      console.error('Profile update error:', error);
+    }
   };
+
 
 
   return (
@@ -90,6 +119,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
       }}
       closeTimeoutMS={200}
     >
+      <ToastContainer />
       <div className="relative">
         <button
           onClick={onRequestClose}
@@ -174,31 +204,70 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData }) => {
 
 // Then define the Profile component
 const Profile = () => {
-  const { userData } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const { userData, loading, error } = useSelector((state) => state.user);
   const user = userData?.data;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const dispatch = useDispatch();
-  console.log(isEditModalOpen)
-  const breadcrumbLinks = [
-    { label: 'Home', url: '/' },
-    { label: 'User', url: 'javascript:void(0)' },
-    { label: 'My Account', url: 'javascript:void(0)' },
-    { pagename: 'My Account' },
-  ];
+  // Fetch user data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      const userId = localStorage.getItem('userId');
+      if (userId) {
+        try {
+          await dispatch(fetchUserData(userId));
+        } catch (err) {
+          toast.error("Failed to load user data");
+        }
+      }
+    };
+    fetchData();
+  }, [dispatch]);
+
 
   const navigate = useNavigate();
 
   function handleLogout() {
-    console.log("logout")
-    localStorage.clear()
-    dispatch(logout());
-    navigate('/login');
+    toast.error("Logging out...", {
+      position: "top-right",
+      autoClose: 1000,
 
+    });
+
+    setTimeout(() => {
+      localStorage.clear();
+      dispatch(logout());
+      navigate('/login');
+    }, 1500);
   }
+
+
+
+  // Refresh function that can be passed to EditProfileModal
+  const refreshUserData = async (updatedData = null) => {
+    try {
+      const userId = localStorage.getItem('userId');
+      if (updatedData) {
+        // Update store with the freshly updated data
+        dispatch({
+          type: 'user/updateUserData',
+          payload: updatedData
+        });
+      } else if (userId) {
+        // Fallback to full refresh if no updatedData provided
+        await dispatch(fetchUserData(userId));
+      }
+    } catch (error) {
+      toast.error("Failed to refresh data");
+      console.error('Refresh error:', error);
+    }
+  };
+
+
 
   return (
     <section>
+      <ToastContainer />
       <div className="mx-auto mt-5 w-full space-y-4 px-4 text-sm xl:max-w-7xl my-2 ">
         <div>
           <h1 className="text-xl font-extrabold sm:text-3xl">My Account</h1>
@@ -353,6 +422,8 @@ const Profile = () => {
         isOpen={isEditModalOpen}
         onRequestClose={() => setIsEditModalOpen(false)}
         userData={user}
+        onSuccess={refreshUserData}
+
       />
 
     </section>

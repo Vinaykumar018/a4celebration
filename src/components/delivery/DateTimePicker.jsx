@@ -1,12 +1,12 @@
-import React, { useState, useEffect ,useRef} from 'react';
-import { 
-  format, 
-  parse, 
-  addHours, 
-  isToday, 
-  isAfter, 
-  isBefore, 
-  setHours, 
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  format,
+  parse,
+  addHours,
+  isToday,
+  isAfter,
+  isBefore,
+  setHours,
   setMinutes,
   startOfDay,
   isSameDay
@@ -67,7 +67,7 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
     // Generate 3-hour slots
     while (isBefore(currentSlotStart, dayEnd)) {
       const slotEnd = addHours(currentSlotStart, 3);
-      
+
       // Don't create slots that would go past closing time
       if (isAfter(slotEnd, dayEnd)) {
         break;
@@ -114,7 +114,7 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
           </svg>
           Select Date (IST)
         </label>
-        
+
         <div className="relative">
           <input
             type="date"
@@ -125,11 +125,10 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
             onClick={handleInputClick}
             min={format(new Date(), 'yyyy-MM-dd')}
             disabled={PIN === false}
-            className={`px-4 py-1.5 border rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition shadow-sm w-full ${
-              PIN === false 
-                ? 'border-gray-200 bg-gray-50 cursor-not-allowed pr-8' 
-                : 'border-pink-200 hover:border-pink-300 cursor-pointer'
-            }`}
+            className={`px-4 py-1.5 border rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition shadow-sm w-full ${PIN === false
+              ? 'border-gray-200 bg-gray-50 cursor-not-allowed pr-8'
+              : 'border-pink-200 hover:border-pink-300 cursor-pointer'
+              }`}
           />
           {PIN === false && (
             <FaLock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-pink-500" />
@@ -147,13 +146,12 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
                 key={index}
                 onClick={() => handleSlotSelect(slot)}
                 disabled={PIN === false}
-                className={`p-3 border rounded-lg text-center transition ${
-                  selectedSlot && selectedSlot.start.getTime() === slot.start.getTime()
-                    ? 'bg-pink-500 text-white border-pink-500'
-                    : PIN === false
-                      ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
-                      : 'bg-white border-pink-200 hover:border-pink-300 hover:bg-pink-50'
-                }`}
+                className={`p-3 border rounded-lg text-center transition ${selectedSlot && selectedSlot.start.getTime() === slot.start.getTime()
+                  ? 'bg-pink-500 text-white border-pink-500'
+                  : PIN === false
+                    ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
+                    : 'bg-white border-pink-200 hover:border-pink-300 hover:bg-pink-50'
+                  }`}
               >
                 {slot.label}
               </button>
@@ -167,7 +165,7 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
             : "No available slots for the selected date."}
         </p>
       ) : null}
-      
+
       {selectedSlot && (
         <p className="text-green-600 text-sm mt-1">
           Selected: {format(selectedSlot.start, 'MMMM d, yyyy')} • {selectedSlot.label} ({timezone})

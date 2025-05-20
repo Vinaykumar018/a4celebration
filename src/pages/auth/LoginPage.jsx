@@ -64,7 +64,7 @@ const LoginPage = () => {
           <div className="absolute inset-0 bg-[url('/placeholder.svg?height=200&width=500')] bg-cover bg-center opacity-20"></div>
           <div className="relative py-6 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-pink-500/10 to-red-500/10">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.w3.org/2000/svg"
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -202,7 +202,7 @@ const LoginPage = () => {
               data-prefix="fab"
               data-icon="google"
               role="img"
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.w3.org/2000/svg"
               viewBox="0 0 488 512"
             >
               <path

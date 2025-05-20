@@ -35,8 +35,14 @@ const RegisterPage = () => {
         username: formData.username
       });
 
-      toast.success("Account Created Successfully!");
-      navigate("/login"); // Redirect to login page after successful registration
+      toast.success("Account Created Successfully!", {
+        autoClose:  1500  // Toast will auto-close after 2 seconds
+      });
+
+      // Wait for 2 seconds before navigating
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (error) {
       console.error("Registration error:", error);
       toast.error(error.response?.data?.message || "Registration failed. Please try again.");
@@ -52,7 +58,7 @@ const RegisterPage = () => {
         <div className="relative">
           <div className="py-6 bg-gradient-to-r from-pink-500/10 to-red-500/10 flex flex-col items-center space-y-2">
             <svg
-              xmlns="http://www.w3.org/2000/svg"
+              xmlns="https://www.w3.org/2000/svg"
               className="h-10 w-10 text-pink-600"
               fill="none"
               viewBox="0 0 24 24"

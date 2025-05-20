@@ -60,7 +60,7 @@ const CreateAccountModal = ({ open, onClose, onSuccess, onSwitchToLogin }) => {
             </button>
             <div className="py-6 bg-gradient-to-r from-pink-500/10 to-red-500/10 flex flex-col items-center space-y-2">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="https://www.w3.org/2000/svg"
                 className="h-10 w-10 text-pink-600"
                 fill="none"
                 viewBox="0 0 24 24"

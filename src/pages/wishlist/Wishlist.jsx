@@ -124,9 +124,8 @@ export default function WishlistPage() {
                   </td>
                   <td className="py-4 px-2">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs sm:text-sm ${
-                        item.inStock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                      }`}
+                      className={`px-2 py-1 rounded-full text-xs sm:text-sm ${item.inStock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                        }`}
                     >
                       {item.inStock ? "In Stock" : "Stock Out"}
                     </span>
@@ -175,7 +174,7 @@ export default function WishlistPage() {
                       )}
                       <span className="font-medium text-gray-800 text-sm">{item.name}</span>
                     </div>
-                    
+
                     <div className="mb-1">
                       {item.salePrice ? (
                         <div>
@@ -186,17 +185,16 @@ export default function WishlistPage() {
                         <span className="font-semibold text-gray-800 text-sm">${item.originalPrice}</span>
                       )}
                     </div>
-                    
+
                     <span
-                      className={`px-2 py-0.5 rounded-full text-xs ${
-                        item.inStock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                      }`}
+                      className={`px-2 py-0.5 rounded-full text-xs ${item.inStock ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                        }`}
                     >
                       {item.inStock ? "In Stock" : "Stock Out"}
                     </span>
                   </div>
                 </div>
-                
+
                 <div className="flex justify-end space-x-2 mt-2">
                   <button className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-1 px-2 rounded flex items-center text-xs">
                     <ShoppingCart className="w-3 h-3 mr-1" />

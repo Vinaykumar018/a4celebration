@@ -21,26 +21,27 @@ import CustomerReviewSlider from '../components/service/CustomerReviewSlider';
 const Home = () => {
   return (
     <>
-    <div className='bg-pink-50'>
-      <Slider></Slider>
-      <Service></Service>
-      <AvailableCities></AvailableCities>
-      <AboutDetails></AboutDetails>
-      <Banner1></Banner1>
-      <ProductSection1></ProductSection1>
-      <ProductSection2></ProductSection2>
-      <Banner2 ></Banner2>
-      <ProductSection3></ProductSection3>
-      <ProductSection4></ProductSection4>
-      <Banner3></Banner3>
-      <ProductSection5></ProductSection5>
-     <ProductSection6></ProductSection6>
-     <CustomerReviewSlider></CustomerReviewSlider>
-     <WhyChooseUs></WhyChooseUs>
-   
-     </div>
-      
-      
+      <div className='bg-pink-50'>
+        <Slider></Slider>
+        <Service></Service>
+        <AvailableCities></AvailableCities>
+        <AboutDetails></AboutDetails>
+        <Banner1></Banner1>
+        <ProductSection1></ProductSection1>
+        <ProductSection2></ProductSection2>
+        <Banner2 ></Banner2>
+        <ProductSection6></ProductSection6>
+        <ProductSection3></ProductSection3>
+        <ProductSection4></ProductSection4>
+        <Banner3></Banner3>
+        <ProductSection5></ProductSection5>
+
+        <CustomerReviewSlider></CustomerReviewSlider>
+        <WhyChooseUs></WhyChooseUs>
+
+      </div>
+
+
 
 
 

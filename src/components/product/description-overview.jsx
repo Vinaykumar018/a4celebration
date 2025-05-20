@@ -2,10 +2,10 @@
 import { FaArrowDown, FaBook, FaInfoCircle } from 'react-icons/fa';
 
 const DescriptionOverview = (descriptionPart) => {
-  console.log("my description part",descriptionPart)
+  console.log("my description part", descriptionPart)
 
-  
- 
+
+
   const productDetails = {
     long_description: `
       <p>Celebrate your special occasion with our beautifully designed celebration gifts and decorations! Our collection includes everything you need to make your event unforgettable. From elegant floral arrangements to vibrant balloons, we've got it all covered!</p>
@@ -62,12 +62,12 @@ const DescriptionOverview = (descriptionPart) => {
               <FaArrowDown className="text-pink-500" />
             </summary>
             <div className="pb-4 text-gray-700">
-              
+
               <div
-              
-        className="description text-xs"
-        dangerouslySetInnerHTML={{ __html: decodeHTML(descriptionPart.description) }}
-      />
+
+                className="description text-xs"
+                dangerouslySetInnerHTML={{ __html: decodeHTML(descriptionPart.description) }}
+              />
               <p className="mt-4 text-sm italic text-red-600">
                 <FaInfoCircle className="inline mr-2 text-yellow-600" />
                 Note: If you choose "Without Kit" option, you'll need to arrange the materials yourself.

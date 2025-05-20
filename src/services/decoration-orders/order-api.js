@@ -13,6 +13,7 @@ export const placeOrder = async (orderData) => {
         'Authorization': AUTH_TOKEN
       }
     });
+    console.log(response)
     return response.data;
   } catch (error) {
     throw error;

@@ -73,7 +73,7 @@ const ProductSection6 = () => {
 
 "
       ctaText="Book Now"
-      section="Event Organization"
+      section="Event M"
     sectionSlug="/event"
     />
   );

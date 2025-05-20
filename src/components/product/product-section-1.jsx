@@ -1,3 +1,4 @@
+
 import CardTypeA from "../cards/card-type-a";
 import img1 from '../../assets/decoration/1687938112_original.avif'
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,7 +20,7 @@ const ProductSection1 = () => {
   }, [dispatch]);
 
 
- console.log(products)
+ 
   return (
     <CardTypeA
       title="Decorations"
@@ -28,7 +29,7 @@ const ProductSection1 = () => {
       baseImageUrl={img1}
       themeColor="#f472b6"
       section="Decorations"
-      sectionSlug="/decorations"
+      sectionSlug="/decorations/service"
       ctaText="Book Now"
     />
   );

@@ -1,7 +1,18 @@
 import CardTypeA from "../cards/card-type-a";
 import img1 from '../../assets/gifts/1670584828_original.avif'
 
+import React, { useEffect } from 'react';
+import useGiftHook from  '../../hooks/useGiftHooks';
+
+
 const ProductSection2 = () => {
+
+   const { giftList, giftLoading, giftError, fetchGifts } = useGiftHook();
+
+  useEffect(() => {
+    fetchGifts();
+  }, []);
+  console.log(giftList)
   const services = [
     {
       id: 1,
@@ -66,11 +77,11 @@ const ProductSection2 = () => {
     <CardTypeA
       title="Giftings"
       description="Explore our Gifting Section"
-      services={services}
+      services={giftList}
       baseImageUrl={img1}
       themeColor="#f472b6"
       section="Giftings"
-      section-slug="/decorations"
+      sectionSlug="/gifts/e-commerce"
       ctaText="Book Now"
     />
   );

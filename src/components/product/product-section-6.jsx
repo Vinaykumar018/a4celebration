@@ -10,7 +10,7 @@ const ProductSection6 = () => {
       image: img1,
       price: 500,
       rating: 4.8,
-      slug: "wedding-planning"
+      slug: "event-management"
     },
     {
       id: 2,
@@ -18,7 +18,7 @@ const ProductSection6 = () => {
       image: img1,
       price: 400,
       rating: 4.6,
-      slug: "corporate-events"
+      slug: "event-management"
     },
     {
       id: 3,
@@ -26,7 +26,7 @@ const ProductSection6 = () => {
       image: img1,
       price: 250,
       rating: 4.7,
-      slug: "birthday-parties"
+      slug: "event-management"
     },
     {
       id: 4,
@@ -34,7 +34,7 @@ const ProductSection6 = () => {
       image: img1,
       price: 300,
       rating: 4.5,
-      slug: "cultural-events"
+      slug: "event-management"
     },
     {
       id: 5,
@@ -42,7 +42,7 @@ const ProductSection6 = () => {
       image: img1,
       price: 800,
       rating: 4.9,
-      slug: "concert-management"
+      slug: "event-management"
     },
     {
       id: 6,
@@ -50,7 +50,7 @@ const ProductSection6 = () => {
       image: img1,
       price: 350,
       rating: 4.4,
-      slug: "exhibition-stalls"
+      slug: "event-management"
     },
     {
       id: 7,
@@ -58,7 +58,7 @@ const ProductSection6 = () => {
       image: img1,
       price: 600,
       rating: 4.7,
-      slug: "product-launches"
+      slug: "event-management"
     },
   ];
   
@@ -69,12 +69,10 @@ const ProductSection6 = () => {
       description="Explore our spiritual services"
       services={services}
       baseImageUrl={img1}
-      themeColor="#f472b6
-
-"
+      themeColor="#f472b6" 
       ctaText="Book Now"
-      section="Event Organization"
-    sectionSlug="/event"
+      section="Event Management"
+    sectionSlug="/event-management"
     />
   );
 };

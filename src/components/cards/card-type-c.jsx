@@ -12,7 +12,7 @@ const CardTypeC = ({
   description = "Explore our wide range of services",
   services = [],
   baseImageUrl = "",
-  serviceLinkPrefix = "/product",
+  serviceLinkPrefix = "/event-management",
   themeColor = "#ff7e00",
   showRating = true,
   showPrice = true,
@@ -106,7 +106,7 @@ const CardTypeC = ({
             const words = service.name.split(" ");
             return (
               <SwiperSlide key={index}>
-                <Link to={`${serviceLinkPrefix}/${service.slug}`} className="block h-full">
+                <Link to={`${serviceLinkPrefix}/service/${service.slug}`} className="block h-full">
                   <motion.div
                     className="h-full bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                     style={{

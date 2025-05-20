@@ -3,7 +3,7 @@ import CategoryTopBanner from './category-top-banner';
 import CategoryWiseFilter from './CategoryWiseFilter';
 import CategoryWiseProduct from './category-wise-product';
 import ProductSection1 from '../../../components/product/product-section-1'
-import CategoryWiseFeed from '../../../components/category-wise-feed/category-wise-feed';
+import EventManagementCategoryWiseFeed from '../../../components/category-wise-feed/event-category-wise-feed';
 const Events = () => {
   return (
     <div className="container mx-auto px-4 py-6">
@@ -17,7 +17,7 @@ const Events = () => {
 
         {/* 8 columns for products */}
         <div className="md:col-span-9">
-        <CategoryWiseFeed></CategoryWiseFeed>
+        <EventManagementCategoryWiseFeed></EventManagementCategoryWiseFeed>
         </div>
       </div>
     </div>
