@@ -110,7 +110,7 @@ const EventManagementDetailsPage = () => {
 
               </div>
               <div className="lg:col-span-5 md:hidden mt-1">
-                <div className="bg-pink-50 rounded-lg shadow-lg overflow-hidden border border-[#FFD700] sticky top-2">
+                <div className="bg-amber-50 rounded-lg shadow-lg overflow-hidden border border-[#FFD700] sticky top-2">
                   <div className="p-4 border-b border-[#FFD700]">
                     <h1 className="text-xl font-bold mb-4 text-black">Package Details</h1>
 
@@ -579,7 +579,7 @@ const EventManagementDetailsPage = () => {
 
           {/* Right Column - Package Details */}
           <div className="lg:col-span-5 hidden md:block">
-            <div className="bg-pink-50 rounded-lg shadow-lg overflow-hidden border border-[#FFD700] sticky top-2">
+            <div className="bg-amber-50 rounded-lg shadow-lg overflow-hidden border border-[#FFD700] sticky top-2">
               <div className="p-4 border-b border-[#FFD700]">
                 <h1 className="text-xl font-bold mb-4 text-black">Package Details</h1>
 

@@ -40,6 +40,7 @@ const RoutesComponent = () => {
         <Route path="/decorations" element={<Decoration />} />
       <Route path="/decorations/:slug" element={<Decoration />} />
       <Route path="/giftings" element={<Gifting />} />
+      <Route path="/giftings/:slug" element={<Gifting/>} />
       <Route path="/artists" element={<Artist />} />
       <Route path="/catering" element={<Caterings />} />
       <Route path="/baby-shower" element={<BabyShower />} />

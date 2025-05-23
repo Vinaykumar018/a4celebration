@@ -55,7 +55,7 @@ const CardTypeA = ({
   console.log(services.category_name)
 
   return (
-    <section className="bg-pink-50 md:px-0 sm:px-4 px-4 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
+    <section className="bg-amber-50 md:px-0 sm:px-4 px-4 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="container-fluid mx-auto md:px-6 sm:px-0 px-0 lg:px-6">
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
@@ -67,7 +67,7 @@ const CardTypeA = ({
                       {section}
                     </h2>
 
-                    {sectionSlug && <div className="flex items-center gap-2 text-pink-600 hover:text-pink-800 cursor-pointer text-sm sm:text-base font-medium">
+                    {sectionSlug && <div className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium">
                       <Link to={sectionSlug}><span>View All</span></Link>
                       <EyeIcon className="h-5 w-5" />
                     </div>}
@@ -123,7 +123,7 @@ const CardTypeA = ({
                     {/* Image Section */}
                     <div className="sign_box_img flex justify-center mb-2">
                       <img
-                        src={`${"http://localhost:3000/" + service.featured_image}`}
+                        src={`${"https://a4celebration.com/api/" + service.featured_image}`}
                         alt={service.name}
                         className="object-cover rounded-lg h-40 w-full"
                       />

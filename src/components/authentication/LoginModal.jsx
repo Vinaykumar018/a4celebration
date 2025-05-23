@@ -34,7 +34,7 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
       // Store user data or token as needed
       localStorage.setItem("userEmail", formData.email);
       localStorage.setItem("isLoggedIn", "true");
-      
+
       localStorage.setItem("userId", response.data._id); // Assuming the API returns a token
 
       toast.success("Login Successful!");
@@ -66,7 +66,7 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
             </button>
 
             <div className="absolute inset-0 bg-[url('/placeholder.svg?height=200&width=500')] bg-cover bg-center opacity-20"></div>
-            <div className="relative py-6 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-pink-500/10 to-red-500/10">
+            <div className="relative py-6 flex flex-col items-center justify-center space-y-2 bg-gradient-to-r from-amber-500/10 to-red-500/10">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -77,15 +77,15 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="h-10 w-10 text-pink-600"
+                className="h-10 w-10 text-amber-600"
               >
                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
                 <circle cx="12" cy="12" r="3" />
               </svg>
-              <h2 className="text-xl font-bold text-pink-800 font-serif">
-                Sign In 
+              <h2 className="text-xl font-bold text-amber-800 font-serif">
+                Sign In
               </h2>
-              <p className="text-sm text-pink-700">Welcome to our Celebration HUB!</p>
+              <p className="text-sm text-amber-700">Welcome to our Celebration HUB!</p>
             </div>
           </div>
 
@@ -94,19 +94,19 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
               <div className="space-y-2">
                 <label
                   htmlFor="modal-email"
-                  className="block text-sm font-medium text-pink-800"
+                  className="block text-sm font-medium text-amber-800"
                 >
                   Email Address <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 h-5 w-5 text-pink-500" />
+                  <Mail className="absolute left-3 top-2.5 h-5 w-5 text-amber-500" />
                   <input
                     id="modal-email"
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-3 text-gray-500 py-2.5 rounded-lg border border-amber-200 bg-amber-50 focus:border-pink-300 focus:ring-pink-300"
+                    className="w-full pl-10 pr-3 text-gray-500 py-2.5 rounded-lg border border-amber-200 bg-amber-50 focus:border-amber-300 focus:ring-amber-300"
                     placeholder="your.email@example.com"
                     required
                   />
@@ -116,26 +116,26 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
               <div className="space-y-2">
                 <label
                   htmlFor="modal-password"
-                  className="block text-sm font-medium text-pink-800"
+                  className="block text-sm font-medium text-amber-800"
                 >
                   Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-2.5 h-5 w-5 text-pink-500" />
+                  <Lock className="absolute left-3 top-2.5 h-5 w-5 text-amber-500" />
                   <input
                     id="modal-password"
                     type={showPassword ? "text" : "password"}
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="w-full pl-10 pr-10 text-gray-500 py-2.5 rounded-lg border border-amber-200 bg-amber-50 focus:border-pink-300 focus:ring-pink-300"
+                    className="w-full pl-10 pr-10 text-gray-500 py-2.5 rounded-lg border border-amber-200 bg-amber-50 focus:border-amber-300 focus:ring-amber-300"
                     placeholder="Enter your password"
                     required
                   />
                   <button
                     type="button"
                     onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-2.5 text-pink-500 hover:text-pink-700"
+                    className="absolute right-3 top-2.5 text-amber-500 hover:text-amber-700"
                   >
                     {showPassword ? (
                       <EyeOff className="h-5 w-5" />
@@ -156,18 +156,18 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
                   <input
                     id="modal-remember"
                     type="checkbox"
-                    className="h-4 w-4 rounded border-amber-300 text-pink-600 focus:ring-pink-500"
+                    className="h-4 w-4 rounded border-amber-300 text-amber-600 focus:ring-amber-500"
                   />
                   <label
                     htmlFor="modal-remember"
-                    className="text-sm text-pink-700"
+                    className="text-sm text-amber-700"
                   >
                     Remember me
                   </label>
                 </div>
                 <Link
                   to="/forgot-password"
-                  className="text-sm font-medium text-pink-600 hover:text-pink-800 hover:underline"
+                  className="text-sm font-medium text-amber-600 hover:text-amber-800 hover:underline"
                   onClick={onClose}
                 >
                   Forgot Password?
@@ -177,7 +177,7 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:from-pink-600 hover:to-red-600 text-white font-medium py-2.5 rounded-md transition-all duration-300 shadow-md hover:shadow-lg"
+                className="w-full bg-gradient-to-r from-amber-500 to-red-500 hover:from-amber-600 hover:to-red-600 text-white font-medium py-2.5 rounded-md transition-all duration-300 shadow-md hover:shadow-lg"
               >
                 {loading ? (
                   <div className="flex items-center justify-center">
@@ -192,13 +192,13 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
 
             <div className="flex items-center justify-center">
               <div className="flex-grow h-px bg-amber-200"></div>
-              <span className="px-3 text-sm text-pink-700">or</span>
+              <span className="px-3 text-sm text-amber-700">or</span>
               <div className="flex-grow h-px bg-amber-200"></div>
             </div>
 
             <button
               type="button"
-              className="w-full flex items-center justify-center py-2.5 border border-amber-300 text-pink-700 hover:bg-pink-100 hover:text-pink-800 rounded-md"
+              className="w-full flex items-center justify-center py-2.5 border border-amber-300 text-amber-700 hover:bg-amber-100 hover:text-amber-800 rounded-md"
             >
               <svg
                 className="mr-2 h-4 w-4"
@@ -219,14 +219,14 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
             </button>
 
             <div className="text-center pt-4 border-t border-amber-200">
-              <p className="text-sm text-pink-700">
+              <p className="text-sm text-amber-700">
                 Don&apos;t have an account?{" "}
                 <button
                   onClick={() => {
                     onClose();
                     onCreateAccount();
                   }}
-                  className="font-medium text-pink-600 hover:text-pink-800 hover:underline"
+                  className="font-medium text-amber-600 hover:text-amber-800 hover:underline"
                 >
                   Create Account
                 </button>

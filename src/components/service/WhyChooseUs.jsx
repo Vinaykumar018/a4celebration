@@ -26,11 +26,11 @@ const WhyChooseUs = () => {
 
 
   return (
-    <section className="px-5 rashi_wrapper mt-2 mt-8 pb-8 bg-pink-50" id="zodiac_Sign">
+    <section className="px-5 rashi_wrapper mt-2 mt-8 pb-8 bg-amber-50" id="zodiac_Sign">
       <div className="container mx-auto px-12">
         <div className="heading_wrapper " style={{ marginBottom: "40px" }}>
           <h2
-            className="text-center text-4xl sm:text-5xl font-bold tracking-wide mb-8 text-pink-600"
+            className="text-center text-4xl sm:text-5xl font-bold tracking-wide mb-8 text-amber-600"
             style={{ fontFamily: "'Bebas Neue', sans-serif" }}
           >
             Why Choose Us
@@ -41,8 +41,8 @@ const WhyChooseUs = () => {
           {poojas.map((pooja, index) => (
             <div
               key={index}
-              className="flex flex-col md:flex-row items-center bg-pink-200 p-4 rounded-2xl 
-              transition-transform duration-300 ease-in-out transform hover:scale-100 hover:border-2 hover:border-pink-500"
+              className="flex flex-col md:flex-row items-center bg-amber-200 p-4 rounded-2xl 
+              transition-transform duration-300 ease-in-out transform hover:scale-100 hover:border-2 hover:border-amber-500"
             >
               {
                 console.log(pooja.image)
@@ -58,16 +58,16 @@ const WhyChooseUs = () => {
                 style={{ color: "transparent" }}
               />
               <div className="flex flex-col items-center md:items-start text-center md:text-start mt-4 md:mt-0 md:ml-4">
-                <h2 className="text-pink-600 font-bold text-xl md:text-2xl">
+                <h2 className="text-amber-600 font-bold text-xl md:text-2xl">
                   {pooja.title}
                 </h2>
                 <p className="text-sm text-gray-700 font-semibold mt-2">
                   {pooja.description}
                 </p>
                 <div className="flex mt-3">
-                  <div className="p-1 bg-pink-400 m-1 rounded-full"></div>
-                  <div className="p-1 bg-pink-400 m-1 rounded-full"></div>
-                  <div className="p-1 bg-pink-400 m-1 rounded-full"></div>
+                  <div className="p-1 bg-amber-400 m-1 rounded-full"></div>
+                  <div className="p-1 bg-amber-400 m-1 rounded-full"></div>
+                  <div className="p-1 bg-amber-400 m-1 rounded-full"></div>
                 </div>
               </div>
             </div>

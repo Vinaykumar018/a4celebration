@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCategories } from '../../redux/categoriesSlice';
@@ -29,9 +29,9 @@ const BottomNavbar = () => {
           {categories.map((category) => (
             <div key={category._id} className="group relative">
               {/* Main category link */}
-              <Link 
-                to={`/${category.slug_url}`} 
-                className="flex items-center text-gray-700 hover:text-rose-500 font-medium transition-colors"
+              <Link
+                to={`/${category.slug_url}`}
+                className="flex items-center text-gray-700 hover:text-amber-500 font-medium transition-colors"
               >
                 {category.category_name}
                 {Object.keys(category.child_category || {}).length > 0 && (
@@ -43,10 +43,10 @@ const BottomNavbar = () => {
               {Object.keys(category.child_category || {}).length > 0 && (
                 <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200">
                   {Object.entries(category.child_category).map(([id, child]) => (
-                    <Link 
+                    <Link
                       key={id}
                       to={formatChildUrl(category.slug_url, child.name)}
-                      className="block px-4 py-2 text-gray-700 hover:bg-rose-50 hover:text-rose-500"
+                      className="block px-4 py-2 text-gray-700 hover:bg-amber-50 hover:text-amber-500"
                     >
                       {child.name}
                     </Link>

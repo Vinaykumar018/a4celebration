@@ -169,14 +169,14 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
         < form className="space-y-6" onSubmit={handlePlaceOrder}>
             <ToastContainer />
             {/* Customer Details */}
-            <div className="border-2 border-rose-200 rounded-xl shadow-lg bg-white overflow-hidden">
+            <div className="border-2 border-amber-200 rounded-xl shadow-lg bg-white overflow-hidden">
                 <div
-                    className="bg-gradient-to-r from-rose-100 to-pink-100 border-b border-rose-200 p-4 cursor-pointer"
+                    className="bg-gradient-to-r from-amber-100 to-amber-100 border-b border-amber-200 p-4 cursor-pointer"
                     onClick={() => setIsOpen1(!isOpen1)}
                 >
-                    <h2 className="text-rose-800 flex items-center justify-between gap-2 font-playfair text-lg">
+                    <h2 className="text-amber-800 flex items-center justify-between gap-2 font-playfair text-lg">
                         <span className="flex items-center gap-2">
-                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white text-sm">
+                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-sm">
                                 1
                             </span>
                             Your Celebration Details ✨
@@ -187,20 +187,20 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
 
                 {/* Summary view when closed */}
                 {!isOpen1 && (
-                    <div className="p-4 bg-rose-10">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-rose-800">
+                    <div className="p-4 bg-amber-10">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-amber-800">
                             <div className="flex items-center gap-2">
-                                <User className="h-4 w-4 text-rose-600" />
+                                <User className="h-4 w-4 text-amber-600" />
                                 <span className="font-medium">Name:</span>
                                 <span>{username || 'Not provided'}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <Phone className="h-4 w-4 text-rose-600" />
+                                <Phone className="h-4 w-4 text-amber-600" />
                                 <span className="font-medium">Phone:</span>
                                 <span>{contactNumber || 'Not provided'}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <Mail className="h-4 w-4 text-rose-600" />
+                                <Mail className="h-4 w-4 text-amber-600" />
                                 <span className="font-medium">Email:</span>
                                 <span>{email || 'Not provided'}</span>
                             </div>
@@ -212,13 +212,13 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                     <div className="p-6 space-y-4">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label htmlFor="username" className="text-rose-800 font-medium">
-                                    Full Name <span className="text-rose-500">*</span>
+                                <label htmlFor="username" className="text-amber-800 font-medium">
+                                    Full Name <span className="text-amber-500">*</span>
                                 </label>
                                 <input
                                     id="username"
                                     name="username"
-                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
                                     required
                                     placeholder="Your beautiful name"
                                     value={username}
@@ -226,13 +226,13 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="contactNumber" className="text-rose-800 font-medium">
-                                    Phone <span className="text-rose-500">*</span>
+                                <label htmlFor="contactNumber" className="text-amber-800 font-medium">
+                                    Phone <span className="text-amber-500">*</span>
                                 </label>
                                 <input
                                     id="contactNumber"
                                     name="contactNumber"
-                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
                                     required
                                     placeholder="Where we can reach you"
                                     value={contactNumber}
@@ -242,14 +242,14 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="email" className="text-rose-800 font-medium">
-                                Email Address <span className="text-rose-500">*</span>
+                            <label htmlFor="email" className="text-amber-800 font-medium">
+                                Email Address <span className="text-amber-500">*</span>
                             </label>
                             <input
                                 id="email"
                                 name="email"
                                 type="email"
-                                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
                                 required
                                 placeholder="For booking confirmation 💌"
                                 value={email}
@@ -261,14 +261,14 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
             </div>
 
             {/* Shipping Address */}
-            <div className="border-2 border-rose-200 rounded-xl shadow-lg bg-white overflow-hidden">
+            <div className="border-2 border-amber-200 rounded-xl shadow-lg bg-white overflow-hidden">
                 <div
-                    className="bg-gradient-to-r from-rose-100 to-pink-100 border-b border-rose-200 p-4 cursor-pointer"
+                    className="bg-gradient-to-r from-amber-100 to-amber-100 border-b border-amber-200 p-4 cursor-pointer"
                     onClick={() => setIsOpen2(!isOpen2)}
                 >
-                    <h2 className="text-rose-800 flex items-center justify-between gap-2 font-playfair text-lg">
+                    <h2 className="text-amber-800 flex items-center justify-between gap-2 font-playfair text-lg">
                         <span className="flex items-center gap-2">
-                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white text-sm">
+                            <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-sm">
                                 2
                             </span>
                             Celebration Venue 🏡
@@ -278,13 +278,13 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                 </div>
 
                 {!isOpen2 && (
-                    <div className="p-4 bg-rose-10">
-                        <div className="space-y-3 text-sm text-rose-800">
+                    <div className="p-4 bg-amber-10">
+                        <div className="space-y-3 text-sm text-amber-800">
                             <div className="flex items-start gap-2">
-                                <Home className="h-4 w-4 mt-0.5 text-rose-600 flex-shrink-0" />
+                                <Home className="h-4 w-4 mt-0.5 text-amber-600 flex-shrink-0" />
                                 <div>
                                     <p className="font-medium">Address</p>
-                                    <p className="text-rose-700">
+                                    <p className="text-amber-700">
                                         {aptSuite || 'Not provided'}
                                         {city && `, ${city}`}
                                         {zipCode && `, ${zipCode}`}
@@ -294,7 +294,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
 
                             {country && (
                                 <div className="flex items-center gap-2">
-                                    <Flag className="h-4 w-4 text-rose-600" />
+                                    <Flag className="h-4 w-4 text-amber-600" />
                                     <span className="font-medium">Country:</span>
                                     <span>{country}</span>
                                 </div>
@@ -306,18 +306,18 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                 {isOpen2 && (
                     <div className="p-6 space-y-4">
                         <div className="flex items-center gap-2 mb-4">
-                            <MapPin className="h-5 w-5 text-rose-600" />
-                            <p className="text-sm text-rose-800">Where should we bring the celebration magic?</p>
+                            <MapPin className="h-5 w-5 text-amber-600" />
+                            <p className="text-sm text-amber-800">Where should we bring the celebration magic?</p>
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="aptSuite" className="text-rose-800 font-medium">
-                                Apt/Suite/Building <span className="text-rose-500">*</span>
+                            <label htmlFor="aptSuite" className="text-amber-800 font-medium">
+                                Apt/Suite/Building <span className="text-amber-500">*</span>
                             </label>
                             <input
                                 id="aptSuite"
                                 name="aptSuite"
-                                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
                                 required
                                 placeholder="Your celebration spot"
                                 value={aptSuite}
@@ -326,13 +326,13 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="streetAddress" className="text-rose-800 font-medium">
-                                Street Address <span className="text-rose-500">*</span>
+                            <label htmlFor="streetAddress" className="text-amber-800 font-medium">
+                                Street Address <span className="text-amber-500">*</span>
                             </label>
                             <input
                                 id="streetAddress"
                                 name="streetAddress"
-                                className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
                                 required
                                 placeholder="Where the party's at!"
                                 value={streetAddress}
@@ -342,13 +342,13 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label htmlFor="city" className="text-rose-800 font-medium">
-                                    City/Town <span className="text-rose-500">*</span>
+                                <label htmlFor="city" className="text-amber-800 font-medium">
+                                    City/Town <span className="text-amber-500">*</span>
                                 </label>
                                 <input
                                     id="city"
                                     name="city"
-                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
                                     required
                                     placeholder="Your city of joy"
                                     value={city}
@@ -356,13 +356,13 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                                 />
                             </div>
                             <div className="space-y-2">
-                                <label htmlFor="zipCode" className="text-rose-800 font-medium">
-                                    Zip/Postal Code <span className="text-rose-500">*</span>
+                                <label htmlFor="zipCode" className="text-amber-800 font-medium">
+                                    Zip/Postal Code <span className="text-amber-500">*</span>
                                 </label>
                                 <input
                                     id="zipCode"
                                     name="zipCode"
-                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
                                     required
                                     placeholder="Postal code"
                                     value={zipCode}
@@ -373,13 +373,13 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
-                                <label htmlFor="country" className="text-rose-800 font-medium">
-                                    Country <span className="text-rose-500">*</span>
+                                <label htmlFor="country" className="text-amber-800 font-medium">
+                                    Country <span className="text-amber-500">*</span>
                                 </label>
                                 <input
                                     id="country"
                                     name="country"
-                                    className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all"
+                                    className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
                                     required
                                     placeholder="Your country"
                                     value={country}
@@ -392,10 +392,10 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
             </div>
 
             {/* Special Notes */}
-            <div className="border-2 border-rose-200 rounded-xl shadow-lg bg-white overflow-hidden">
-                <div className="bg-gradient-to-r from-rose-100 to-pink-100 border-b border-rose-200 p-4">
-                    <h2 className="text-rose-800 flex items-center gap-2 font-playfair text-lg">
-                        <span className="flex items-center justify-center w-6 h-6 rounded-full bg-rose-600 text-white text-sm">
+            <div className="border-2 border-amber-200 rounded-xl shadow-lg bg-white overflow-hidden">
+                <div className="bg-gradient-to-r from-amber-100 to-amber-100 border-b border-amber-200 p-4">
+                    <h2 className="text-amber-800 flex items-center gap-2 font-playfair text-lg">
+                        <span className="flex items-center justify-center w-6 h-6 rounded-full bg-amber-600 text-white text-sm">
                             3
                         </span>
                         Special Celebration Wishes 💫
@@ -406,7 +406,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                         <textarea
                             id="specialNote"
                             name="specialNote"
-                            className="w-full border-2 border-rose-200 rounded-lg p-3 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 outline-none transition-all min-h-[120px]"
+                            className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all min-h-[120px]"
                             placeholder="Tell us about your celebration dreams, special rituals, or anything we should know to make it perfect..."
                             value={specialNote}
                             onChange={(e) => setSpecialNote(e.target.value)}
@@ -417,11 +417,11 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
 
             {/* Payment Method Selection */}
             <div className="mb-6">
-                <div className="p-6 space-y-4 bg-white border-2 border-rose-200 rounded-xl shadow-sm">
+                <div className="p-6 space-y-4 bg-white border-2 border-amber-200 rounded-xl shadow-sm">
                     <h3 className="text-lg font-semibold text-gray-800">Select Payment Method</h3>
 
                     {/* Razorpay Option */}
-                    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-rose-300 transition-colors">
+                    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-amber-300 transition-colors">
                         <input
                             type="radio"
                             id="razorpay"
@@ -429,7 +429,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                             value="razorpay"
                             checked={paymentMethod === "razorpay"}
                             onChange={() => setPaymentMethod("razorpay")}
-                            className="text-rose-600 border-2 border-rose-300 focus:ring-rose-200"
+                            className="text-amber-600 border-2 border-amber-300 focus:ring-amber-200"
                         />
                         <label htmlFor="razorpay" className="flex items-center space-x-3 cursor-pointer w-full">
                             <div className="bg-blue-50 p-2 rounded-lg">
@@ -443,7 +443,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                     </div>
 
                     {/* UPI Option */}
-                    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-rose-300 transition-colors">
+                    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-amber-300 transition-colors">
                         <input
                             type="radio"
                             id="upi"
@@ -451,7 +451,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                             value="upi"
                             checked={paymentMethod === "upi"}
                             onChange={() => setPaymentMethod("upi")}
-                            className="text-rose-600 border-2 border-rose-300 focus:ring-rose-200"
+                            className="text-amber-600 border-2 border-amber-300 focus:ring-amber-200"
                         />
                         <label htmlFor="upi" className="flex items-center space-x-3 cursor-pointer w-full">
                             <div className="bg-purple-50 p-2 rounded-lg">
@@ -465,7 +465,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                     </div>
 
                     {/* Cash on Delivery Option */}
-                    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-rose-300 transition-colors">
+                    <div className="flex items-center space-x-4 p-4 border border-gray-200 rounded-lg hover:border-amber-300 transition-colors">
                         <input
                             type="radio"
                             id="cod"
@@ -473,7 +473,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                             value="cod"
                             checked={paymentMethod === "cod"}
                             onChange={() => setPaymentMethod("cod")}
-                            className="text-rose-600 border-2 border-rose-300 focus:ring-rose-200"
+                            className="text-amber-600 border-2 border-amber-300 focus:ring-amber-200"
                         />
                         <label htmlFor="cod" className="flex items-center space-x-3 cursor-pointer w-full">
                             <div className="bg-green-50 p-2 rounded-lg">
@@ -488,17 +488,17 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
 
                     {/* Terms and Conditions */}
                     <div className="mb-6">
-                        <div className="p-6 space-y-4 bg-white border-rose-200 rounded-xl shadow-sm">
+                        <div className="p-6 space-y-4 bg-white border-amber-200 rounded-xl shadow-sm">
                             <div className="flex items-start space-x-2">
                                 <input
                                     type="checkbox"
                                     id="terms"
-                                    className="text-rose-600 border-2 border-rose-300 rounded mt-1 focus:ring-rose-200"
+                                    className="text-amber-600 border-2 border-amber-300 rounded mt-1 focus:ring-amber-200"
                                     required
                                 />
                                 <label htmlFor="terms" className="text-sm cursor-pointer">
                                     I agree to the{" "}
-                                    <Link to="#" className="text-rose-600 hover:underline font-medium">
+                                    <Link to="#" className="text-amber-600 hover:underline font-medium">
                                         terms and conditions
                                     </Link>{" "}
                                     of this celebration booking
@@ -509,7 +509,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                                 <input
                                     type="checkbox"
                                     id="offers"
-                                    className="text-rose-600 border-2 border-rose-300 rounded mt-1 focus:ring-rose-200"
+                                    className="text-amber-600 border-2 border-amber-300 rounded mt-1 focus:ring-amber-200"
                                 />
                                 <label htmlFor="offers" className="text-sm cursor-pointer">
                                     Yes! I want to receive exclusive celebration offers and updates 💌
@@ -523,7 +523,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
             {/* Submit Button */}
             <button
                 type="submit"
-                className="w-full py-4 text-lg rounded-xl font-bold bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2"
+                className="w-full py-4 text-lg rounded-xl font-bold bg-gradient-to-r from-amber-500 to-amber-500 hover:from-amber-600 hover:to-amber-600 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2"
             >
                 <Sparkles className="h-5 w-5" />
                 Complete Your Celebration Booking

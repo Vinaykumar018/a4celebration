@@ -51,7 +51,7 @@ export default function WishlistPage() {
   return (
     <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-6xl">
       <div className="flex items-center justify-center mb-2">
-        <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-pink-500 mr-2 sm:mr-3 fill-pink-200" />
+        <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-amber-500 mr-2 sm:mr-3 fill-amber-200" />
         <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-center text-gray-800">
           Your Favorite Items
         </h1>
@@ -64,13 +64,13 @@ export default function WishlistPage() {
       {wishlistItems.length === 0 ? (
         <div className="text-center py-10 sm:py-16">
           <div className="flex justify-center mb-4">
-            <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-pink-300" />
+            <Heart className="w-12 h-12 sm:w-16 sm:h-16 text-amber-300" />
           </div>
           <h2 className="text-xl sm:text-2xl font-semibold mb-2">Your wishlist is empty</h2>
           <p className="text-sm sm:text-base text-gray-500 mb-6">
             Add items you love to your wishlist. Review them anytime and easily move them to the cart.
           </p>
-          <button className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-2 px-4 rounded text-sm sm:text-base">
+          <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded text-sm sm:text-base">
             Continue Shopping
           </button>
         </div>
@@ -88,7 +88,7 @@ export default function WishlistPage() {
             </thead>
             <tbody>
               {wishlistItems.map((item) => (
-                <tr key={item.id} className="border-b border-b border-pink-100 hover:bg-pink-50">
+                <tr key={item.id} className="border-b border-b border-amber-100 hover:bg-amber-50">
                   <td className="py-4 px-2">
                     <div className="flex items-center">
                       <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-md overflow-hidden bg-gray-100 mr-3 sm:mr-4">
@@ -100,13 +100,13 @@ export default function WishlistPage() {
                       </div>
                       <div className="flex items-center">
                         {item.name.includes("lamp") ? (
-                          <PartyPopper className="w-4 h-4 text-pink-500 mr-2" />
+                          <PartyPopper className="w-4 h-4 text-amber-500 mr-2" />
                         ) : item.name.includes("bulb") ? (
-                          <Lightbulb className="w-4 h-4 text-pink-500 mr-2" />
+                          <Lightbulb className="w-4 h-4 text-amber-500 mr-2" />
                         ) : item.name.includes("vase") ? (
-                          <Gift className="w-4 h-4 text-pink-500 mr-2" />
+                          <Gift className="w-4 h-4 text-amber-500 mr-2" />
                         ) : (
-                          <Cake className="w-4 h-4 text-pink-500 mr-2" />
+                          <Cake className="w-4 h-4 text-amber-500 mr-2" />
                         )}
                         <span className="font-medium text-gray-800 text-sm sm:text-base">{item.name}</span>
                       </div>
@@ -132,7 +132,7 @@ export default function WishlistPage() {
                   </td>
                   <td className="py-4 px-2">
                     <div className="flex space-x-2">
-                      <button className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-1 px-3 sm:py-2 sm:px-4 rounded flex items-center text-xs sm:text-sm">
+                      <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-1 px-3 sm:py-2 sm:px-4 rounded flex items-center text-xs sm:text-sm">
                         <ShoppingCart className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                         Add to Cart
                       </button>
@@ -140,7 +140,7 @@ export default function WishlistPage() {
                         className="border border-gray-200 hover:bg-gray-100 text-gray-500 font-semibold py-1 px-3 sm:py-2 sm:px-4 rounded flex items-center text-xs sm:text-sm"
                         onClick={() => removeFromWishlist(item.id)}
                       >
-                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-pink-500" />
+                        <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-amber-500" />
                       </button>
                     </div>
                   </td>
@@ -152,7 +152,7 @@ export default function WishlistPage() {
           {/* Mobile Card View */}
           <div className="sm:hidden space-y-4">
             {wishlistItems.map((item) => (
-              <div key={item.id} className="border-b border-pink-100 p-3 hover:bg-pink-50 rounded-lg">
+              <div key={item.id} className="border-b border-amber-100 p-3 hover:bg-amber-50 rounded-lg">
                 <div className="flex">
                   <div className="h-16 w-16 rounded-md overflow-hidden bg-gray-100 mr-3">
                     <img
@@ -164,13 +164,13 @@ export default function WishlistPage() {
                   <div className="flex-1">
                     <div className="flex items-center mb-1">
                       {item.name.includes("lamp") ? (
-                        <PartyPopper className="w-3 h-3 text-pink-500 mr-1" />
+                        <PartyPopper className="w-3 h-3 text-amber-500 mr-1" />
                       ) : item.name.includes("bulb") ? (
-                        <Lightbulb className="w-3 h-3 text-pink-500 mr-1" />
+                        <Lightbulb className="w-3 h-3 text-amber-500 mr-1" />
                       ) : item.name.includes("vase") ? (
-                        <Gift className="w-3 h-3 text-pink-500 mr-1" />
+                        <Gift className="w-3 h-3 text-amber-500 mr-1" />
                       ) : (
-                        <Cake className="w-3 h-3 text-pink-500 mr-1" />
+                        <Cake className="w-3 h-3 text-amber-500 mr-1" />
                       )}
                       <span className="font-medium text-gray-800 text-sm">{item.name}</span>
                     </div>
@@ -196,7 +196,7 @@ export default function WishlistPage() {
                 </div>
 
                 <div className="flex justify-end space-x-2 mt-2">
-                  <button className="bg-pink-500 hover:bg-pink-600 text-white font-semibold py-1 px-2 rounded flex items-center text-xs">
+                  <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-1 px-2 rounded flex items-center text-xs">
                     <ShoppingCart className="w-3 h-3 mr-1" />
                     Add to Cart
                   </button>
@@ -204,7 +204,7 @@ export default function WishlistPage() {
                     className="border border-gray-200 hover:bg-gray-100 text-gray-500 font-semibold py-1 px-2 rounded flex items-center text-xs"
                     onClick={() => removeFromWishlist(item.id)}
                   >
-                    <Trash2 className="w-3 h-3 text-pink-500" />
+                    <Trash2 className="w-3 h-3 text-amber-500" />
                   </button>
                 </div>
               </div>
@@ -214,8 +214,8 @@ export default function WishlistPage() {
       )}
 
       <div className="mt-6 sm:mt-10 flex justify-between items-center">
-        <div className="flex items-center text-pink-500">
-          <Heart className="w-4 h-4 sm:w-5 sm:h-5 fill-pink-200 mr-1 sm:mr-2" />
+        <div className="flex items-center text-amber-500">
+          <Heart className="w-4 h-4 sm:w-5 sm:h-5 fill-amber-200 mr-1 sm:mr-2" />
           <span className="text-xs sm:text-sm font-medium">Save your favorites for later</span>
         </div>
       </div>

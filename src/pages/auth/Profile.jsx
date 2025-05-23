@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchUserData } from "../../redux/userSlice";
+import MyOrders from "./myOrder";
 Modal.setAppElement('#root')
 
 
@@ -128,7 +129,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
           &times;
         </button>
 
-        <h2 className="text-xl font-bold text-center text-pink-600 mb-4">Edit Profile</h2>
+        <h2 className="text-xl font-bold text-center text-amber-600 mb-4">Edit Profile</h2>
 
         <form onSubmit={handleSubmit} className="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
@@ -149,7 +150,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
                   name={field.name}
                   value={field.value}
                   onChange={handleChange}
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
                 >
                   <option value="">Select Gender</option>
                   <option value="male">Male</option>
@@ -162,7 +163,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
                   name={field.name}
                   value={field.value}
                   onChange={handleChange}
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               )}
             </div>
@@ -174,7 +175,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
               type="file"
               name="profile_image"
               onChange={handleChange}
-              className="w-full px-3 py-1.5 border border-gray-300 rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-pink-500"
+              className="w-full px-3 py-1.5 border border-gray-300 rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
           </div>
 
@@ -188,7 +189,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
             </button>
             <button
               type="submit"
-              className="px-4 py-1.5 bg-pink-600 text-white rounded-lg text-xs hover:bg-pink-500 focus:outline-none transition"
+              className="px-4 py-1.5 bg-amber-600 text-white rounded-lg text-xs hover:bg-amber-500 focus:outline-none transition"
             >
               Save
             </button>
@@ -208,6 +209,8 @@ const Profile = () => {
   const { userData, loading, error } = useSelector((state) => state.user);
   const user = userData?.data;
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const [activeTab, setActiveTab] = useState('overview');
 
   // Fetch user data on component mount
   useEffect(() => {
@@ -278,7 +281,7 @@ const Profile = () => {
               <div className="h-11 w-11 sm:h-20 sm:w-20">
                 <img
                   className="border-primary-500 h-full w-full rounded-full border-2 p-[3px]"
-                  src={"http://localhost:3000/" + user?.profile_image || "https://png.pngtree.com/png-clipart/20231019/original/pngtree-user-profile-avatar-png-image_13369990.png"}
+                  src={"https://a4celebration.com/api/" + user?.profile_image || "https://png.pngtree.com/png-clipart/20231019/original/pngtree-user-profile-avatar-png-image_13369990.png"}
                   alt="Profile"
                 />
               </div>
@@ -306,115 +309,144 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="hidden w-full border-b border-gray-400 xl:block"></div>
-          {/* <div id="accountTabs" className="mx-auto hidden w-full items-center space-x-2 overflow-x-auto whitespace-nowrap px-4 pb-3 text-sm font-semibold xl:inline-flex xl:flex-row xl:flex-nowrap xl:justify-between xl:overflow-x-hidden">
-            <a className="nk-acc-active-tab" href="account-overview.html">
-              <div>Account Overview</div>
-            </a>
-           
-            <a className="nk-account-tab" href="account-orders-purchase.html">
-              <div>Orders &amp; Purchase</div>
-            </a>
-            <a className="nk-account-tab" href="account-shipping-billing.html">
-              <div>Shipping &amp; Billing</div>
-            </a>
-          </div> */}
-          <div id="accOverview" className="animate-nk-acc-tab block space-y-12 px-4">
-            <div className="space-y-4 rounded-lg border border-gray-200 bg-white py-4 shadow">
-              <div className="flex flex-auto items-center justify-between px-4">
-                <div className="text-base font-semibold sm:text-lg">Personal Details</div>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
-                  <button
-                    onClick={() => setIsEditModalOpen(true)}
-                    className="w-36 sm:w-48 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
-                  >
-                    Edit Profile
-                  </button>
+              <div>
 
-                  <button
-                    onClick={handleLogout}
-                    className="w-36 sm:w-48 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
-                  >
-                    Logout
-                  </button>
-                </div>
-
-              </div>
-              <div className="w-full border-b border-gray-400"></div>
-              <div className="space-y-2 px-4">
-                <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                  <div className="w-52 text-sm">Username:</div>
-                  <span className="font-semibold">{user?.username}</span>
-                </div>
-                <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                  <div className="w-52 text-sm">Email:</div>
-                  <span className="font-semibold">{user?.email}</span>
-                </div>
-                {user?.mobile && (
-                  <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                    <div className="w-52 text-sm">Mobile:</div>
-                    <span className="font-semibold">{user?.mobile}</span>
-                  </div>
-                )}
-                {user?.gender && (
-                  <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                    <div className="w-52 text-sm">Gender:</div>
-                    <span className="font-semibold">{user?.gender}</span>
-                  </div>
-                )}
-                {user?.address && (
-                  <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                    <div className="w-52 text-sm">Address:</div>
-                    <span className="font-semibold">{user.address}</span>
-                  </div>
-                )}
-                {user?.city && (
-                  <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                    <div className="w-52 text-sm">City:</div>
-                    <span className="font-semibold">{user.city}</span>
-                  </div>
-                )}
-                {user?.country && (
-                  <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                    <div className="w-52 text-sm">Country:</div>
-                    <span className="font-semibold">{user.country}</span>
-                  </div>
-                )}
-                {user?.pincode && (
-                  <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                    <div className="w-52 text-sm">Pincode:</div>
-                    <span className="font-semibold">{user.pincode}</span>
-                  </div>
-                )}
-                {user?.landmark && (
-                  <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                    <div className="w-52 text-sm">Landmark:</div>
-                    <span className="font-semibold">{user.landmark}</span>
-                  </div>
-                )}
-                <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                  <div className="w-52 text-sm">Account Status:</div>
-                  <span className="font-semibold capitalize">{user?.status}</span>
-                </div>
-                {user?.social_type && (
-                  <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                    <div className="w-52 text-sm">Login Method:</div>
-                    <span className="font-semibold capitalize">
-                      {user.social_type === 'other' ? 'Email/Password' : user.social_type}
-                    </span>
-                  </div>
-                )}
-                <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                  <div className="w-52 text-sm">Member Since:</div>
-                  <span className="font-semibold">
-                    {new Date(user?.created_at).toLocaleDateString()}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
+          <div className=" w-full border-b border-gray-400 xl:block ml-8 pb-2">
+            <div id="accountTabs" className="flex flex-row space-x-5">
+              <button
+                className={`px-2 py-2 rounded-lg border text-sm transition-all duration-200 ${activeTab === 'overview'
+                  ? 'bg-black text-white border-black'
+                  : 'bg-white text-black border-gray-300'
+                  }`}
+                onClick={() => setActiveTab('overview')}
+              >
+                Personal details
+              </button>
+
+              <button
+                className={`px-2 py-2 rounded-lg text-sm border transition-all duration-200 ${activeTab === 'accordion2'
+                  ? 'bg-black text-white border-black'
+                  : 'bg-white text-black border-gray-300'
+                  }`}
+                onClick={() => setActiveTab('accordion2')}
+              >
+                My Orders
+              </button>
+            </div>
+          </div>
+
+
+          {activeTab === 'overview' && (
+            <div className="animate-nk-acc-tab block space-y-12 px-4">
+              <div id="accOverview" className="animate-nk-acc-tab block space-y-12 px-4">
+                <div className="space-y-4 rounded-lg border border-gray-200 bg-white py-4 shadow">
+                  <div className="flex flex-auto items-center justify-between px-4">
+                    <div className="text-base font-semibold sm:text-lg">Personal Details</div>
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+                      <button
+                        onClick={() => setIsEditModalOpen(true)}
+                        className="w-36 sm:w-48 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+                      >
+                        Edit Profile
+                      </button>
+
+                      <button
+                        onClick={handleLogout}
+                        className="w-36 sm:w-48 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition duration-300 ease-in-out"
+                      >
+                        Logout
+                      </button>
+                    </div>
+
+                  </div>
+                  <div className="w-full border-b border-gray-400"></div>
+                  <div className="space-y-2 px-4">
+                    <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                      <div className="w-52 text-sm">Username:</div>
+                      <span className="font-semibold">{user?.username}</span>
+                    </div>
+                    <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                      <div className="w-52 text-sm">Email:</div>
+                      <span className="font-semibold">{user?.email}</span>
+                    </div>
+                    {user?.mobile && (
+                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                        <div className="w-52 text-sm">Mobile:</div>
+                        <span className="font-semibold">{user?.mobile}</span>
+                      </div>
+                    )}
+                    {user?.gender && (
+                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                        <div className="w-52 text-sm">Gender:</div>
+                        <span className="font-semibold">{user?.gender}</span>
+                      </div>
+                    )}
+                    {user?.address && (
+                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                        <div className="w-52 text-sm">Address:</div>
+                        <span className="font-semibold">{user.address}</span>
+                      </div>
+                    )}
+                    {user?.city && (
+                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                        <div className="w-52 text-sm">City:</div>
+                        <span className="font-semibold">{user.city}</span>
+                      </div>
+                    )}
+                    {user?.country && (
+                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                        <div className="w-52 text-sm">Country:</div>
+                        <span className="font-semibold">{user.country}</span>
+                      </div>
+                    )}
+                    {user?.pincode && (
+                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                        <div className="w-52 text-sm">Pincode:</div>
+                        <span className="font-semibold">{user.pincode}</span>
+                      </div>
+                    )}
+                    {user?.landmark && (
+                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                        <div className="w-52 text-sm">Landmark:</div>
+                        <span className="font-semibold">{user.landmark}</span>
+                      </div>
+                    )}
+                    <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                      <div className="w-52 text-sm">Account Status:</div>
+                      <span className="font-semibold capitalize">{user?.status}</span>
+                    </div>
+                    {user?.social_type && (
+                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                        <div className="w-52 text-sm">Login Method:</div>
+                        <span className="font-semibold capitalize">
+                          {user.social_type === 'other' ? 'Email/Password' : user.social_type}
+                        </span>
+                      </div>
+                    )}
+                    <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
+                      <div className="w-52 text-sm">Member Since:</div>
+                      <span className="font-semibold">
+                        {new Date(user?.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          {activeTab === 'accordion2' && (
+            <div className="animate-nk-acc-tab block space-y-12 px-4">
+
+
+
+              <div id="accOverview" className="animate-nk-acc-tab block space-y-12 px-4">
+                <MyOrders userData={userData}></MyOrders>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

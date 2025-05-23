@@ -66,7 +66,7 @@ const SimpleCard1 = ({
              
             </h2>
 
-            <div className="flex items-center gap-2 text-pink-600 hover:text-pink-800 cursor-pointer text-sm sm:text-base font-medium">
+            <div className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium">
                <Link to={sectionSlug}><span>View All</span></Link>
               <EyeIcon className="h-5 w-5" />
             </div> 
@@ -96,7 +96,7 @@ const SimpleCard1 = ({
                     {/* Image Section */}
                     <div className="sign_box_img flex justify-center mb-2">
                       <img
-                        src={`${"http://localhost:3000/" + service.featured_image}`}
+                        src={`${"https://a4celebration.com/api/" + service.featured_image}`}
                         alt={service.name}
                         className="object-cover rounded-lg h-40 w-full"
                       />

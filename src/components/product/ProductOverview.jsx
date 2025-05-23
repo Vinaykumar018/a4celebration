@@ -45,19 +45,19 @@ const ProductOverview = (descriptionPart) => {
         }
       `}</style>
 
-      <div className="w-full mt-2 font-poppins bg-pink-50">
-        <h2 className="mb-6 text-center text-2xl font-bold text-pink-700 font-playfair">
+      <div className="w-full mt-2 font-poppins bg-amber-50">
+        <h2 className="mb-6 text-center text-2xl font-bold text-amber-700 font-playfair">
           Product Overview
         </h2>
 
-        <div className="rounded-lg shadow-sm divide-y bg-pink-50 product-shadow">
+        <div className="rounded-lg shadow-sm divide-y bg-amber-50 product-shadow">
           <details className="px-4">
             <summary className="py-4 font-medium cursor-pointer text-black flex justify-between items-center">
               <span className="flex items-center gap-2">
-                <FaBook className="text-pink-500" />
+                <FaBook className="text-amber-500" />
                 Product Description
               </span>
-              <FaArrowDown className="text-pink-500" />
+              <FaArrowDown className="text-amber-500" />
             </summary>
             <div className="pb-4 text-gray-700">
 
@@ -77,10 +77,10 @@ const ProductOverview = (descriptionPart) => {
             <details className="px-4">
               <summary className="py-4 font-medium cursor-pointer text-black flex justify-between items-center">
                 <span className="flex items-center gap-2">
-                  <FaBook className="text-pink-500" />
+                  <FaBook className="text-amber-500" />
                   Decoration Kit & Materials
                 </span>
-                <FaArrowDown className="text-pink-500" />
+                <FaArrowDown className="text-amber-500" />
               </summary>
               <div className="pb-4 text-gray-700">
 

@@ -54,12 +54,12 @@ const Services = () => {
 
   // Function to get image URL
   const getImageUrl = (imagePath) => {
-    return imagePath ? `http://localhost:3000/${imagePath.replace(/\\/g, '/')}` : '/placeholder.svg'
+    return imagePath ? `https://a4celebration.com/api/${imagePath.replace(/\\/g, '/')}` : '/placeholder.svg'
   }
 
   if (loading) {
     return (
-      <section className="bg-gradient-to-b from-pink-50 to-white py-16 px-4">
+      <section className="bg-gradient-to-b from-amber-50 to-amber-100 py-16 px-4">
         <div className="container mx-auto max-w-7xl text-center">
           <p>Loading categories...</p>
         </div>
@@ -69,7 +69,7 @@ const Services = () => {
 
   if (error) {
     return (
-      <section className="bg-gradient-to-b from-pink-50 to-white py-16 px-4">
+      <section className="bg-gradient-to-b from-amber-50 to-amber-50 py-16 px-4">
         <div className="container mx-auto max-w-7xl text-center text-red-500">
           <p>Error loading categories: {error}</p>
         </div>
@@ -78,7 +78,7 @@ const Services = () => {
   }
 
   return (
-    <section className="bg-gradient-to-b from-pink-50 to-white py-16 px-4">
+    <section className="bg-gradient-to-b from-amber-50 to-amber-100 py-16 px-4">
       <div className="container mx-auto max-w-7xl">
         <motion.div
           className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8"
@@ -94,8 +94,8 @@ const Services = () => {
               className="group"
             >
               <Link to={`/${category.slug_url}`} className="block h-full">
-                <div className="bg-pink-50 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 h-full flex flex-col max-w-[280px] mx-auto w-full">
-                  <div className="relative overflow-hidden aspect-square p-3 pt-4 bg-pink-50">
+                <div className="bg-amber-50 rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow duration-300 h-full flex flex-col max-w-[280px] mx-auto w-full border border-amber-200">
+                  <div className="relative overflow-hidden aspect-square p-3 pt-4 bg-gradient-to-br from-amber-100 to-amber-50">
                     <motion.div className="w-full h-full" variants={imageVariants}>
                       <img
                         src={getImageUrl(category.category_image)}
@@ -105,30 +105,29 @@ const Services = () => {
                     </motion.div>
 
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-t from-pink-500/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6 m-3 rounded-2xl"
+                      className="absolute inset-0 bg-gradient-to-t from-amber-600/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6 m-3 rounded-2xl"
                       variants={overlayVariants}
                       initial="initial"
                     >
-                      <span className="text-white font-medium flex items-center gap-1 px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm">
+                      <span className="text-amber-100 font-medium flex items-center gap-1 px-4 py-2 rounded-full bg-amber-900/60 backdrop-blur-sm border border-amber-700/50">
                         View Details <ChevronRight size={16} />
                       </span>
                     </motion.div>
                   </div>
 
-                  <div className="px-3 py-2 text-center bg-white flex-grow flex flex-col justify-center">
+                  <div className="px-3 py-2 text-center bg-amber-50 flex-grow flex flex-col justify-center border-t border-amber-200">
                     <h3
-                      className="text-md font-extrabold text-[#8B4513] tracking-wide google-font"
+                      className="text-md font-extrabold text-amber-900 tracking-wide google-font"
                       style={{ textTransform: "uppercase" }}
                     >
                       {category.category_name}
                     </h3>
-
                   </div>
 
                   {/* Popular badge - you can customize the condition */}
                   {category.status === "1" && (
                     <div className="absolute top-5 right-5 z-10">
-                      <span className="bg-pink-500 text-white text-[10px] px-2 py-0.5 rounded-full font-medium shadow-md">
+                      <span className="bg-gradient-to-r from-amber-500 to-amber-600 text-amber-50 text-[10px] px-2 py-0.5 rounded-full font-medium shadow-md border border-amber-600/50">
                         Popular
                       </span>
                     </div>

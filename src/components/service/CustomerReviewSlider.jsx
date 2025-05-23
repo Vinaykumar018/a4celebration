@@ -78,9 +78,9 @@ const renderStars = (rating) => {
 
 const CustomerReviewSlider = () => {
   return (
-    <section className="px-2 py-6 bg-gray-100 mt-8 bg-pink-50">
+    <section className="px-2 py-6 bg-amber-50 mt-8 ">
       <h2
-        className="text-center text-4xl sm:text-5xl font-bold tracking-wide mb-8 text-pink-600"
+        className="text-center text-4xl sm:text-5xl font-bold tracking-wide mb-8 text-amber-600"
         style={{ fontFamily: "'Bebas Neue', sans-serif" }}
       >
         Customer Reviews
@@ -100,7 +100,7 @@ const CustomerReviewSlider = () => {
       >
         {reviews.map((review, idx) => (
           <SwiperSlide key={idx}>
-            <div className="bg-white border border-pink-300 shadow-md shadow-pink-200 rounded-lg p-3 flex flex-col items-center text-center h-full pb-8">
+            <div className="bg-white border border-amber-300 shadow-md shadow-amber-200 rounded-lg p-3 flex flex-col items-center text-center h-full pb-8">
               <img
                 src={review.image}
                 alt={review.name}

@@ -78,9 +78,9 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Check } from "lucide-react";
 
-import img1 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
+import img1 from '../../assets/slider/Pre pre wedding reattempt.jpg';
 import img2 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
-import img3 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
+import img3 from '../../assets/slider/Pre.jpg';
 
 const slides = [
   {
@@ -104,11 +104,11 @@ export default function Slider() {
   return (
     <div className="w-full  sm:h-auto md:h-[75vh] lg:h-[80vh] overflow-hidden">
       <Swiper
-        modules={[Autoplay, Navigation, Pagination]}
-        autoplay={{ delay: 3000 }}
+        modules={[ Navigation, Pagination]}
+        // autoplay={{ delay: 3000 }}
         spaceBetween={0}
         slidesPerView={1}
-        loop
+        // loop
         // pagination={{ clickable: true }}
       
         className="w-full h-full"

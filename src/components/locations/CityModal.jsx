@@ -38,26 +38,26 @@ const CityModal = ({ isOpen, onClose, }) => {
             console.log("Modal close button clicked");
             onClose();
           }}
-          className="absolute top-4 right-4 text-pink-600 hover:text-pink-800 text-2xl font-bold"
+          className="absolute top-4 right-4 text-amber-600 hover:text-amber-800 text-2xl font-bold"
         >
           &times;
         </button>
 
-        <h2 className="text-center text-2xl font-semibold text-pink-700">Select your City</h2>
+        <h2 className="text-center text-2xl font-semibold text-amber-700">Select your City</h2>
         <p className="text-center text-gray-600 mt-2 mb-6">Find more than 3000 decorations, gifts and surprises!</p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {cities.map((city, idx) => (
             <div
               key={idx}
-              className="bg-pink-50 hover:bg-pink-100 transition-all p-4 rounded-lg text-center shadow-md cursor-pointer"
+              className="bg-amber-50 hover:bg-amber-100 transition-all p-4 rounded-lg text-center shadow-md cursor-pointer"
             >
               <img
                 src={city.image}
                 alt={city.name}
                 className="mx-auto mb-2 h-12 object-contain"
               />
-              <p className="text-pink-700 font-medium">{city.name}</p>
+              <p className="text-amber-700 font-medium">{city.name}</p>
             </div>
           ))}
         </div>

@@ -4,7 +4,7 @@ import './CategoryTopBanner.css';
 export default function CategoryTopBanner() {
   return (
     <div className="container mx-auto px-4 py-6">
-      <div className="relative group overflow-hidden rounded-2xl h-96 bg-pink-300 hover:shadow-xl transition-shadow duration-300 border-4 border-white">
+      <div className="relative group overflow-hidden rounded-2xl h-96 bg-amber-300 hover:shadow-xl transition-shadow duration-300 border-4 border-white">
 
         {/* Background Image with border */}
         <img

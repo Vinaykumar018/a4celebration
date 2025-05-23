@@ -62,7 +62,7 @@ const CardTypeB = ({
   }
 
   return (
-    <section className="bg-pink rashi_wrapper mt-2" id="zodiac_Sign">
+    <section className="bg-amber rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="container-fluid mx-auto md:px-6 sm:px-0 px-0 lg:px-6">
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
@@ -74,7 +74,7 @@ const CardTypeB = ({
                       {section}
                     </h2>
 
-                    <div className="flex items-center gap-2 text-pink-600 hover:text-pink-800 cursor-pointer text-sm sm:text-base font-medium">
+                    <div className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium">
                       <Link to={sectionSlug}><span>View All</span></Link>
                       <EyeIcon className="h-5 w-5" />
                     </div>

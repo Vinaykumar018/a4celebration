@@ -4,7 +4,7 @@ import { useCart } from "./cartHook";
 import { toast } from "react-toastify";
 import useGiftHook from '../hooks/useGiftHooks'
 
-const useUserCartData = () => {
+const  useUserCartData= () => {
   const { cart, getCart } = useCart();
   const [cartItems, setCartItems] = useState([]);
   const { fetchGiftById, singleGift, giftLoading, giftError } = useGiftHook();
@@ -19,36 +19,46 @@ const useUserCartData = () => {
   }, []);
 
   useEffect(() => {
-    const fetchCartItems = async () => {
-      setIsLoading(true);
-      try {
-        const products = await Promise.all(
-          cart.map(async (item) => {
-            const product = await getProductById(item.product_id);
-            console.log(product,cart)
-           
-            return {
-              ...product.data,
-              ...item,
-            };
-             console.log(product)
-          })
-          
-        );
-       
-        setCartItems(products);
-      } catch (error) {
-        toast.error("Failed to load cart items.");
-        console.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const fetchCartItems = async () => {
+    setIsLoading(true);
+    try {
+      const products = await Promise.all(
+        cart.map(async (item) => {
+          console.log(item.product_id, "of the product");
 
-    if (cart && cart.length > 0) {
-      fetchCartItems();
+          let product;
+
+          // Check if the product_id starts with "PROD-DECORATION"
+          if (item.product_id.startsWith("PROD-DECORATION")) {
+            product = await getProductById(item.product_id);
+          } else {
+            product = await fetchGiftById(item.product_id);
+            console.log("gift data",product)
+          }
+
+          return {
+            ...product.data,
+            ...item,
+          };
+        })
+      );
+
+      console.log(cartItems,"cartitems")
+
+      setCartItems(products);
+    } catch (error) {
+      toast.error("Failed to load cart items.");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
     }
-  }, [cart]);
+  };
+
+  if (cart && cart.length > 0) {
+    fetchCartItems();
+  }
+}, [cart]);
+
 
   return { cartItems, isLoading };
 };

@@ -69,9 +69,7 @@ const ProductSection5 = () => {
       description="Explore our spiritual services"
       services={services}
       baseImageUrl={img1}
-      themeColor="#f472b6
-
-"
+      themeColor="#d97706"
       ctaText="Book Now"
 
        section="Catering Events"

@@ -2,7 +2,7 @@ import React from 'react';
 import CategoryTopBanner from './category-top-banner';
 import CategoryWiseFilter from './CategoryWiseFilter';
 import CategoryWiseProduct from './category-wise-product';
-import CategoryWiseFeed from '../../../components/category-wise-feed/decoration-category-wise-feed';
+import GiftCategoryWiseFeed from '../../../components/category-wise-feed/gift-category-wise-feed'
 
 const Events = () => {
   return (
@@ -17,7 +17,8 @@ const Events = () => {
 
         {/* 8 columns for products */}
         <div className="md:col-span-9">
-          <CategoryWiseFeed></CategoryWiseFeed>
+          <GiftCategoryWiseFeed></GiftCategoryWiseFeed>
+        
         </div>
       </div>
     </div>

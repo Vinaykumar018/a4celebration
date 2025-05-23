@@ -68,29 +68,29 @@ const TopNavbar = () => {
         <input
           type="text"
           placeholder="What are you celebrating?"
-          className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent"
+          className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent"
         />
-        <button className="absolute right-0 top-0 h-full px-3 flex items-center text-gray-400 hover:text-rose-500">
+        <button className="absolute right-0 top-0 h-full px-3 flex items-center text-gray-400 hover:text-amber-500">
           <Search className="h-5 w-5" />
         </button>
       </div>
 
       {/* Desktop Icons */}
       <div className="hidden md:flex items-center gap-4">
-        <Link to="/help" className="flex items-center hover:text-rose-500 cursor-pointer">
+        <Link to="/help" className="flex items-center hover:text-amber-500 cursor-pointer">
           <HelpCircle className="h-5 w-5" />
           <span className="ml-1 text-sm font-medium">HELP CENTER</span>
         </Link>
-        <Link to="/wishlist" className="hover:text-rose-500 cursor-pointer flex items-center">
+        <Link to="/wishlist" className="hover:text-amber-500 cursor-pointer flex items-center">
           <Heart className="h-5 w-5" />
         </Link>
-        <Link to="/cart" className="hover:text-rose-500 cursor-pointer flex items-center">
+        <Link to="/cart" className="hover:text-amber-500 cursor-pointer flex items-center">
           <ShoppingCart className="h-5 w-5" />
         </Link>
         {isAuthenticated ? (
           <Link
             to="/profile"
-            className="flex flex-col items-center hover:text-rose-500 cursor-pointer"
+            className="flex flex-col items-center hover:text-amber-500 cursor-pointer"
             style={{
               textAlign: 'center',  // Centers content horizontally
               display: 'flex',  // Flexbox to stack the image and text vertically
@@ -105,7 +105,7 @@ const TopNavbar = () => {
             <div
               style={{
                 backgroundImage: `url(${userData.data.profile_image
-                  ? "http://localhost:3000/" + sanitizePath(userData.data.profile_image)
+                  ? "https://a4celebration.com/api/" + sanitizePath(userData.data.profile_image)
                   : unknown
                   })`,
                 backgroundSize: 'cover',
@@ -130,14 +130,14 @@ const TopNavbar = () => {
         ) : (
           <button
             onClick={() => setIsLoginModalOpen(true)}
-            className="flex items-center hover:text-rose-500 cursor-pointer"
+            className="flex items-center hover:text-amber-500 cursor-pointer"
           >
             <User className="h-5 w-5" />
           </button>
         )}
 
-        <div className="flex items-center hover:text-rose-500 cursor-pointer" onClick={handleOpenModal}>
-          <MapPin className="h-5 w-5 text-rose-500" />
+        <div className="flex items-center hover:text-amber-500 cursor-pointer" onClick={handleOpenModal}>
+          <MapPin className="h-5 w-5 text-amber-500" />
           <span className="ml-1 text-sm font-medium">KANPUR</span>
         </div>
       </div>
@@ -145,20 +145,20 @@ const TopNavbar = () => {
       {/* Mobile Icons & Menu */}
       <div className="md:hidden flex items-center gap-2">
         <button onClick={() => setIsSearchOpen(!isSearchOpen)}>
-          <Search className="h-5 w-5 text-gray-700 hover:text-rose-500" />
+          <Search className="h-5 w-5 text-gray-700 hover:text-amber-500" />
         </button>
         {isSearchOpen && (
           <input
             type="text"
             placeholder="Search..."
-            className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-rose-300 focus:border-transparent"
+            className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent"
           />
         )}
         <Link to="/wishlist">
-          <Heart className="h-5 w-5 text-gray-700 hover:text-rose-500" />
+          <Heart className="h-5 w-5 text-gray-700 hover:text-amber-500" />
         </Link>
         <Link to="/cart">
-          <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-rose-500" />
+          <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-amber-500" />
         </Link>
         <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? (
@@ -181,7 +181,7 @@ const TopNavbar = () => {
                 setIsMobileMenuOpen(false);
 
               }}
-              className="flex items-center text-gray-700 hover:text-rose-500">
+              className="flex items-center text-gray-700 hover:text-amber-500">
               <FaUser />
               <span
 
@@ -196,22 +196,22 @@ const TopNavbar = () => {
                 setIsMobileMenuOpen(false);
                 setIsLoginModalOpen(true);
               }}
-              className="flex items-center text-gray-700 hover:text-rose-500"
+              className="flex items-center text-gray-700 hover:text-amber-500"
             >
               <User className="h-5 w-5 mr-2" /> Log In
             </button>
           )}
-          <Link to="/help" className="flex items-center text-gray-700 hover:text-rose-500">
+          <Link to="/help" className="flex items-center text-gray-700 hover:text-amber-500">
             <HelpCircle className="h-5 w-5 mr-2" /> Help Center
           </Link>
-          <Link to="/wishlist" className="flex items-center text-gray-700 hover:text-rose-500">
+          <Link to="/wishlist" className="flex items-center text-gray-700 hover:text-amber-500">
             <Heart className="h-5 w-5 mr-2" /> Wishlist
           </Link>
-          <Link to="/cart" className="flex items-center text-gray-700 hover:text-rose-500">
+          <Link to="/cart" className="flex items-center text-gray-700 hover:text-amber-500">
             <ShoppingCart className="h-5 w-5 mr-2" /> Cart
           </Link>
-          <div className="flex items-center text-gray-700 hover:text-rose-500" onClick={handleOpenModal}>
-            <MapPin className="h-5 w-5 mr-2 text-rose-500" /> Kanpur
+          <div className="flex items-center text-gray-700 hover:text-amber-500" onClick={handleOpenModal}>
+            <MapPin className="h-5 w-5 mr-2 text-amber-500" /> Kanpur
           </div>
         </div>
       )}

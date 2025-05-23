@@ -10,6 +10,7 @@ import { useCart } from '../../hooks/cartHook';
 
 const Cart = () => {
   const { cartItems: initialCartItems, isLoading } = useUserCartData();
+
   const [cartItems, setCartItems] = useState([]);
   const { cart, clearCart, removeItem } = useCart();
   console.log(cartItems, "of the user")
@@ -46,6 +47,8 @@ const Cart = () => {
     }
   };
 
+
+
   const handleClearCart = async () => {
     const isLoggedIn = localStorage.getItem("isLoggedIn");
     const userId = localStorage.getItem("userId");
@@ -68,15 +71,15 @@ const Cart = () => {
       <ToastContainer />
 
       {/* Special Offers Banner */}
-      <div className="w-full bg-pink-100 border-t-4 border-pink-500">
+      <div className="w-full bg-amber-100 border-t-4 border-amber-500">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Gift className="h-5 w-5 text-pink-600" />
+            <Gift className="h-5 w-5 text-amber-600" />
             <p className="text-sm">
               <span className="font-semibold">Special Offers.</span> We found offers available based on items in your cart.
             </p>
           </div>
-          <Link to="#" className="text-pink-700 hover:underline text-sm font-medium">
+          <Link to="#" className="text-amber-700 hover:underline text-sm font-medium">
             See All Deals & Offers
           </Link>
         </div>
@@ -85,11 +88,11 @@ const Cart = () => {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="h-8 w-12 text-pink-300" />
-            <h1 className="text-2xl sm:text-3xl font-bold text-pink-800">Your Sacred Cart</h1>
+            <ShoppingBag className="h-8 w-12 text-amber-300" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-amber-800">Your Sacred Cart</h1>
           </div>
           <Link to="/" className="self-start sm:self-auto">
-            <button className="border border-pink-300 text-pink-700 hover:bg-pink-100 px-4 py-2 rounded">
+            <button className="border border-amber-300 text-amber-700 hover:bg-amber-100 px-4 py-2 rounded">
               Continue Shopping
             </button>
           </Link>
@@ -99,13 +102,13 @@ const Cart = () => {
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-6">
             {cartItems.length === 0 ? (
-              <div className="border-dashed border-2 border-pink-200 rounded-lg p-6">
+              <div className="border-dashed border-2 border-amber-200 rounded-lg p-6">
                 <div className="flex flex-col items-center justify-center py-12">
-                  <ShoppingBag className="h-12 w-12 text-pink-300 mb-4" />
+                  <ShoppingBag className="h-12 w-12 text-amber-300 mb-4" />
                   <p className="text-lg text-gray-600 mb-2">Your cart is empty</p>
                   <p className="text -sm text-gray-500 mb-6">Add items to begin your spiritual journey</p>
                   <Link to="/">
-                    <button className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded">
+                    <button className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded">
                       Browse Products
                     </button>
                   </Link>
@@ -113,7 +116,7 @@ const Cart = () => {
               </div>
             ) : (
               cartItems.map((item) => (
-                <div key={item._id} className="overflow-hidden border-pink-200 shadow-md rounded-lg">
+                <div key={item._id} className="overflow-hidden border-amber-200 shadow-md rounded-lg">
                   <div className="relative">
                     <div className="absolute top-2 right-2">
                       <button
@@ -125,16 +128,16 @@ const Cart = () => {
                     </div>
                     <div className="p-4 md:p-6">
                       <div className="flex flex-col md:flex-row gap-6">
-                        <div className="relative h-32 w-32 mx-auto md:mx-0 rounded-lg overflow-hidden border-2 border-pink-200 bg-white">
+                        <div className="relative h-32 w-32 mx-auto md:mx-0 rounded-lg overflow-hidden border-2 border-amber-200 bg-white">
                           <img
-                            src={"http://localhost:3000/" + item.featured_image}
+                            src={"https://a4celebration.com/api/" + item.featured_image}
                             alt={item.product_name}
                             className="object-cover w-full h-full"
                           />
                         </div>
                         <div className="flex-1 space-y-3">
                           <div>
-                            <Link to="#" className="text-pink-800 hover:text-pink-600 font-medium text-lg">
+                            <Link to="#" className="text-amber-800 hover:text-amber-600 font-medium text-lg">
                               {item.product_name}
                             </Link>
                             <span className="ml-2 bg-green-50 text-green-700 border-green-200 px-2 py-1 rounded text-sm">
@@ -145,14 +148,14 @@ const Cart = () => {
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
                               <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-pink-600" />
+                                <Calendar className="h-4 w-4 text-amber-600" />
                                 <p className="text-sm text-gray-700">
                                   <span className="font-medium">Booking Date:</span>{" "}
                                   {new Date(item.service_date).toLocaleDateString()}
                                 </p>
                               </div>
                               <div className="flex items-center gap-2">
-                                <Clock className="h-4 w-4 text-pink-600" />
+                                <Clock className="h-4 w-4 text-amber-600" />
                                 <p className="text-sm text-gray-700">
                                   <span className="font-medium">Booking Time:</span> {item.service_time}
                                 </p>
@@ -175,7 +178,7 @@ const Cart = () => {
                                   <span className="font-medium">Price:</span> {currencySymbol}{" "}
                                   {item.price.toFixed(2)}
                                 </p>
-                                <p className="text-sm font-medium text-pink-800">
+                                <p className="text-sm font-medium text-amber-800">
                                   <span className="font-medium">Total:</span> {currencySymbol}{" "}
                                   {(item.price * item.quantity).toFixed(2)}
                                 </p>
@@ -185,11 +188,11 @@ const Cart = () => {
                         </div>
                       </div>
 
-                      <div className="mt-4 pt-4 border-t border-pink-100">
+                      <div className="mt-4 pt-4 border-t border-amber-100">
                         <p className="text-xs text-gray-600">
                           <span className="font-medium">Parampara:</span> Earn a ₹20 statement credit when you spend
                           ₹29 on eligible purchases.
-                          <Link to="#" className="text-pink-700 hover:underline ml-1">
+                          <Link to="#" className="text-amber-700 hover:underline ml-1">
                             Learn more
                           </Link>
                         </p>
@@ -204,25 +207,25 @@ const Cart = () => {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="sticky top-4 space-y-6">
-              <div className="border-pink-200 shadow-md rounded-lg overflow-hidden">
-                <div className="bg-pink-50 border-b border-pink-100 p-4">
-                  <h2 className="text-center text-pink-800 font-bold">Order Summary</h2>
+              <div className="border-amber-200 shadow-md rounded-lg overflow-hidden">
+                <div className="bg-amber-50 border-b border-amber-100 p-4">
+                  <h2 className="text-center text-amber-800 font-bold">Order Summary</h2>
                 </div>
                 <div className="p-6 space-y-6">
                   <div className="flex items-center space-x-2">
                     <input
                       type="text"
                       placeholder="Enter Promo code here..."
-                      className="border border-pink-200 focus:border-pink-400 px-3 py-2 rounded w-full"
+                      className="border border-amber-200 focus:border-amber-400 px-3 py-2 rounded w-full"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value)}
                     />
-                    <button className="border border-pink-200 text-pink-700 hover:bg-pink-100 px-4 py-2 rounded">
+                    <button className="border border-amber-200 text-amber-700 hover:bg-amber-100 px-4 py-2 rounded">
                       Apply
                     </button>
                   </div>
 
-                  <hr className="bg-pink-100" />
+                  <hr className="bg-amber-100" />
 
                   <div className="space-y-3">
                     <div className="flex justify-between">
@@ -243,7 +246,7 @@ const Cart = () => {
                       <p>-</p>
                     </div>
                     <div className="flex justify-between">
-                      <Link to="#" className="text-pink-700 hover:underline flex items-center gap-1">
+                      <Link to="#" className="text-amber-700 hover:underline flex items-center gap-1">
                         <Info className="h-4 w-4" />
                         <span>Estimate Tax</span>
                       </Link>
@@ -251,18 +254,18 @@ const Cart = () => {
                     </div>
                   </div>
 
-                  <hr className="bg-pink-100" />
+                  <hr className="bg-amber-100" />
 
                   <div className="flex justify-between items-center">
-                    <p className="text-lg font-bold text-pink-800">Total:</p>
-                    <p className="text-lg font-bold text-pink-800">
+                    <p className="text-lg font-bold text-amber-800">Total:</p>
+                    <p className="text-lg font-bold text-amber-800">
                       {currencySymbol}
                       {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}
                     </p>
                   </div>
 
                   <button
-                    className="w-full bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded"
+                    className="w-full bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded"
                     onClick={handleCheckout}
                     type="submit"
                     disabled={cartItems.length === 0 || isLoading}
@@ -271,7 +274,7 @@ const Cart = () => {
                   </button>
 
                   <button
-                    className="w-full border border-pink-200 text-pink-700 hover:bg-pink-100 px-6 py-2 rounded"
+                    className="w-full border border-amber-200 text-amber-700 hover:bg-amber-100 px-6 py-2 rounded"
                     onClick={handleClearCart}
                     disabled={cartItems.length === 0}
                   >
@@ -280,7 +283,7 @@ const Cart = () => {
                 </div>
               </div>
 
-              <div className="border-pink-200 rounded-lg p-4">
+              <div className="border-amber-200 rounded-lg p-4">
                 <div className="flex items-center justify-center gap-4 flex-wrap">
                   <img src="https://cdn4.iconfinder.com/data/icons/flat-brand-logo-2/512/visa-1024.png" alt="Visa" width={40} height={30} />
                   <img src="https://cdn3.iconfinder.com/data/icons/payment-method-1/64/_Mastercard-1024.png" alt="Mastercard" width={40} height={30} />

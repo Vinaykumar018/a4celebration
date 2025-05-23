@@ -109,7 +109,7 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
     <div className="space-y-4">
       <div className="flex flex-col relative">
         <label htmlFor="date" className="text-sm font-medium text-gray-700 mb-1 flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
           Select Date (IST)
@@ -125,13 +125,13 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
             onClick={handleInputClick}
             min={format(new Date(), 'yyyy-MM-dd')}
             disabled={PIN === false}
-            className={`px-4 py-1.5 border rounded-xl focus:ring-2 focus:ring-pink-400 focus:border-pink-400 outline-none transition shadow-sm w-full ${PIN === false
+            className={`px-4 py-1.5 border rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition shadow-sm w-full ${PIN === false
               ? 'border-gray-200 bg-gray-50 cursor-not-allowed pr-8'
-              : 'border-pink-200 hover:border-pink-300 cursor-pointer'
+              : 'border-amber-200 hover:border-amber-300 cursor-pointer'
               }`}
           />
           {PIN === false && (
-            <FaLock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-pink-500" />
+            <FaLock className="absolute right-3 top-1/2 transform -translate-y-1/2 text-amber-500" />
           )}
         </div>
 
@@ -147,10 +147,10 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
                 onClick={() => handleSlotSelect(slot)}
                 disabled={PIN === false}
                 className={`p-3 border rounded-lg text-center transition ${selectedSlot && selectedSlot.start.getTime() === slot.start.getTime()
-                  ? 'bg-pink-500 text-white border-pink-500'
+                  ? 'bg-amber-500 text-white border-amber-500'
                   : PIN === false
                     ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
-                    : 'bg-white border-pink-200 hover:border-pink-300 hover:bg-pink-50'
+                    : 'bg-white border-amber-200 hover:border-amber-300 hover:bg-amber-50'
                   }`}
               >
                 {slot.label}

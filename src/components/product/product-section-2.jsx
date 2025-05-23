@@ -79,7 +79,7 @@ const ProductSection2 = () => {
       description="Explore our Gifting Section"
       services={giftList}
       baseImageUrl={img1}
-      themeColor="#f472b6"
+      themeColor="#d97706"
       section="Giftings"
       sectionSlug="/gifts/e-commerce"
       ctaText="Book Now"

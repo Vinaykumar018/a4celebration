@@ -42,20 +42,20 @@ const KitsOverview = (kitPart) => {
         }
       `}</style>
 
-      <div className="w-full mt-2 font-poppins bg-pink-50">
+      <div className="w-full mt-2 font-poppins bg-amber-50">
 
 
-        <div className="rounded-lg shadow-sm divide-y bg-pink-50 product-shadow">
+        <div className="rounded-lg shadow-sm divide-y bg-amber-50 product-shadow">
 
 
 
           <details className="px-4" open>
             <summary className="py-4 font-medium cursor-pointer text-black flex justify-between items-center">
               <span className="flex items-center gap-2">
-                <FaBook className="text-pink-500" />
+                <FaBook className="text-amber-500" />
                 Decoration Kit & Materials
               </span>
-              <FaArrowDown className="text-pink-500" />
+              <FaArrowDown className="text-amber-500" />
             </summary>
             <div className="pb-4 text-gray-700">
 

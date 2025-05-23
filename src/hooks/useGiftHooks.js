@@ -30,7 +30,9 @@ const useGiftHook = () => {
     setGiftLoading(true);
     try {
       const data = await getProductById(id);
-      setSingleGift(data);
+      setSingleGift(data.data);
+      return data;
+      
     } catch (err) {
       setGiftError(err);
     } finally {

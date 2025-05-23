@@ -34,17 +34,17 @@ const DeliveryInfo = () => {
         }
       `}</style>
 
-      <div className="bg-pink-50 p-4 text-sm space-y-2 font-poppins rounded-lg shadow-sm product-shadow">
-        <p className="text-xl font-bold mb-4 text-pink-700 font-playfair">Get it in 7 days</p>
+      <div className="bg-amber-50 p-4 text-sm space-y-2 font-poppins rounded-lg shadow-sm product-shadow">
+        <p className="text-xl font-bold mb-4 text-amber-700 font-playfair">Get it in 7 days</p>
 
         <div className="space-y-3">
           {/* Store Pickup */}
           <div className="flex items-start gap-2">
-            <Store className="w-4 h-4 text-pink-500 mt-1" />
+            <Store className="w-4 h-4 text-amber-500 mt-1" />
             <div>
               <span className="font-semibold">Store Pickup: </span>
               <span>Order now for pickup on <strong>Wed, Jul 7</strong> at Neykart Store. </span>
-              <span className="cursor-pointer text-pink-600 underline hover:text-pink-800">
+              <span className="cursor-pointer text-amber-600 underline hover:text-amber-800">
                 Discover all pickup locations
               </span>
             </div>
@@ -52,11 +52,11 @@ const DeliveryInfo = () => {
 
           {/* Shipping */}
           <div className="flex items-start gap-2">
-            <Truck className="w-4 h-4 text-pink-500 mt-1" />
+            <Truck className="w-4 h-4 text-amber-500 mt-1" />
             <div>
               <span className="font-semibold">Shipping &amp; Delivery: </span>
               <span>Available in your Area. </span>
-              <span className="cursor-pointer text-pink-600 underline hover:text-pink-800">
+              <span className="cursor-pointer text-amber-600 underline hover:text-amber-800">
                 Enter your location
               </span>
             </div>
@@ -64,11 +64,11 @@ const DeliveryInfo = () => {
 
           {/* Easy Return */}
           <div className="flex items-start gap-2">
-            <Undo2 className="w-4 h-4 text-pink-500 mt-1" />
+            <Undo2 className="w-4 h-4 text-amber-500 mt-1" />
             <div>
               <span className="font-semibold">Easy Return: </span>
               <span>Return this item until Jul 22. </span>
-              <a href="#" className="text-pink-600 underline hover:text-pink-800">Return Policy</a>
+              <a href="#" className="text-amber-600 underline hover:text-amber-800">Return Policy</a>
             </div>
           </div>
         </div>
@@ -84,8 +84,8 @@ const DeliveryInfo = () => {
 
         {/* Secure Transaction */}
         <div className="flex items-center gap-2 mt-4">
-          <Lock className="w-5 h-5 text-pink-500" />
-          <span className="text-pink-600">Secure Transaction</span>
+          <Lock className="w-5 h-5 text-amber-500" />
+          <span className="text-amber-600">Secure Transaction</span>
         </div>
       </div>
     </>

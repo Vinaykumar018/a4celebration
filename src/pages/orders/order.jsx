@@ -43,7 +43,7 @@ export default function OrderConfirmation() {
     if (!status) return "bg-gray-100 text-gray-800";
     switch (status.toLowerCase()) {
       case "processing":
-        return "bg-pink-100 text-pink-800"
+        return "bg-amber-100 text-amber-800"
       case "confirmed":
         return "bg-green-100 text-green-800"
       case "shipped":
@@ -62,7 +62,7 @@ export default function OrderConfirmation() {
   if (!orderData) return <div>No order data found</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-pink-50 to-white p-4 md:p-8">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* Success Animation */}
         <div className="flex flex-col items-center justify-center mb-8 pt-8">
@@ -70,11 +70,11 @@ export default function OrderConfirmation() {
             className={`mb-4 transform transition-all duration-700 ease-out ${isLoaded ? "scale-100 opacity-100" : "scale-0 opacity-0"
               }`}
           >
-            <CheckCircle className="w-24 h-24 text-pink-500" />
+            <CheckCircle className="w-24 h-24 text-amber-500" />
           </div>
 
           <h1
-            className={`text-3xl md:text-4xl font-bold text-pink-700 text-center transform transition-all duration-500 delay-300 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+            className={`text-3xl md:text-4xl font-bold text-amber-700 text-center transform transition-all duration-500 delay-300 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
               }`}
           >
             Thank You for Your Order!
@@ -85,7 +85,7 @@ export default function OrderConfirmation() {
               }`}
           >
             <p className="text-lg text-gray-600">
-              Your order <span className="font-semibold text-pink-600">{orderData?.order_id || 'N/A'}</span> has been confirmed
+              Your order <span className="font-semibold text-amber-600">{orderData?.order_id || 'N/A'}</span> has been confirmed
             </p>
           </div>
         </div>
@@ -95,9 +95,9 @@ export default function OrderConfirmation() {
           className={`transform transition-all duration-500 delay-700 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
             }`}
         >
-          <div className="mb-6 border border-pink-200 rounded-lg shadow-md overflow-hidden">
-            <div className="bg-pink-50 p-4 border-b border-pink-200">
-              <div className="flex items-center text-pink-700 font-semibold text-lg">
+          <div className="mb-6 border border-amber-200 rounded-lg shadow-md overflow-hidden">
+            <div className="bg-amber-50 p-4 border-b border-amber-200">
+              <div className="flex items-center text-amber-700 font-semibold text-lg">
                 <Package className="mr-2 h-5 w-5" />
                 Order Status
               </div>
@@ -130,9 +130,9 @@ export default function OrderConfirmation() {
             className={`transform transition-all duration-500 delay-[800ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
               }`}
           >
-            <div className="border border-pink-200 rounded-lg shadow-sm h-full">
-              <div className="bg-pink-50 p-4 border-b border-pink-200">
-                <div className="flex items-center text-pink-700 font-semibold text-lg">
+            <div className="border border-amber-200 rounded-lg shadow-sm h-full">
+              <div className="bg-amber-50 p-4 border-b border-amber-200">
+                <div className="flex items-center text-amber-700 font-semibold text-lg">
                   <User className="mr-2 h-5 w-5" />
                   Customer Details
                 </div>
@@ -154,9 +154,9 @@ export default function OrderConfirmation() {
             className={`transform transition-all duration-500 delay-[900ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
               }`}
           >
-            <div className="border border-pink-200 rounded-lg shadow-sm h-full">
-              <div className="bg-pink-50 p-4 border-b border-pink-200">
-                <div className="flex items-center text-pink-700 font-semibold text-lg">
+            <div className="border border-amber-200 rounded-lg shadow-sm h-full">
+              <div className="bg-amber-50 p-4 border-b border-amber-200">
+                <div className="flex items-center text-amber-700 font-semibold text-lg">
                   <MapPin className="mr-2 h-5 w-5" />
                   Shipping Address
                 </div>
@@ -179,9 +179,9 @@ export default function OrderConfirmation() {
             className={`transform transition-all duration-500 delay-[1000ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
               }`}
           >
-            <div className="border border-pink-200 rounded-lg shadow-sm h-full">
-              <div className="bg-pink-50 p-4 border-b border-pink-200">
-                <div className="flex items-center text-pink-700 font-semibold text-lg">
+            <div className="border border-amber-200 rounded-lg shadow-sm h-full">
+              <div className="bg-amber-50 p-4 border-b border-amber-200">
+                <div className="flex items-center text-amber-700 font-semibold text-lg">
                   <Calendar className="mr-2 h-5 w-5" />
                   Delivery Information
                 </div>
@@ -189,7 +189,7 @@ export default function OrderConfirmation() {
               <div className="p-4">
                 <div className="space-y-2">
                   <div className="flex items-start">
-                    <Clock className="h-5 w-5 text-pink-500 mr-2 mt-0.5" />
+                    <Clock className="h-5 w-5 text-amber-500 mr-2 mt-0.5" />
                     <p className="text-gray-700">{orderData?.deliveryNotes || 'No delivery notes available'}</p>
                   </div>
                   <div className="mt-2">
@@ -208,9 +208,9 @@ export default function OrderConfirmation() {
             className={`transform transition-all duration-500 delay-[1100ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
               }`}
           >
-            <div className="border border-pink-200 rounded-lg shadow-sm h-full">
-              <div className="bg-pink-50 p-4 border-b border-pink-200">
-                <div className="flex items-center text-pink-700 font-semibold text-lg">
+            <div className="border border-amber-200 rounded-lg shadow-sm h-full">
+              <div className="bg-amber-50 p-4 border-b border-amber-200">
+                <div className="flex items-center text-amber-700 font-semibold text-lg">
                   <CreditCard className="mr-2 h-5 w-5" />
                   Payment Information
                 </div>
@@ -240,9 +240,9 @@ export default function OrderConfirmation() {
           className={`mt-6 transform transition-all duration-500 delay-[1200ms] ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
             }`}
         >
-          <div className="border border-pink-200 rounded-lg shadow-md">
-            <div className="bg-pink-50 p-4 border-b border-pink-200">
-              <div className="flex items-center text-pink-700 font-semibold text-lg">
+          <div className="border border-amber-200 rounded-lg shadow-md">
+            <div className="bg-amber-50 p-4 border-b border-amber-200">
+              <div className="flex items-center text-amber-700 font-semibold text-lg">
                 <Truck className="mr-2 h-5 w-5" />
                 Order Summary
               </div>
@@ -251,10 +251,10 @@ export default function OrderConfirmation() {
               <div className="space-y-4">
                 {orderData?.productDetails?.length ? (
                   orderData.productDetails.map((product, index) => (
-                    <div key={index} className="flex justify-between items-center py-3 border-b border-pink-100">
+                    <div key={index} className="flex justify-between items-center py-3 border-b border-amber-100">
                       <div className="flex items-center">
-                        <div className="w-12 h-12 bg-pink-100 rounded-md flex items-center justify-center mr-4">
-                          <Package className="h-6 w-6 text-pink-500" />
+                        <div className="w-12 h-12 bg-amber-100 rounded-md flex items-center justify-center mr-4">
+                          <Package className="h-6 w-6 text-amber-500" />
                         </div>
                         <div>
                           <p className="font-medium text-gray-900">{product?.productName || 'Unknown Product'}</p>
@@ -283,10 +283,10 @@ export default function OrderConfirmation() {
                     <p className="text-gray-600">Shipping</p>
                     <p className="font-medium">Free</p>
                   </div>
-                  <div className="h-px w-full bg-pink-100 my-2"></div>
+                  <div className="h-px w-full bg-amber-100 my-2"></div>
                   <div className="flex justify-between py-2">
                     <p className="font-semibold text-lg">Total</p>
-                    <p className="font-bold text-lg text-pink-700">₹{orderData?.paymentDetails?.totalAmount || 0}</p>
+                    <p className="font-bold text-lg text-amber-700">₹{orderData?.paymentDetails?.totalAmount || 0}</p>
                   </div>
                 </div>
               </div>
@@ -303,10 +303,10 @@ export default function OrderConfirmation() {
             We'll notify you when your order ships. You can track your order status anytime.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-6 py-2 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition-colors">
+            <button className="px-6 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors">
               Track Order
             </button>
-            <button className="px-6 py-2 bg-white border border-pink-300 text-pink-600 rounded-md hover:bg-pink-50 transition-colors">
+            <button className="px-6 py-2 bg-white border border-amber-300 text-amber-600 rounded-md hover:bg-amber-50 transition-colors">
               Continue Shopping
             </button>
           </div>
