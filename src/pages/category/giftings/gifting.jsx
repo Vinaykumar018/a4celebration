@@ -3,11 +3,13 @@ import CategoryTopBanner from './category-top-banner';
 import CategoryWiseFilter from './CategoryWiseFilter';
 import CategoryWiseProduct from './category-wise-product';
 import GiftCategoryWiseFeed from '../../../components/category-wise-feed/gift-category-wise-feed'
+import ChildCategoryFilter from './child-category-filter';
 
 const Events = () => {
   return (
     <div className="container mx-auto px-4 py-6">
       <CategoryTopBanner />
+      <ChildCategoryFilter></ChildCategoryFilter>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-6">
         {/* 4 columns for filter */}

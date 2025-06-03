@@ -40,7 +40,7 @@ const ProductDetailsPage = () => {
 
   const location = useLocation();
   const { serviceData, sectionData } = location.state;
-  console.log(sectionData, serviceData)
+
   const [mainImage, setMainImage] = useState(
     "https://a4celebration.com/api/" + serviceData.featured_image
 
@@ -105,7 +105,7 @@ const ProductDetailsPage = () => {
               <h2 className="text-3xl font-bold mb-2 font-playfair text-amber-800">{serviceData.name}
 
 
-                {console.log(serviceData.name)}
+
               </h2>
               <p className="text-amber-600 mb-4">SKU: WH1000XM4</p>
 

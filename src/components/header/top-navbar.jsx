@@ -21,7 +21,7 @@ const TopNavbar = () => {
 
 
   const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
-  console.log(isAuthenticated)
+
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -47,7 +47,7 @@ const TopNavbar = () => {
   }, []);
 
   const handleLoginSuccess = () => {
-    console.log("Login successful!");
+    // console.log("Login successful!");
   };
 
   const sanitizePath = (path) => {
@@ -98,9 +98,7 @@ const TopNavbar = () => {
             }}
           >
 
-            {
-              console.log(userData.data.profile_image, "user profile image")
-            }
+
 
             <div
               style={{

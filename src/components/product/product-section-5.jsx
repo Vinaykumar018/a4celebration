@@ -10,7 +10,7 @@ const ProductSection5 = () => {
       image: img1,
       price: 120,
       rating: 4.8,
-      slug: "wedding-catering"
+      slug_url: "wedding-catering"
     },
     {
       id: 2,
@@ -18,7 +18,7 @@ const ProductSection5 = () => {
       image: img1,
       price: 100,
       rating: 4.6,
-      slug: "corporate-catering"
+      slug_url: "corporate-catering"
     },
     {
       id: 3,
@@ -26,7 +26,7 @@ const ProductSection5 = () => {
       image: img1,
       price: 90,
       rating: 4.7,
-      slug: "birthday-catering"
+      slug_url: "birthday-catering"
     },
     {
       id: 4,
@@ -34,7 +34,7 @@ const ProductSection5 = () => {
       image: img1,
       price: 150,
       rating: 4.9,
-      slug: "buffet-services"
+      slug_url: "buffet-services"
     },
     {
       id: 5,
@@ -42,7 +42,7 @@ const ProductSection5 = () => {
       image: img1,
       price: 200,
       rating: 4.5,
-      slug: "live-counter-setup"
+      slug_url: "live-counter-setup"
     },
     {
       id: 6,
@@ -50,7 +50,7 @@ const ProductSection5 = () => {
       image: img1,
       price: 180,
       rating: 4.4,
-      slug: "veg-nonveg-packages"
+      slug_url: "veg-nonveg-packages"
     },
     {
       id: 7,
@@ -58,14 +58,14 @@ const ProductSection5 = () => {
       image: img1,
       price: 130,
       rating: 4.6,
-      slug: "custom-menu-planning"
+      slug_url: "custom-menu-planning"
     },
   ];
   
 
   return (
     <CardTypeC
-      title="Catering Events"
+      title="Event-Catering"
       description="Explore our spiritual services"
       services={services}
       baseImageUrl={img1}
@@ -73,7 +73,7 @@ const ProductSection5 = () => {
       ctaText="Book Now"
 
        section="Catering Events"
-    sectionSlug="/catering"
+    sectionSlug="/event-catering/service"
     />
   );
 };

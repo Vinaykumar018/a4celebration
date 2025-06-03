@@ -6,6 +6,9 @@ import 'swiper/swiper-bundle.css';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { EyeIcon } from 'lucide-react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEvents, removeEvent } from '../../redux/eventManagementSlice';
 
 const CardTypeC = ({
   title = "Featured Services",
@@ -24,6 +27,15 @@ const CardTypeC = ({
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 !== 0;
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+
+    const dispatch = useDispatch();
+    const { events, loading, error } = useSelector((state) => state.events);
+
+
+    useEffect(() => {
+      dispatch(fetchEvents());
+    }, [dispatch]);
 
     return (
       <>
@@ -56,20 +68,24 @@ const CardTypeC = ({
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
             <div>
-              <a href="#" target="_blank" className="cursor-default pointer-events-none">
-                <div className="text-[rgb(94,15,77)]">
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
-                      {section}
-                    </h2>
+              <div className="text-[rgb(94,15,77)]">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
+                    {section}
+                  </h2>
 
-                    <div className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium">
-                      <Link to={sectionSlug}><span>View All</span></Link>
+                  {sectionSlug && (
+                    <Link
+                      to={title.toLowerCase()}
+                      className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium"
+                    >
+                      <span>View All</span>
                       <EyeIcon className="h-5 w-5" />
-                    </div>
-                  </div>
+                    </Link>
+                  )}
                 </div>
-              </a>
+              </div>
+
             </div>
           </div>
         </div>
@@ -106,7 +122,12 @@ const CardTypeC = ({
             const words = service.name.split(" ");
             return (
               <SwiperSlide key={index}>
-                <Link to={`${serviceLinkPrefix}/service/${service.slug}`} className="block h-full">
+
+                <Link to={`${sectionSlug}/${service.
+                  slug_url} `} className="block h-full" state={{
+                    serviceData: service,
+                    sectionData: section
+                  }}>
                   <motion.div
                     className="h-full bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                     style={{
@@ -118,7 +139,8 @@ const CardTypeC = ({
                     {/* Image Section */}
                     <div className="sign_box_img flex justify-center p-4 bg-gray-50">
                       <img
-                        src={baseImageUrl}
+                       src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
+
                         alt={service.name}
                         className="object-cover rounded-lg w-full h-40 md:h-48"
                         style={{

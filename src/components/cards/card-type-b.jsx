@@ -8,14 +8,14 @@ import "swiper/css/pagination"
 import { FaStar, FaStarHalfAlt, FaRegStar, FaHeart, FaArrowRight } from "react-icons/fa"
 import { Autoplay, Pagination } from "swiper/modules"
 import { EyeIcon } from "lucide-react"
-// serviceLinkPrefix = "/product"
+
 
 const CardTypeB = ({
   title = "Featured Decorations",
   description = "Explore our wide range of decoration services",
   services = [],
   baseImageUrl = "/placeholder.svg?height=200&width=300",
-  serviceLinkPrefix = "/product",
+  serviceLinkPrefix = "/gifts/e-commerce",
   themeColor = "#ff7e00",
   showRating = true,
   showPrice = true,
@@ -67,20 +67,24 @@ const CardTypeB = ({
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
             <div>
-              <a href="#" target="_blank" className="cursor-default pointer-events-none">
-                <div className="text-[rgb(94,15,77)]">
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
-                      {section}
-                    </h2>
+              <div className="text-[rgb(94,15,77)]">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
+                    {section}
+                  </h2>
 
-                    <div className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium">
-                      <Link to={sectionSlug}><span>View All</span></Link>
+                  {sectionSlug && (
+                    <Link
+                      to={title.toLowerCase()}
+                      className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium"
+                    >
+                      <span>View All</span>
                       <EyeIcon className="h-5 w-5" />
-                    </div>
-                  </div>
+                    </Link>
+                  )}
                 </div>
-              </a>
+              </div>
+
             </div>
           </div>
         </div>
@@ -116,22 +120,25 @@ const CardTypeB = ({
           {services.map((service, index) => (
             <SwiperSlide key={index}>
               <div className="h-full px-2 pb-10">
-                <Link to={`${serviceLinkPrefix}/${service.slug}`} className="block h-full">
+                <Link to={`${sectionSlug}/${service.slug_url || service.slug}`} className="block h-full" state={{
+                  serviceData: service,
+                  sectionData: section
+                }}>
                   <div className="h-full bg-white rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 flex flex-col">
                     {/* Favorite Button */}
                     <button
-                      onClick={(e) => toggleFavorite(service.id || index, e)}
+                      onClick={(e) => toggleFavorite(service._id || service.id || index, e)}
                       className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md"
                     >
                       <FaHeart
-                        className={`${favorites[service.id || index] ? "text-red-500" : "text-gray-300"} text-lg`}
+                        className={`${favorites[service._id || service.id || index] ? "text-red-500" : "text-gray-300"} text-lg`}
                       />
                     </button>
 
                     {/* Image Section */}
                     <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={service.image || baseImageUrl}
+                    <img
+                       src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
                         alt={service.name}
                         className="w-full h-full object-cover"
                       />
@@ -144,9 +151,9 @@ const CardTypeB = ({
                             <span className="font-bold" style={{ color: themeColor }}>
                               {formatPrice(service.price)}
                             </span>
-                            {service.originalPrice && (
+                            {service.isOffer && service.price && (
                               <span className="text-xs text-gray-500 line-through">
-                                {formatPrice(service.originalPrice)}
+                                {formatPrice(Math.round(service.price * 1.2))}
                               </span>
                             )}
                           </div>
@@ -160,9 +167,9 @@ const CardTypeB = ({
                         {service.name}
                       </h3>
 
-                      {service.location && (
+                      {service.category_name && (
                         <p className="text-sm text-gray-500 mb-2">
-                          {service.location}
+                          {service.category_name}
                         </p>
                       )}
 
@@ -173,7 +180,7 @@ const CardTypeB = ({
                       )}
 
                       <p className="text-gray-600 mb-4 line-clamp-2 text-sm">
-                        {service.description || "Beautiful decoration package"}
+                        {service.short_description || "Beautiful gift package"}
                       </p>
 
                       <button
@@ -198,90 +205,3 @@ const CardTypeB = ({
 }
 
 export default CardTypeB
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React from "react";
-// import { Swiper, SwiperSlide } from "swiper/react";
-// import { Autoplay, Navigation, Pagination } from "swiper/modules";
-// import "swiper/css";
-// import "swiper/css/navigation";
-// import "swiper/css/pagination";
-// import { Check } from "lucide-react";
-
-// import img1 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
-// import img2 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
-// import img3 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
-
-// const slides = [
-//   {
-//     image: img1,
-//     title: "Premium Decoration 1",
-//     features: ["Feature one", "Feature two", "Feature three"],
-//   },
-//   {
-//     image: img2,
-//     title: "Elegant Setup 2",
-//     features: ["Feature A", "Feature B"],
-//   },
-//   {
-//     image: img3,
-//     title: "Traditional Theme 3",
-//     features: ["Custom lighting", "Creative decor"],
-//   },
-// ];
-
-// export default function Slider() {
-//   return (
-//     <div className="w-full overflow-hidden w-full h-[60vh] sm:h-[70vh] md:h-[75vh] lg:h-[80vh] overflow-hidden h-auto">
-//       <Swiper
-//         modules={[Autoplay, Navigation, Pagination]}
-//         autoplay={{ delay: 3000 }}
-//         spaceBetween={0}
-//         slidesPerView={1}
-//         loop
-//         pagination={{ clickable: true }}
-      
-//         className="w-full h-auto"
-//       >
-//         {slides.map((slide, index) => (
-//           <SwiperSlide key={index} className="w-full sm:h-auto h-full">
-//             <div className="relative w-full sm:h-auto h-full">
-//               {/* Overlay */}
-//               <div className="absolute inset-0  z-10"></div>
-
-//               {/* Image */}
-//               <img
-//                 src={"https://jusst4you.com/wp-content/uploads/2024/01/1-9-1.png"}
-//                 alt={slide.title || "Slide Image"}
-//                 className="object-cover w-full sm:h-auto h-full"
-//                 loading="lazy"
-//               />
-
-//               {/* Content */}
-//               <div className="absolute inset-0 z-20 flex flex-col justify-center px-6 sm:px-10 md:px-16 lg:px-24">
-               
-//               </div>
-//             </div>
-//           </SwiperSlide>
-//         ))}
-//       </Swiper>
-//     </div>
-//   );
-// }

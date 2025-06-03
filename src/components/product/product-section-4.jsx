@@ -64,14 +64,14 @@ const ProductSection4 = () => {
 
   return (
     <CardTypeB
-      title="Trending Artists"
+      title="Artist-Management"
       description="Explore our spiritual services"
       services={services}
       baseImageUrl={img1}
       themeColor="#d97706"
       ctaText="Book Now"
        section="Trending Artists"
-    sectionSlug="/trending"
+    sectionSlug="/artist/service"
     />
   );
 };

@@ -1,25 +1,55 @@
-"use client"
 
-import { useState, useEffect } from "react"
+
+import { useState, useEffect, useCallback } from "react"
 import { Share2, Phone, Clock, ChevronLeft, ChevronRight, Check, Gift } from "lucide-react"
+import { useLocation, useNavigate } from "react-router-dom"
+import { useCart } from "../../hooks/cartHook"
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from 'react-toastify';
+import { Settings2Icon } from 'lucide-react';
+import { TimeSlotPicker } from '../../components/delivery/DateTimePicker'
+import CustomRequestModal from "./customizedProduct";
+import { TimeSlotPicker2 } from "../../components/delivery/TimeSlotPicker2";
 
 const EventManagementDetailsPage = () => {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
+  const { cart, addToCart } = useCart();
+  const [dateTime, setDateTime] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+
+  const { serviceData, sectionData } = location.state;
+
+  const [showModal, setShowModal] = useState(false);
+
+
+  const handleOpen = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+
+  // Use serviceData for dynamic content
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [timeLeft, setTimeLeft] = useState({
-    days: 16,
+    days: parseInt(serviceData?.offer_ends_in) || 0,
     hours: 11,
     minutes: 27,
     seconds: 33,
   })
 
+  // Prepare images array - combine featured image with other_images
   const images = [
-    "https://www.ptaufiqphotography.com/wp-content/uploads/2019/02/Indian-Wedding-Couples-Session-Hyatt-Pune-1024x683.jpg",
+    serviceData.featured_image,
+    ...(serviceData.other_images || [])
+  ].filter(img => img); // Remove any undefined/null images
 
-    "https://media.licdn.com/dms/image/v2/D4D22AQHgX-upePfe9A/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1683857830403?e=1750291200&v=beta&t=9zuNd8yXsL4Ox-AyyHHadTxNC9enAU6iPtOhMPOTN8Q",
-    "https://media.licdn.com/dms/image/v2/D4D22AQELufa94zFKyw/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1683857830255?e=1750291200&v=beta&t=fk_3eSaEEc5vixtnULiYGZXIcI5ZPe4Dz-msP_0Vksk",
-    "https://media.licdn.com/dms/image/v2/D4D22AQFXMbxEbjq-qw/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1683857815284?e=1750291200&v=beta&t=tOIaJAS6z7g5LCRNAeUKMEWvOX5eRk9MZTB7iooooaY",
-  ]
+  const [productId, setProductId] = useState('');
 
+  const generateProductId = useCallback(() => {
+    const prefix = 'PROD-CUSTOM-';
+    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const timestamp = Date.now().toString().slice(-4);
+    return `${prefix}${randomNum}${timestamp}`;
+  }, []);
   // Countdown timer
   useEffect(() => {
     const timer = setInterval(() => {
@@ -48,23 +78,79 @@ const EventManagementDetailsPage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
   }
 
-  const packageIncludes = [
-    { name: "Venue", included: true },
-    { name: "Catering", included: true },
-    { name: "Anchor", included: true },
-    { name: "Decoration", included: true },
-    { name: "DJ", included: true },
-    { name: "Entry Theme", included: true },
-    { name: "Photography", included: true },
-    { name: "Accommodation", included: true },
-  ]
+  // Convert package_includes object to array format
+  const packageIncludes = serviceData.package_includes ?
+    Object.entries(serviceData.package_includes).map(([name, included]) => ({
+      name: name.charAt(0).toUpperCase() + name.slice(1).replace('_', ' '),
+      included
+    })) : [];
+
+  // Format price with Indian rupee symbol and commas
+  const formattedPrice = new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0
+  }).format(serviceData.price || 0).replace('₹', '₹ ');
+
+
+  const decodeHTML = (html) => {
+    const txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    return txt.value;
+  };
+
+  useEffect(() => {
+    // Generate the product ID once when component mounts
+    setProductId(generateProductId());
+  }, [generateProductId]);
+
+  const handleBookNow = async () => {
+
+
+
+    if (!dateTime) {
+      toast.error('Please select a date and time slot');
+      return;
+    }
+
+    const cartItem = {
+      product_id: serviceData.product_id,
+      product_name: serviceData.name,
+      quantity,
+      service_date: dateTime
+
+
+
+
+    };
+
+    const cartPayload = {
+      userID: userData?.data?._id,
+      items: [cartItem]
+    };
+
+
+    try {
+      await addToCart(cartPayload);
+      toast.success('Added to cart!');
+      setTimeout(() => {
+        navigate('/cart');
+      }, 1500);
+    }
+    catch (error) {
+      // Error handling
+      toast.error('cant add to cart!', error);
+      console.error(error)
+
+    }
+  };
 
   return (
     <div className="bg-white min-h-screen">
 
       <div className="bg-gradient-to-r bg-yellow-600 text-white py-2 px-4 text-center text-sm font-medium flex items-center justify-center gap-2">
         <Gift className="h-4 w-4" />
-        <span>Special Celebration Offer! Get 8 % off on this service</span>
+        <span>Special Celebration Offer! Get 8% off on this service</span>
         <ChevronRight className="h-4 w-4" />
       </div>
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -75,39 +161,42 @@ const EventManagementDetailsPage = () => {
             <div className="relative rounded-2xl overflow-hidden mb-8 shadow-lg group">
               <div className="aspect-[4/3] relative">
                 <img
-                  src={images[currentImageIndex] || "/placeholder.svg"}
-                  alt="Event Venue"
+                  src={"https://a4celebration.com/api/" + images[currentImageIndex] || "/placeholder.svg"}
+                  alt={serviceData.name || "Event Venue"}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
                 {/* Image Navigation Buttons */}
-                <button
-                  onClick={prevImage}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <ChevronLeft size={24} />
-                </button>
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <ChevronRight size={24} />
-                </button>
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevImage}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronLeft size={24} />
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <ChevronRight size={24} />
+                    </button>
+                  </>
+                )}
 
                 {/* Image Indicators */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-                  {images.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`w-2 h-2 rounded-full transition-all ${index === currentImageIndex ? "bg-[#FFD700] w-6" : "bg-white/70 hover:bg-white"
-                        }`}
-                    />
-                  ))}
-                </div>
-
-                {/* Share Button */}
-
+                {images.length > 1 && (
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                    {images.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentImageIndex(index)}
+                        className={`w-2 h-2 rounded-full transition-all ${index === currentImageIndex ? "bg-[#FFD700] w-6" : "bg-white/70 hover:bg-white"
+                          }`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="lg:col-span-5 md:hidden mt-1">
                 <div className="bg-amber-50 rounded-lg shadow-lg overflow-hidden border border-[#FFD700] sticky top-2">
@@ -136,7 +225,7 @@ const EventManagementDetailsPage = () => {
                           </div>
                           <span className="font-medium text-black">Price</span>
                         </div>
-                        <div className="text-lg font-bold text-yellow-700">₹ 25,00,000</div>
+                        <div className="text-lg font-bold text-yellow-700">{formattedPrice}</div>
                       </div>
 
                       <div className="flex justify-between items-center">
@@ -158,7 +247,7 @@ const EventManagementDetailsPage = () => {
                           </div>
                           <span className="font-medium text-black">Food Type</span>
                         </div>
-                        <div className="text-black font-medium">Mix Menu</div>
+                        <div className="text-black font-medium">{serviceData.food_type || 'Not specified'}</div>
                       </div>
 
                       <div className="flex justify-between items-center">
@@ -183,7 +272,7 @@ const EventManagementDetailsPage = () => {
                           </div>
                           <span className="font-medium text-black">Pax</span>
                         </div>
-                        <div className="text-black font-medium">200 Pax</div>
+                        <div className="text-black font-medium">{serviceData.pax || 'Not specified'}</div>
                       </div>
 
                       <div className="flex justify-between items-center">
@@ -213,7 +302,7 @@ const EventManagementDetailsPage = () => {
                           </div>
                           <span className="font-medium text-black">Room</span>
                         </div>
-                        <div className="text-black font-medium">70 Room</div>
+                        <div className="text-black font-medium">{serviceData.room || 'Not specified'}</div>
                       </div>
 
                       <div className="flex justify-between items-center">
@@ -235,7 +324,7 @@ const EventManagementDetailsPage = () => {
                           </div>
                           <span className="font-medium text-black">City</span>
                         </div>
-                        <div className="text-black font-medium">Agra</div>
+                        <div className="text-black font-medium">{serviceData.city || 'Not specified'}</div>
                       </div>
 
                       <div className="flex justify-between items-center">
@@ -259,7 +348,7 @@ const EventManagementDetailsPage = () => {
                           </div>
                           <span className="font-medium text-black">Venue</span>
                         </div>
-                        <div className="text-black font-medium">Bng Bells</div>
+                        <div className="text-black font-medium">{serviceData.venue || 'Not specified'}</div>
                       </div>
 
                       <div className="flex justify-between items-center">
@@ -286,7 +375,7 @@ const EventManagementDetailsPage = () => {
                           </div>
                           <span className="font-medium text-black">Package By</span>
                         </div>
-                        <div className="text-black font-medium">Bng Bells</div>
+                        <div className="text-black font-medium">{serviceData.package_by || 'Not specified'}</div>
                       </div>
 
                       <div className="flex justify-between items-center">
@@ -318,6 +407,7 @@ const EventManagementDetailsPage = () => {
                   </div>
 
                   {/* Contact Buttons */}
+
                   <div className="p-4 space-y-3">
                     <div className="grid grid-cols-2 gap-3">
                       <button className="flex items-center justify-center gap-1 py-2 px-3 rounded-full border border-[#FFD700] bg-[#222222] transition-colors ">
@@ -364,7 +454,30 @@ const EventManagementDetailsPage = () => {
                       </svg>
                       <span className="font-medium text-sm">Package Enquiry</span>
                     </button>
+
+                    <div>
+                  <button
+                    onClick={handleOpen}
+                    className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors"
+                  >
+                    <Settings2Icon />
+                    <span className="font-medium text-sm">Your Customized Requirements</span>
+                  </button>
+
+                  {showModal && (
+                    <CustomRequestModal
+                      productId={productId}  // replace with actual productId if needed
+                      userId={userData?.data?._id}      // replace with actual userId if needed
+                      onClose={handleClose}
+                    />
+                  )}
+                </div>
+
+
                   </div>
+
+
+
 
                   {/* Special Offer */}
                   <div className="p-4 bg-gradient-to-r from-[#222222] to-black text-white">
@@ -409,11 +522,13 @@ const EventManagementDetailsPage = () => {
                 {packageIncludes.map((item, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-2 px-4 py-2 rounded-full border border-[#897712] bg-white hover:bg-[#FFF8E1] transition-colors group cursor-pointer"
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full border ${item.included ? 'border-[#897712] bg-white hover:bg-[#FFF8E1]' : 'border-gray-300 bg-gray-100'} transition-colors group cursor-pointer`}
                   >
-                    <div className="w-5 h-5 rounded-full bg-[#ddbe10] flex items-center justify-center">
-                      <Check size={12} className="text-black" />
-                    </div>
+                    {item.included && (
+                      <div className="w-5 h-5 rounded-full bg-[#ddbe10] flex items-center justify-center">
+                        <Check size={12} className="text-black" />
+                      </div>
+                    )}
                     <span className="font-medium">{item.name}</span>
                   </div>
                 ))}
@@ -423,15 +538,13 @@ const EventManagementDetailsPage = () => {
             {/* Description */}
             <div className="mb-8">
               <h2 className="text-2xl font-bold mb-4 text-black">Description</h2>
-              <p className="text-gray-700 leading-relaxed">
-                Create your dream destination wedding at Bng Bells in Agra! Enjoy premium rooms for you and your guests,
-                plus tasty catering options made just for you.
-              </p>
-              <p className="text-gray-700 leading-relaxed mt-4">
-                Our luxury wedding package includes everything you need for a memorable celebration. From stunning
-                decorations to professional entertainment, we've got you covered. The venue features beautiful
-                architecture and spacious areas for all your wedding events.
-              </p>
+              <div
+                className="text-gray-700 leading-relaxed"
+                dangerouslySetInnerHTML={{
+                  __html: decodeHTML(serviceData.description || 'No description available')
+                }}
+              />
+              {console.log(serviceData.description)}
 
               {/* Expandable Content */}
               <div className="mt-4">
@@ -444,7 +557,7 @@ const EventManagementDetailsPage = () => {
 
             {/* Venue Features */}
             <div className="bg-black rounded-xl p-6 text-white hidden md:block">
-              <h2 className="text-xl font-bold mb-4 text-[#FFD700] ">Venue Highlights</h2>
+              <h2 className="text-xl font-bold mb-4 text-[#FFD700]">Venue Highlights</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="flex flex-col items-center text-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
                   <div className="w-12 h-12 rounded-full bg-[#FFD700] flex items-center justify-center mb-2">
@@ -512,7 +625,7 @@ const EventManagementDetailsPage = () => {
                       <path d="M15 17h1"></path>
                     </svg>
                   </div>
-                  <span className="font-medium">70 Rooms</span>
+                  <span className="font-medium">{serviceData.room || '0'} Rooms</span>
                 </div>
                 <div className="flex flex-col items-center text-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
                   <div className="w-12 h-12 rounded-full bg-[#FFD700] flex items-center justify-center mb-2">
@@ -533,7 +646,7 @@ const EventManagementDetailsPage = () => {
                       <path d="M5 16v4c0 2.5 3.5 4 7 4s7-1.5 7-4v-4"></path>
                     </svg>
                   </div>
-                  <span className="font-medium">200 Pax</span>
+                  <span className="font-medium">{serviceData.pax || '0'} Pax</span>
                 </div>
                 <div className="flex flex-col items-center text-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
                   <div className="w-12 h-12 rounded-full bg-[#FFD700] flex items-center justify-center mb-2">
@@ -552,7 +665,7 @@ const EventManagementDetailsPage = () => {
                       <path d="M12 2a8 8 0 0 0-8 8c0 5.4 7 12 8 12s8-6.6 8-12a8 8 0 0 0-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"></path>
                     </svg>
                   </div>
-                  <span className="font-medium">Agra</span>
+                  <span className="font-medium">{serviceData.city || 'City'}</span>
                 </div>
                 <div className="flex flex-col items-center text-center p-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors">
                   <div className="w-12 h-12 rounded-full bg-[#FFD700] flex items-center justify-center mb-2">
@@ -571,7 +684,7 @@ const EventManagementDetailsPage = () => {
                       <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"></path>
                     </svg>
                   </div>
-                  <span className="font-medium">Mix Menu</span>
+                  <span className="font-medium">{serviceData.food_type || 'Food'}</span>
                 </div>
               </div>
             </div>
@@ -605,7 +718,7 @@ const EventManagementDetailsPage = () => {
                       </div>
                       <span className="font-medium text-black">Price</span>
                     </div>
-                    <div className="text-lg font-bold text-yellow-700">₹ 25,00,000</div>
+                    <div className="text-lg font-bold text-yellow-700">{formattedPrice}</div>
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -627,7 +740,7 @@ const EventManagementDetailsPage = () => {
                       </div>
                       <span className="font-medium text-black">Food Type</span>
                     </div>
-                    <div className="text-black font-medium">Mix Menu</div>
+                    <div className="text-black font-medium">{serviceData.food_type || 'Not specified'}</div>
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -652,7 +765,7 @@ const EventManagementDetailsPage = () => {
                       </div>
                       <span className="font-medium text-black">Pax</span>
                     </div>
-                    <div className="text-black font-medium">200 Pax</div>
+                    <div className="text-black font-medium">{serviceData.pax || 'Not specified'}</div>
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -682,7 +795,7 @@ const EventManagementDetailsPage = () => {
                       </div>
                       <span className="font-medium text-black">Room</span>
                     </div>
-                    <div className="text-black font-medium">70 Room</div>
+                    <div className="text-black font-medium">{serviceData.room || 'Not specified'}</div>
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -704,7 +817,7 @@ const EventManagementDetailsPage = () => {
                       </div>
                       <span className="font-medium text-black">City</span>
                     </div>
-                    <div className="text-black font-medium">Agra</div>
+                    <div className="text-black font-medium">{serviceData.city || 'Not specified'}</div>
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -728,7 +841,7 @@ const EventManagementDetailsPage = () => {
                       </div>
                       <span className="font-medium text-black">Venue</span>
                     </div>
-                    <div className="text-black font-medium">Bng Bells</div>
+                    <div className="text-black font-medium">{serviceData.venue || 'Not specified'}</div>
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -755,7 +868,7 @@ const EventManagementDetailsPage = () => {
                       </div>
                       <span className="font-medium text-black">Package By</span>
                     </div>
-                    <div className="text-black font-medium">Bng Bells</div>
+                    <div className="text-black font-medium">{serviceData.package_by || 'Not specified'}</div>
                   </div>
 
                   <div className="flex justify-between items-center">
@@ -788,6 +901,13 @@ const EventManagementDetailsPage = () => {
 
               {/* Contact Buttons */}
               <div className="p-4 space-y-3">
+                <div className=" space-y-4">
+
+                  <TimeSlotPicker2
+                    onDateSelect={(selectedDate) => setDateTime(selectedDate)}
+
+                  />
+                </div>
                 <div className="grid grid-cols-2 gap-3">
                   <button className="flex items-center justify-center gap-1 py-2 px-3 rounded-full border border-[#FFD700] bg-[#222222] transition-colors ">
                     <svg
@@ -814,6 +934,27 @@ const EventManagementDetailsPage = () => {
                   </button>
                 </div>
 
+
+
+                <button className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#ff1900] text-white hover:bg-[#e60000] transition-colors" onClick={handleBookNow}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-white"
+                  >
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <span className="font-medium text-sm" >Book Now</span>
+                </button>
                 <button className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -833,6 +974,26 @@ const EventManagementDetailsPage = () => {
                   </svg>
                   <span className="font-medium text-sm">Package Enquiry</span>
                 </button>
+
+
+                <div>
+                  <button
+                    onClick={handleOpen}
+                    className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors"
+                  >
+                    <Settings2Icon />
+                    <span className="font-medium text-sm">Your Customized Requirements</span>
+                  </button>
+
+                  {showModal && (
+                    <CustomRequestModal
+                      productId={productId}  // replace with actual productId if needed
+                      userId={userData?.data?._id}      // replace with actual userId if needed
+                      onClose={handleClose}
+                    />
+                  )}
+                </div>
+
               </div>
 
               {/* Special Offer */}
@@ -871,6 +1032,7 @@ const EventManagementDetailsPage = () => {
           </div>
         </div>
       </div>
+      <ToastContainer></ToastContainer>
     </div>
   )
 }

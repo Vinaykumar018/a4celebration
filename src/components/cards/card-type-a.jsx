@@ -10,18 +10,20 @@ import { EyeIcon } from 'lucide-react';
 const CardTypeA = ({
 
   services = [],
+  baseImageUrl,
   themeColor = "#ff7e00",
   showRating = true,
   showPrice = true,
   ctaText = "Book Now",
   section,
-  sectionSlug
+  sectionSlug,
+  title
 }) => {
 
 
 
 
-  console.log(section, services)
+
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 !== 0;
@@ -52,7 +54,7 @@ const CardTypeA = ({
     },
   };
 
-  console.log(services.category_name)
+
 
   return (
     <section className="bg-amber-50 md:px-0 sm:px-4 px-4 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
@@ -60,20 +62,24 @@ const CardTypeA = ({
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
             <div>
-              <a href="#" target="_blank" className="cursor-default pointer-events-none">
-                <div className="text-[rgb(94,15,77)]">
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
-                      {section}
-                    </h2>
+              <div className="text-[rgb(94,15,77)]">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
+                    {section}
+                  </h2>
 
-                    {sectionSlug && <div className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium">
-                      <Link to={sectionSlug}><span>View All</span></Link>
+                  {sectionSlug && (
+                    <Link
+                      to={title.toLowerCase()}
+                      className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium"
+                    >
+                      <span>View All</span>
                       <EyeIcon className="h-5 w-5" />
-                    </div>}
-                  </div>
+                    </Link>
+                  )}
                 </div>
-              </a>
+              </div>
+
             </div>
           </div>
         </div>
@@ -122,8 +128,8 @@ const CardTypeA = ({
                   >
                     {/* Image Section */}
                     <div className="sign_box_img flex justify-center mb-2">
-                      <img
-                        src={`${"https://a4celebration.com/api/" + service.featured_image}`}
+                     <img
+                       src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
                         alt={service.name}
                         className="object-cover rounded-lg h-40 w-full"
                       />
@@ -147,7 +153,7 @@ const CardTypeA = ({
                       )}
 
                       <Link
-                        to={`${sectionSlug}/service/${service.slug_url}`}
+                        to={`${sectionSlug}/${service.slug_url}`}
                         className="inline-block text-xs px-3 py-1.5 rounded-md uppercase text-white transition-colors duration-300"
                         style={{ backgroundColor: themeColor }}
                         state={{

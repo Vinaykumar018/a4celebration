@@ -2,7 +2,7 @@
 import { FaArrowDown, FaBook, FaInfoCircle } from 'react-icons/fa';
 
 const DescriptionOverview = (descriptionPart) => {
-  console.log("my description part", descriptionPart)
+ 
 
 
 

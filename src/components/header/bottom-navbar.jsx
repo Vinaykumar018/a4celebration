@@ -39,20 +39,50 @@ const BottomNavbar = () => {
                 )}
               </Link>
 
-              {/* Dropdown for child categories - only show if they exist */}
               {Object.keys(category.child_category || {}).length > 0 && (
-                <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200">
-                  {Object.entries(category.child_category).map(([id, child]) => (
-                    <Link
-                      key={id}
-                      to={formatChildUrl(category.slug_url, child.name)}
-                      className="block px-4 py-2 text-gray-700 hover:bg-amber-50 hover:text-amber-500"
-                    >
-                      {child.name}
-                    </Link>
-                  ))}
+                <div className="absolute left-0 mt-2  bg-white rounded-md shadow-lg p-4 z-10 invisible group-hover:visible opacity-0 group-hover:opacity-100 transition-all duration-200 flex gap-4">
+
+                  {/* First 5 items */}
+                  <div className="w-1/2">
+                    {Object.entries(category.child_category).slice(0, 5).map(([id, child]) => (
+                      <Link
+                        key={id}
+                        to={formatChildUrl(category.slug_url, child.name)}
+                        className="block px-4 py-2 text-gray-700 hover:bg-amber-50 hover:text-amber-500"
+                      >
+                        {child.name}
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* Next 5 items (if available) */}
+                  {Object.entries(category.child_category).length > 5 && (
+                    <div className="w-1/2">
+                      {Object.entries(category.child_category).slice(5, 10).map(([id, child]) => (
+                        <Link
+                          key={id}
+                          to={formatChildUrl(category.slug_url, child.name)}
+                          className="block px-4 py-1 text-gray-700 hover:bg-amber-50 hover:text-amber-500"
+                        >
+                          {child.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Image column */}
+
+                  {/* <div className="w-1/3">
+          <img
+            src={"https://a4celebration.com/api"+"/"+category.category_image}
+            alt="Category Visual"
+            className="w-full h-40 object-cover rounded-md"
+          />
+        </div> */}
+
                 </div>
               )}
+
             </div>
           ))}
         </nav>

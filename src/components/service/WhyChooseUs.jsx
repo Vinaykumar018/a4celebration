@@ -44,9 +44,7 @@ const WhyChooseUs = () => {
               className="flex flex-col md:flex-row items-center bg-amber-200 p-4 rounded-2xl 
               transition-transform duration-300 ease-in-out transform hover:scale-100 hover:border-2 hover:border-amber-500"
             >
-              {
-                console.log(pooja.image)
-              }
+            
               <img
                 alt={`Puja ${index + 1}`}
                 loading="lazy"

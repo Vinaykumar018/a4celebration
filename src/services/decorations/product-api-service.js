@@ -5,12 +5,7 @@ import axios from 'axios';
 const API_URL = import.meta.env.VITE_API_URL;
 const API_KEY = import.meta.env.VITE_API_KEY;
 
-// Product API Services
 
-/**
- * Get all products
- * Array of products
- */
 export const getAllProducts = async () => {
   try {
     const response = await axios.get(`${API_URL}decoration/get-all-products`, {
@@ -26,10 +21,6 @@ export const getAllProducts = async () => {
   }
 };
 
-/**
- * Create a new product
- * Created product data
- */
 export const createProduct = async (formData) => {
   try {
     const response = await axios.post(`${API_URL}decoration/create-product`, formData, {
@@ -45,10 +36,7 @@ export const createProduct = async (formData) => {
   }
 };
 
-/**
- * Update an existing product
 
- */
 export const updateProduct = async (id, formData) => {
   try {
     const response = await axios.put(`${API_URL}decoration/update-product/${id}`, formData, {
@@ -64,9 +52,7 @@ export const updateProduct = async (id, formData) => {
   }
 };
 
-/**
- 
- */
+
 export const getProductById = async (productId) => {
   try {
     const response = await axios.get(`${API_URL}decoration/get-product/${productId}`, {
@@ -82,10 +68,7 @@ export const getProductById = async (productId) => {
   }
 };
 
-/**
- * Delete a product
 
- */
 export const deleteProduct = async (id) => {
   try {
     const response = await axios.delete(`${API_URL}decoration/delete-product/${id}`, {

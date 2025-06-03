@@ -1,5 +1,5 @@
 import { ArrowLeft, Gift, NotebookIcon as Lotus, Info, Calendar, Clock, MapPin, Sparkles, PartyPopper, Heart, Navigation, Home, Flag } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { User, Phone, Mail } from "lucide-react";
@@ -11,9 +11,10 @@ import { placeOrder } from "../../services/decoration-orders/order-api";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { updateRequestStatus } from "../../services/customized-products/customized-api-service";
 
 
-export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) => {
+export const UserOrderCustomDetails = ({ cartItems = [], currencySymbol, userData }) => {
     const [isOpen2, setIsOpen2] = useState(false);
     const [isOpen1, setIsOpen1] = useState(false);
     const { cart, clearCart } = useCart();
@@ -30,13 +31,27 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
     const [country, setCountry] = useState(userData?.country || '');
     const [specialNote, setSpecialNote] = useState('');
     const [paymentMethod, setPaymentMethod] = useState("COD");
+    const [customProductID, setCustomProductID] = useState('000');
 
+    function getID() {
+        if (cartItems.length > 0) {
+            // Example: take the product_id of the first item
+            setCustomProductID(cartItems[0]._id
+            );
+        }
+    }
 
+    useEffect(() => {
+        if (cartItems.length > 0) {
+            getID();
+        }
+    }, [cartItems]);
+    console.log(customProductID, cartItems)
 
     const transformToOrderSchema = () => {
-       
+
         const totalAmount = cartItems.reduce(
-            (sum, item) => sum + (item.price * (item.quantity || 1)),
+            (sum, item) => sum + (item.final_price * (item.quantity || 1)),
             0
         );
 
@@ -58,8 +73,8 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
             productDetails: cartItems.map(item => ({
                 productId: item.product_id,
                 productName: item.name,
-                amount: item.price,
-                quantity: item.quantity
+                amount: item.final_price,
+                quantity: 1
             })),
             paymentDetails: {
                 totalAmount: totalAmount,
@@ -74,7 +89,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                 order_requested_time: new Date().toTimeString().split(' ')[0],
                 products: cartItems.map(item => ({
                     productId: item.product_id,
-                    quantity: item.quantity
+                    quantity: 1
                 })),
                 lastUpdated: new Date()
             },
@@ -92,15 +107,9 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
 
         try {
             if (paymentMethod === "razorpay") {
-                // Create order on backend first
                 const response = await placeOrder(orderData);
-
-
                 const { order, razorpayOrderId } = response.data;
 
-
-
-                // Initialize Razorpay payment
                 const options = {
                     key: import.meta.env.VITE_RAZORPAY_KEY,
                     amount: orderData.paymentDetails.totalAmount * 100,
@@ -111,25 +120,24 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                     handler: async function (response) {
                         try {
                             const verificationResponse = await axios.post(
-                                `${import.meta.env.VITE_API_URL}orders/verify-payment`,
+                                `${API_URL}orders/verify-payment`,
                                 {
                                     order_id: order.order_id,
-                                    razorpayOrderId: razorpayOrderId,
+                                    razorpayOrderId,
                                     payment_id: response.razorpay_payment_id,
-                                    signature: response.razorpay_signature
+                                    signature: response.razorpay_signature,
                                 },
                                 {
                                     headers: {
-                                        Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZpbmF5IiwiaWF0IjoxNzQ0OTY2MzI0fQ.bHVez4j2ksigzKlm7G3G7OlzrlkgAIwN6cPZySRvdCI'
-                                    }
+                                        Authorization: API_KEY,
+                                    },
                                 }
                             );
 
-
-
                             if (verificationResponse.data.status === 'success') {
-                                toast.success("Payment Successful");
-                                // Add a small delay before navigation
+                                await updateRequestStatus(customProductID, { status: 'confirmed' });
+
+                                toast.success("Payment Successful. Order Confirmed.");
                                 setTimeout(() => {
                                     clearCart(userData._id);
                                     navigate(`/order/${order.order_id}`);
@@ -146,25 +154,27 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                     modal: {
                         ondismiss: function () {
                             alert('Payment window closed. Your order is not confirmed.');
-                        }
-                    }
+                        },
+                    },
                 };
 
                 const razorpay = new window.Razorpay(options);
                 razorpay.open();
             } else {
-
                 const response = await placeOrder(orderData);
+                const order = response.data.order;
 
+                await updateRequestStatus(customProductID, { status: 'confirmed' });
+
+                toast.success("Order placed successfully with Cash on Delivery.");
                 clearCart(userData._id);
-                navigate(`/order/${response.data.order.order_id}`);
+                navigate(`/order/${order.order_id}`);
             }
         } catch (error) {
             console.error('Order failed:', error);
             alert('Order placement failed. Please try again.');
         }
     };
-
 
 
 

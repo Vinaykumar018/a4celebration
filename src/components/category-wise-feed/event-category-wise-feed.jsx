@@ -1,12 +1,52 @@
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts,removeProduct } from '../../redux/productSlice';
-import { useEffect } from "react";
+import { fetchEvents } from '../../redux/eventManagementSlice';
+import { useEffect, useMemo } from "react";
 import img1 from '../../assets/decoration/1687938112_original.avif'
 import SimpleCard2 from "../cards/simple-card-2";
 import CardTypeC from '../cards/card-type-c';
-
+import { useParams } from 'react-router-dom';
 const EventManagementCategoryWiseFeed = () => {
+
+
+
+
+  const dispatch = useDispatch();
+   const { slug } = useParams();
+   
+    const { events, loading, error } = useSelector((state) => state.events);
+   
+  
+    // Fetch categories on component mount
+    useEffect(() => {
+      dispatch(fetchEvents());
+    }, [dispatch]);
+
+
+
+
+
+    
+      // Filter events based on slug matching childCategoryId
+    const filteredevents = useMemo(() => {
+    
+      if (!slug || !events) return events;
+      
+      return events.filter(product => {
+        console.log(product)
+        if (!product.child_categories) return false;
+    
+       console.log(product.child_categories,slug)
+        
+       return product.child_categories.some(childCategory => {
+      const normalizedName = childCategory.name.toLowerCase().replace(/\s+/g, '-').trim();
+      return normalizedName === slug.toLowerCase();
+    });
+    
+      });
+    }, [events, slug]);
+
+
 
 
    const services = [
@@ -75,9 +115,9 @@ const EventManagementCategoryWiseFeed = () => {
     
     title="Decorations"
           description="Explore our spiritual services"
-          services={services}
+          services={filteredevents}
           baseImageUrl={img1}
-          themeColor="#f472b6"
+          themeColor="#ff7e00"
           section="Decorations"
       sectionSlug="/decorations"
           ctaText="Book Now"

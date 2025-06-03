@@ -117,7 +117,7 @@ const DecorationsDetailsPage = () => {
   };
 
 
-  const [descriptionPart, kitPart] = serviceData.description.split('kit:');
+  const [descriptionPart, kitPart] = serviceData.description.split('Kit:');
 
 
 

@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 const CategoryWiseFeed = () => {
   const dispatch = useDispatch();
   const { slug } = useParams();
+  
 
   const { products, loading, error } = useSelector((state) => state.products);
 
@@ -19,17 +20,24 @@ const CategoryWiseFeed = () => {
 
   // Filter products based on slug matching childCategoryId
 const filteredProducts = useMemo(() => {
-  console.log("inside filter")
+
   if (!slug || !products) return products;
   
   return products.filter(product => {
+    console.log(product)
     if (!product.child_categories) return false;
+
+   console.log(product.child_categories,slug)
     
-    return product.child_categories.some(childCategory => 
-      childCategory.name.toLowerCase() === slug.toLowerCase()
-    );
+   return product.child_categories.some(childCategory => {
+  const normalizedName = childCategory.name.toLowerCase().replace(/\s+/g, '-').trim();
+  return normalizedName === slug.toLowerCase();
+});
+
   });
 }, [products, slug]);
+
+
 
 
   return (
@@ -38,9 +46,9 @@ const filteredProducts = useMemo(() => {
       description="Explore our spiritual services"
       services={filteredProducts}
       baseImageUrl={img1}
-      themeColor="#f472b6"
+      themeColor="#ff7e00"
       section="Decorations"
-      sectionSlug="/decorations"
+      sectionSlug="/decorations/service"
       ctaText="Book Now"
     />
   );

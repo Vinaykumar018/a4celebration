@@ -8,12 +8,13 @@ import { useDispatch } from "react-redux";
 import useUserCartData from "../../hooks/useUserCartData";
 import { useCart } from '../../hooks/cartHook';
 
+
 const Cart = () => {
   const { cartItems: initialCartItems, isLoading } = useUserCartData();
 
   const [cartItems, setCartItems] = useState([]);
   const { cart, clearCart, removeItem } = useCart();
-  console.log(cartItems, "of the user")
+
 
   const navigate = useNavigate();
   const [promoCode, setPromoCode] = useState("");
@@ -116,6 +117,7 @@ const Cart = () => {
               </div>
             ) : (
               cartItems.map((item) => (
+
                 <div key={item._id} className="overflow-hidden border-amber-200 shadow-md rounded-lg">
                   <div className="relative">
                     <div className="absolute top-2 right-2">

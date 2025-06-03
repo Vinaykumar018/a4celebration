@@ -44,6 +44,7 @@ const GiftsDetailsPage = () => {
   const navigate = useNavigate()
   const location = useLocation();
   const { serviceData, sectionData } = location.state;
+
   const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
 
   const [mainImage, setMainImage] = useState(
@@ -117,7 +118,7 @@ const GiftsDetailsPage = () => {
   };
 
 
-  const [descriptionPart, kitPart] = serviceData.description.split('kit:');
+  const [descriptionPart, kitPart] = serviceData.description.split('Kit:');
 
 
 

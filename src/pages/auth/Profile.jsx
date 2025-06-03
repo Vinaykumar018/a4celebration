@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { fetchUserData } from "../../redux/userSlice";
 import MyOrders from "./myOrder";
+import MyCustomOrders from "./MyCustomOrders";
 Modal.setAppElement('#root')
 
 
@@ -314,7 +315,7 @@ const Profile = () => {
               </div>
             </div>
           </div>
-          <div className=" w-full border-b border-gray-400 xl:block ml-8 pb-2">
+          <div className=" w-full border-b border-gray-400 xl:block pb-2 pl-8">
             <div id="accountTabs" className="flex flex-row space-x-5">
               <button
                 className={`px-2 py-2 rounded-lg border text-sm transition-all duration-200 ${activeTab === 'overview'
@@ -334,6 +335,15 @@ const Profile = () => {
                 onClick={() => setActiveTab('accordion2')}
               >
                 My Orders
+              </button>
+              <button
+                className={`px-2 py-2 rounded-lg text-sm border transition-all duration-200 ${activeTab === 'accordion3'
+                  ? 'bg-black text-white border-black'
+                  : 'bg-white text-black border-gray-300'
+                  }`}
+                onClick={() => setActiveTab('accordion3')}
+              >
+                My Customized Orders
               </button>
             </div>
           </div>
@@ -444,6 +454,16 @@ const Profile = () => {
 
               <div id="accOverview" className="animate-nk-acc-tab block space-y-12 px-4">
                 <MyOrders userData={userData}></MyOrders>
+              </div>
+            </div>
+          )}
+          {activeTab === 'accordion3' && (
+            <div className="animate-nk-acc-tab block space-y-12 px-4">
+
+
+
+              <div id="accOverview" className="animate-nk-acc-tab block space-y-12 px-4">
+                <MyCustomOrders></MyCustomOrders>
               </div>
             </div>
           )}

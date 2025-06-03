@@ -27,6 +27,10 @@ import DecorationsDetailsPage from "../pages/products/decorations-details-page";
 import Order from "../pages/orders/order";
 import EventManagementDetailsPage from "../pages/products/event-management-details-page";
 import GiftsDetailsPage from "../pages/products/gifts-details-page";
+import CustomizedCheckoutPage from "../pages/checkout/customizedCheckout";
+import Services from "../pages/category/services-section/Services";
+import CateringEventsDetailsPage from "../pages/products/catering-events-details-page";
+import ArtistManagementDetailsPage from "../pages/products/artist-management-details-page";
 const RoutesComponent = () => {
 
 
@@ -45,6 +49,7 @@ const RoutesComponent = () => {
       <Route path="/catering" element={<Caterings />} />
       <Route path="/baby-shower" element={<BabyShower />} />
       <Route path="/event-management" element={<Events />} />
+      <Route path="/event-management/:slug" element={<Events />} />
       <Route path="/decorations/service/:slug" element={<DecorationsDetailsPage />} />
        <Route path="/gifts/e-commerce/:slug" element={<GiftsDetailsPage />} />
       
@@ -59,6 +64,21 @@ const RoutesComponent = () => {
       <Route path="/event-management/service/:slug" element={<EventManagementDetailsPage />} />
 
 
+     
+      
+      <Route path="/event-management/service/:slug" element={<EventManagementDetailsPage />} />
+
+
+         <Route path="/services" element={<Services/>} />
+      <Route path="/services/:slug" element={<Services/>} />
+       <Route path="/artist-management" element={<Artist></Artist>} />
+      <Route path="/artist-management/:slug" element={<Artist></Artist>} />
+      <Route path="/artist/service/:slug" element={<ArtistManagementDetailsPage />} />
+       <Route path="/event-catering" element={<Caterings></Caterings>} />
+      <Route path="/event-catering/:slug" element={<Caterings></Caterings>} />
+       <Route path="/event-catering/service/:slug" element={<CateringEventsDetailsPage />} />
+
+
       {/* Protected Routes */}
 
 
@@ -66,6 +86,12 @@ const RoutesComponent = () => {
         path="/checkout"
         element={
           isAuthenticated ? <CheckoutPage /> : <Navigate to="/login" />
+        }
+      />
+      <Route
+        path="/checkout/:id"
+        element={
+          isAuthenticated ? <CustomizedCheckoutPage /> : <Navigate to="/login" />
         }
       />
 

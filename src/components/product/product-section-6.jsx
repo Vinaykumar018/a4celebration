@@ -1,6 +1,9 @@
 import CardTypeC from '../cards/card-type-c';
 import img1 from '../../assets/events/1664351665_original.avif'
 import CardTypeA from '../cards/card-type-a';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchEvents, removeEvent } from '../../redux/eventManagementSlice';
+import { useEffect } from 'react';
 
 const ProductSection6 = () => {
   const services = [
@@ -63,16 +66,27 @@ const ProductSection6 = () => {
   ];
   
 
+
+   const dispatch = useDispatch();
+ 
+  const { events, loading, error } = useSelector((state) => state.events);
+ 
+
+  // Fetch categories on component mount
+  useEffect(() => {
+    dispatch(fetchEvents());
+  }, [dispatch]);
+
   return (
     <CardTypeC
-      title="Decorations"
+      title="event-management"
       description="Explore our spiritual services"
-      services={services}
+      services={events}
       baseImageUrl={img1}
       themeColor="#d97706"
       ctaText="Book Now"
       section="Event Management"
-    sectionSlug="/event-management"
+    sectionSlug="/event-management/service"
     />
   );
 };

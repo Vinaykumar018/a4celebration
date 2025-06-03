@@ -84,7 +84,7 @@ const SimpleCard1 = ({
             const words = service.name.split(" ");
             return (
               <div key={index}>
-                <Link to={`${sectionSlug}/service/${service.slug_url}`} className="block" state={{
+                <Link to={`${sectionSlug}/${service.slug_url}`} className="block" state={{
                   serviceData: service,
                   sectionData: section
                 }}>
@@ -119,7 +119,11 @@ const SimpleCard1 = ({
                       )}
 
                       <Link
-                        to={`${serviceLinkPrefix}/${service.slug}`}
+                        to={`${sectionSlug}/${service.slug_url}`}
+                        state={{
+                          serviceData: service,
+                          sectionData: section
+                        }}
                         className="inline-block text-xs px-3 py-1.5 rounded-md uppercase text-white transition-colors duration-300"
                         style={{ backgroundColor: themeColor }}
                       >

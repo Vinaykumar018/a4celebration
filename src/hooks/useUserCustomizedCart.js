@@ -6,7 +6,7 @@ import useGiftHook from '../hooks/useGiftHooks'
 
 import { getEventById, getEventByProductId } from "../services/event-management/events-management-api-service";
 
-const  useUserCartData= () => {
+const  useUserCustomizedCart= () => {
   const { cart, getCart } = useCart();
   const [cartItems, setCartItems] = useState([]);
   const { fetchGiftById, singleGift, giftLoading, giftError } = useGiftHook();
@@ -73,4 +73,4 @@ const  useUserCartData= () => {
   return { cartItems, isLoading };
 };
 
-export default useUserCartData;
+export default useUserCustomizedCart;

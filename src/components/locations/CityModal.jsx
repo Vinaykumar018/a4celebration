@@ -35,7 +35,7 @@ const CityModal = ({ isOpen, onClose, }) => {
       <div className="bg-white rounded-xl p-6 w-[90%] max-w-3xl shadow-xl relative">
         <button
           onClick={() => {
-            console.log("Modal close button clicked");
+          
             onClose();
           }}
           className="absolute top-4 right-4 text-amber-600 hover:text-amber-800 text-2xl font-bold"

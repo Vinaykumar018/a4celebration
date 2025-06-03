@@ -43,7 +43,7 @@ export const loginUser = async (userData) => {
 
 export const updateUser = async (userData,id) => {
   try {
-    console.log(id)
+   
     const response = await axios.put(API_URL + "user/update-user/"+id, userData, {
       headers: {
         'Content-Type': 'multipart/form-data',

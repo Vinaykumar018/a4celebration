@@ -18,15 +18,16 @@ const { giftList, giftLoading, giftError, fetchGifts } = useGiftHook();
 
   // Filter products based on slug matching childCategoryId
 const filteredProducts = useMemo(() => {
-  console.log("inside filter")
+
   if (!slug || !giftList) return giftList;
   
   return giftList.filter(product => {
     if (!product.child_categories) return false;
     
-   return product.child_categories.some(childCategory => 
-  normalize(childCategory.name) === normalize(slug)
-);
+    return product.child_categories.some(childCategory => {
+  const normalizedName = childCategory.name.toLowerCase().replace(/\s+/g, '-').trim();
+  return normalizedName === slug.toLowerCase();
+});
   });
 }, [giftList, slug]);
 
@@ -38,7 +39,7 @@ function normalize(str) {
     .replace(/[^a-z0-9]/g, '')      // remove spaces, hyphens, punctuation
     .trim();
 }
- console.log(giftList,slug)
+ 
 
 
   return (
@@ -49,7 +50,7 @@ function normalize(str) {
       baseImageUrl={img1}
       themeColor="#f472b6"
       section="Decorations"
-      sectionSlug="/decorations"
+      sectionSlug="/gifts/e-commerce"
       ctaText="Book Now"
     />
   );

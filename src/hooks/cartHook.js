@@ -16,10 +16,10 @@ export const useCart = () => {
   // Add item to cart
   const addToCart = async (cartData) => {
     try {
-      console.log(cartData)
+      
       const response = await axios.post(`${API_BASE}cart/add`, cartData, config);
       setCart(response.data.items); // Update the cart state with the new data
-      console.log("✅ Item added to cart:", response.data);
+ 
     } catch (err) {
       console.error("❌ Add to cart failed:", err.response?.data || err.message);
     }

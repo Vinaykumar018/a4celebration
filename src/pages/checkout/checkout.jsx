@@ -52,16 +52,15 @@ export default function CheckoutPage() {
     if (isLoggedIn && userId) {
       dispatch(fetchUserData(userId));
     }
-  }, [dispatch, userData]);
+  }, [dispatch]);
 
-  console.log(userData)
+
   const { cartItems, isLoading } = useUserCartData();
   const currencySymbol = "₹";
 
 
 
-  console.log("cartitems", cartItems)
-  console.log("userdata", userData)
+
 
   return (
     <>

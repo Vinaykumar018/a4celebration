@@ -17,6 +17,7 @@ import { getOrdersByUserId } from "../../services/decoration-orders/order-api";
 import useMultipleProductDetails from "../../hooks/useMultipleProductDetails";
 import useGiftHook from "../../hooks/useGiftHooks";
 import { getProductById } from "../../services/decorations/product-api-service";
+import { getEventByProductId } from "../../services/event-management/events-management-api-service";
 
 export default function MyOrders({ userData }) {
   const [orders, setOrders] = useState([]);
@@ -30,42 +31,85 @@ export default function MyOrders({ userData }) {
   const staticImageUrl = "https://cheetah.cherishx.com/uploads/1680590693_original.jpg?format=avif&width=384&height=384";
 
   const fetchData = async (id) => {
+
     if (id.startsWith("PROD-DECORATION")) {
       const product = await getProductById(id);
 
       return "https://a4celebration.com/api/" + product.data.featured_image;
-    } else {
+    }
+
+    else if (id.startsWith("PROD-EVENT")) {
+
+      const product = await getEventByProductId(id);
+
+      return "https://a4celebration.com/api/" + product.data.featured_image;
+
+    }
+
+
+
+    else if (id.startsWith("PROD-GIFT")) {
+
       const product = await fetchGiftById(id);
 
 
-      return "https://a4celebration.com/api/" + product.data.featured_image;
+      return "http://localhost:3000/" + product.data.featured_image;
+
     }
+
+    else {
+      return staticImageUrl;
+    }
+
+
+
+
   };
 
+
+
+  const [customOrder, setCustomOrder] = useState([]);
   useEffect(() => {
     const fetchOrders = async () => {
       try {
         const response = await getOrdersByUserId(userData.data._id);
-        setOrders(response.data);
+        const allOrders = response.data;
+
+        // Split into custom and normal orders
+        const customOrders = allOrders.filter(order =>
+          order.orderDetails.products.some(product => product.productId.startsWith("PROD-CUSTOM"))
+        );
+
+        const normalOrders = allOrders.filter(order =>
+          !order.orderDetails.products.some(product => product.productId.startsWith("PROD-CUSTOM"))
+        );
+
+        // Store into respective states
+        setOrders(normalOrders);
+        setCustomOrder(customOrders);
+
+        console.log("All Orders:", allOrders);
+
 
         // Fetch all product images
         const imageUrls = {};
-        for (const order of response.data) {
+        for (const order of allOrders) {
           for (const product of order.productDetails) {
             if (!imageUrls[product.productId]) {
               try {
                 imageUrls[product.productId] = await fetchData(product.productId);
               } catch (error) {
                 console.error(`Failed to fetch image for ${product.productId}:`, error);
-                imageUrls[product.productId] = staticImageUrl;
+                imageUrls[product.productId] = staticImageUrl; // fallback image
               }
             }
           }
         }
+
         setProductImages(imageUrls);
         setIsLoading(false);
       } catch (error) {
-        console.error('Failed to fetch orders:', error);
+        console.error("Failed to fetch orders:", error);
         setIsLoading(false);
       }
     };
@@ -77,7 +121,8 @@ export default function MyOrders({ userData }) {
 
   const cancelOrder = (orderId) => {
     // Implement your cancel order logic here
-    console.log("Canceling order:", orderId);
+    console.log(orders, customOrder)
+
     // setOrders(orders.filter(order => order._id !== orderId));
   };
 
@@ -97,6 +142,7 @@ export default function MyOrders({ userData }) {
 
 
 
+  console.log(productImages)
 
 
 
@@ -155,9 +201,13 @@ export default function MyOrders({ userData }) {
                         <div key={index} className="flex items-center mb-2 sm:mb-3">
                           <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-md overflow-hidden bg-gray-100 mr-3 sm:mr-4">
                             <img
-                              src={productImages[product.productId] || staticImageUrl} // Correct usage
+                              src={productImages[product.productId] || staticImageUrl}
                               alt={product.productName}
                               className="object-cover w-full h-full"
+                              onError={(e) => {
+                                e.target.src = staticImageUrl;
+                                e.target.onerror = null;
+                              }}
                             />
                           </div>
                           <div>
@@ -189,10 +239,10 @@ export default function MyOrders({ userData }) {
                     <div className="flex items-center">
                       {getStatusIcon(order.orderDetails.order_status)}
                       <span className={`px-2 py-1 rounded-full text-xs sm:text-sm ${order.orderDetails.order_status === 'processing'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : order.orderDetails.order_status === 'completed'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : order.orderDetails.order_status === 'completed'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
                         }`}>
                         {order.orderDetails.order_status}
                       </span>
@@ -227,12 +277,21 @@ export default function MyOrders({ userData }) {
             {orders.map((order) => (
               <div key={order._id} className="border-b border-amber-100 p-3 hover:bg-amber-50 rounded-lg">
                 <div className="flex">
-                  <div className="h-16 w-16 rounded-md overflow-hidden bg-gray-100 mr-3">
+                  <div className="h-16 w-16 rounded-md overflow-hidden bg-gray-100 mr-3 relative">
                     <img
-                      src={staticImageUrl}
-                      alt="Product"
+                      src={productImages[order.productDetails[0].productId] || staticImageUrl}
+                      alt={order.productDetails[0].productName}
                       className="object-cover w-full h-full"
+                      onError={(e) => {
+                        e.target.src = staticImageUrl;
+                        e.target.onerror = null;
+                      }}
                     />
+                    {order.productDetails.length > 1 && (
+                      <div className="absolute -bottom-1 -right-1 bg-amber-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        +{order.productDetails.length - 1}
+                      </div>
+                    )}
                   </div>
                   <div className="flex-1">
                     <div className="mb-1">
@@ -247,18 +306,24 @@ export default function MyOrders({ userData }) {
 
                     <div className="mb-1">
                       <p className="text-xs font-medium">Order ID: {order.order_id}</p>
+
+                      <p className="text-gray-600 text-xs sm:text-sm">
+                        {order.paymentDetails.paymentMethodType === 'cod' ? 'COD' : 'Paid'}
+                      </p>
+
                       <p className="text-gray-600 text-xs">
                         {order.orderDetails.order_requested_date} at {order.orderDetails.order_requested_time}
                       </p>
+
                     </div>
 
                     <div className="flex items-center mb-1">
                       {getStatusIcon(order.orderDetails.order_status)}
                       <span className={`px-2 py-0.5 rounded-full text-xs ${order.orderDetails.order_status === 'processing'
-                          ? 'bg-yellow-100 text-yellow-800'
-                          : order.orderDetails.order_status === 'completed'
-                            ? 'bg-green-100 text-green-800'
-                            : 'bg-gray-100 text-gray-800'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : order.orderDetails.order_status === 'completed'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-gray-100 text-gray-800'
                         }`}>
                         {order.orderDetails.order_status}
                       </span>

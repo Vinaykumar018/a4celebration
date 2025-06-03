@@ -39,7 +39,10 @@ const SimpleCard2 = ({
           {services?.map((service, index) => {
             const words = service.name.split(" ");
             return (
-              <Link to={`${serviceLinkPrefix}/service/${service.slug}`} key={index} className="block h-full">
+              <Link to={`${serviceLinkPrefix}/service/${service.slug_url}`} key={index} className="block h-full" state={{
+                serviceData: service,
+                sectionData: "Event Management"
+              }}>
                 <motion.div
                   className="h-full bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
                   style={{ borderBottom: `3px solid ${themeColor}` }}
@@ -48,8 +51,9 @@ const SimpleCard2 = ({
                 >
                   {/* Image Section */}
                   <div className="sign_box_img flex justify-center p-4 bg-gray-50">
+
                     <img
-                      src={baseImageUrl}
+                      src={`${"https://a4celebration.com/api/" + service.featured_image}`}
                       alt={service.name}
                       className="object-cover rounded-lg w-full h-40 md:h-48"
                       style={{
@@ -81,6 +85,7 @@ const SimpleCard2 = ({
                     )}
 
                     <div className="mt-4">
+
                       <motion.button
                         className="w-full py-2 px-4 rounded-md uppercase font-medium text-sm tracking-wide text-white transition-colors duration-300"
                         style={{ backgroundColor: themeColor }}
