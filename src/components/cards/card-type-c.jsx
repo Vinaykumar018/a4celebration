@@ -64,7 +64,7 @@ const CardTypeC = ({
 
   return (
     <section className="bg-amber-50 md:px-0 sm:px-5 px-5 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
-      <div className="container-fluid mx-auto md:px-6 sm:px-0 px-0 lg:px-6">
+      <div className="container-fluid mx-auto md:px-6 px-3 lg:px-6">
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
             <div>
@@ -139,7 +139,7 @@ const CardTypeC = ({
                     {/* Image Section */}
                     <div className="sign_box_img flex justify-center p-4 bg-gray-50">
                       <img
-                       src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
+                        src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
 
                         alt={service.name}
                         className="object-cover rounded-lg w-full h-40 md:h-48"
@@ -152,7 +152,7 @@ const CardTypeC = ({
 
                     {/* Content Section */}
                     <div className="sign_box_cont p-5 text-center">
-                      <h4 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
+                      <h4 className="text-md font-medium mb-1 font-semibold mb-2 line-clamp-2">
                         {words.length > 4 ? `${words.slice(0, 2).join(" ")}` : service.name}
                       </h4>
 

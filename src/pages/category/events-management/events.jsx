@@ -7,22 +7,24 @@ import EventManagementCategoryWiseFeed from '../../../components/category-wise-f
 import ChildCategoryFilter from './child-category-filter';
 const Events = () => {
   return (
-    <div className="container mx-auto px-4 py-6">
-      <CategoryTopBanner />
-      <ChildCategoryFilter></ChildCategoryFilter>
+    <>
+    
+     <>
+   <div className="w-full py-2 px-4"> {/* Removed 'container mx-auto' */}
+         <CategoryTopBanner />
 
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 mt-6">
-        {/* 4 columns for filter */}
-        <div className="md:col-span-3">
-          <CategoryWiseFilter />
+        <div className="md:col-span-8">
+           <ChildCategoryFilter></ChildCategoryFilter>
         </div>
 
-        {/* 8 columns for products */}
         <div className="md:col-span-9">
-        <EventManagementCategoryWiseFeed></EventManagementCategoryWiseFeed>
+          <EventManagementCategoryWiseFeed></EventManagementCategoryWiseFeed>
         </div>
       </div>
-    </div>
+    
+    </>
+   
+    </>
   );
 };
 

@@ -49,7 +49,7 @@ const ChildCategoryFilter = () => {
   if (!decorationsCategory) return null;
 
   return (
-    <div className="py-5 mb-8">
+    <div className="py-5 mb-0">
       <h3 className="text-lg font-semibold px-4 mb-4 text-gray-800">Decoration Categories</h3>
 
       <div className="relative">

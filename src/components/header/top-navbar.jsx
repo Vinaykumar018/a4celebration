@@ -59,7 +59,7 @@ const TopNavbar = () => {
       {/* Left Logo */}
       <div className="flex items-center">
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Logo" className="h-10 w-auto" />
+          <img src={logo} alt="Logo" className="h-10 w-auto" style={{height:"60px"}} />
         </Link>
       </div>
 

@@ -14,12 +14,22 @@ Modal.setAppElement('#root')
 
 
 
+// import React, { useState, useEffect } from "react";
+// import Modal from "react-modal";
+// import { useDispatch, useSelector } from "react-redux";
+// import { updateUser } from "../../services/auth/auth";
+// import { logout } from "../../redux/userSlice";
+// import { useNavigate } from 'react-router-dom';
+// import { toast, ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
+// import { fetchUserData } from "../../redux/userSlice";
+
+// Modal.setAppElement('#root');
+
 const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
-
-
   const [formData, setFormData] = useState({
-    username: userData?.username,
-    email: userData?.email,
+    username: userData?.username || "",
+    email: userData?.email || "",
     mobile: userData?.mobile || "",
     address: userData?.address || "",
     city: userData?.city || "",
@@ -30,23 +40,150 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
     profile_image: userData?.profile_image || "",
   });
 
+  const [inputWarnings, setInputWarnings] = useState({
+    username: "",
+    email: "",
+    mobile: "",
+    address: "",
+    city: "",
+    country: "",
+    pincode: "",
+    landmark: ""
+  });
+
+  // Define allowed patterns
+  const allowedPatterns = {
+    username: /^[a-zA-Z0-9]+([_-]?[a-zA-Z0-9])*$/,
+    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    mobile: /^[0-9]{10,15}$/,
+    pincode: /^[0-9]{4,10}$/
+  };
+
+  // Define blocked patterns (security)
+  const blockedPatterns = {
+    username: /[^a-zA-Z0-9_-]/g,
+    email: /[<>"'`;|&{}[\]()]/g,
+    mobile: /[^0-9]/g,
+    address: /[<>"'`;|&{}[\]()]/g,
+    city: /[<>"'`;|&{}[\]()]/g,
+    country: /[<>"'`;|&{}[\]()]/g,
+    pincode: /[^0-9]/g,
+    landmark: /[<>"'`;|&{}[\]()]/g
+  };
+
+  // Enhanced validation logic
+  const validateInput = (name, value) => {
+    let warning = "";
+
+    // First, check for blocked patterns
+    if (blockedPatterns[name]?.test(value)) {
+      warning = `Invalid character detected. Please remove special characters.`;
+      setInputWarnings(prev => ({ ...prev, [name]: warning }));
+      return false;
+    }
+
+    // Field-specific validation
+    if (name === "username") {
+      if (value.length > 30) {
+        warning = "Username must be 30 characters or less";
+      } else if (value.length < 3) {
+        warning = "Username must be at least 3 characters";
+      } else if (!allowedPatterns.username.test(value)) {
+        warning = "Username can only contain letters, numbers, single underscores or hyphens";
+      } else if (/_{2,}|-{2,}/.test(value)) {
+        warning = "Username cannot have consecutive special characters";
+      } else if (/^[_-]|[_-]$/.test(value)) {
+        warning = "Username cannot start or end with special characters";
+      }
+    }
+
+    if (name === "email") {
+      if (!allowedPatterns.email.test(value)) {
+        warning = "Please enter a valid email address";
+      } else if (value.length > 254) {
+        warning = "Email must be 254 characters or less";
+      } else if (/(\.\.)|(@\.)|(\.@)/.test(value)) {
+        warning = "Email contains invalid character sequence";
+      } else if (/\.$/.test(value)) {
+        warning = "Email cannot end with a dot";
+      }
+    }
+
+    if (name === "mobile") {
+      if (!allowedPatterns.mobile.test(value)) {
+        warning = "Please enter a valid mobile number (10-15 digits)";
+      }
+    }
+
+    if (name === "pincode") {
+      if (value && !allowedPatterns.pincode.test(value)) {
+        warning = "Please enter a valid pincode (4-10 digits)";
+      }
+    }
+
+    setInputWarnings(prev => ({ ...prev, [name]: warning }));
+    return warning === "";
+  };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
+
     if (name === "profile_image") {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
-        [name]: files[0], // store file object
+        [name]: files[0]
       }));
     } else {
-      setFormData((prev) => ({
+      // Sanitize input based on field type
+      let sanitizedValue = value;
+
+      if (name === "username") {
+        sanitizedValue = value
+          .replace(blockedPatterns.username, '')
+          .replace(/_{2,}/g, '_')
+          .replace(/-{2,}/g, '-')
+          .replace(/^[_-]+/, '')
+          .replace(/[_-]+$/, '')
+          .substring(0, 30);
+      }
+      else if (name === "email") {
+        sanitizedValue = value.replace(blockedPatterns.email, '');
+      }
+      else if (name === "mobile") {
+        sanitizedValue = value.replace(blockedPatterns.mobile, '').substring(0, 15);
+      }
+      else if (name === "pincode") {
+        sanitizedValue = value.replace(blockedPatterns.pincode, '').substring(0, 10);
+      }
+      else if (blockedPatterns[name]) {
+        sanitizedValue = value.replace(blockedPatterns[name], '');
+      }
+
+      setFormData(prev => ({
         ...prev,
-        [name]: value,
+        [name]: sanitizedValue
       }));
+      validateInput(name, sanitizedValue);
     }
+  };
+
+  const validateForm = () => {
+    const validations = [
+      validateInput("username", formData.username),
+      validateInput("email", formData.email),
+      formData.mobile ? validateInput("mobile", formData.mobile) : true,
+      formData.pincode ? validateInput("pincode", formData.pincode) : true
+    ];
+    return validations.every(v => v);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      toast.error("Please fix the errors in the form before submitting.");
+      return;
+    }
 
     const multipartFormData = new FormData();
     for (const key in formData) {
@@ -57,39 +194,31 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
 
     try {
       const response = await updateUser(multipartFormData, userData._id);
-
-
       toast.success("Profile updated successfully!", {
         position: "top-right",
         autoClose: 2000,
-
       });
+
       if (onSuccess) {
         onSuccess();
       }
 
-      // Close modal after 1 second to let user see the success message
       setTimeout(() => {
         onRequestClose();
       }, 2000);
-
     } catch (error) {
       toast.error("Failed to update profile. Please try again.", {
         position: "top-right",
         autoClose: 3000,
-
       });
       console.error('Profile update error:', error);
     }
   };
 
-
-
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-
       style={{
         overlay: {
           position: 'fixed',
@@ -99,7 +228,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
           bottom: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
           zIndex: 1000,
-          overflow: 'hidden', // Prevent overlay from scrolling
+          overflow: 'hidden',
         },
         content: {
           position: 'absolute',
@@ -114,8 +243,8 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
           padding: '1.5rem',
           width: '90%',
           maxWidth: '800px',
-          maxHeight: '90vh', // Limit height to viewport
-          overflowY: 'auto', // Enable scrolling for content
+          maxHeight: '90vh',
+          overflowY: 'auto',
           WebkitOverflowScrolling: 'touch',
         }
       }}
@@ -134,24 +263,27 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
 
         <form onSubmit={handleSubmit} className="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {[
-            { label: "Username", name: "username", type: "text", value: formData.username },
-            { label: "Email", name: "email", type: "email", value: formData.email },
-            { label: "Mobile", name: "mobile", type: "tel", value: formData.mobile },
-            { label: "Gender", name: "gender", type: "select", value: formData.gender },
-            { label: "Address", name: "address", type: "text", value: formData.address },
-            { label: "City", name: "city", type: "text", value: formData.city },
-            { label: "Country", name: "country", type: "text", value: formData.country },
-            { label: "Pincode", name: "pincode", type: "text", value: formData.pincode },
-            { label: "Landmark", name: "landmark", type: "text", value: formData.landmark },
+            { label: "Username", name: "username", type: "text", value: formData.username, required: true },
+            { label: "Email", name: "email", type: "email", value: formData.email, required: true },
+            { label: "Mobile", name: "mobile", type: "tel", value: formData.mobile, required: false },
+            { label: "Gender", name: "gender", type: "select", value: formData.gender, required: false },
+            { label: "Address", name: "address", type: "text", value: formData.address, required: false },
+            { label: "City", name: "city", type: "text", value: formData.city, required: false },
+            { label: "Country", name: "country", type: "text", value: formData.country, required: false },
+            { label: "Pincode", name: "pincode", type: "text", value: formData.pincode, required: false },
+            { label: "Landmark", name: "landmark", type: "text", value: formData.landmark, required: false },
           ].map((field, index) => (
             <div key={index} className="flex flex-col space-y-1">
-              <label className="text-xs font-medium text-gray-600">{field.label}</label>
+              <label className="text-xs font-medium text-gray-600">
+                {field.label} {field.required && <span className="text-red-500">*</span>}
+              </label>
               {field.type === "select" ? (
                 <select
                   name={field.name}
                   value={field.value}
                   onChange={handleChange}
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
+                  className={`w-full px-3 py-1.5 border ${inputWarnings[field.name] ? "border-red-300 bg-red-50" : "border-gray-300"
+                    } rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-amber-500`}
                 >
                   <option value="">Select Gender</option>
                   <option value="male">Male</option>
@@ -159,13 +291,30 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
                   <option value="other">Other</option>
                 </select>
               ) : (
-                <input
-                  type={field.type}
-                  name={field.name}
-                  value={field.value}
-                  onChange={handleChange}
-                  className="w-full px-3 py-1.5 border border-gray-300 rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
-                />
+                <>
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    value={field.value}
+                    onChange={handleChange}
+                    className={`w-full px-3 py-1.5 border ${inputWarnings[field.name] ? "border-red-300 bg-red-50" : "border-gray-300"
+                      } rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-amber-500`}
+                    required={field.required}
+                  />
+                  {inputWarnings[field.name] && (
+                    <div className="text-red-600 text-xs flex items-start">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-3 w-3 mr-1 mt-0.5 flex-shrink-0"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                      </svg>
+                      <span>{inputWarnings[field.name]}</span>
+                    </div>
+                  )}
+                </>
               )}
             </div>
           ))}
@@ -176,6 +325,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
               type="file"
               name="profile_image"
               onChange={handleChange}
+              accept="image/*"
               className="w-full px-3 py-1.5 border border-gray-300 rounded-lg shadow-sm text-xs focus:outline-none focus:ring-2 focus:ring-amber-500"
             />
           </div>
@@ -200,6 +350,8 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
     </Modal>
   );
 };
+
+
 
 
 
@@ -380,7 +532,7 @@ const Profile = () => {
                     </div>
                     <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
                       <div className="w-52 text-sm">Email:</div>
-                      <span className="font-semibold">{user?.email}</span>
+                      <span className="font-semibold ">{user?.email}</span>
                     </div>
                     {user?.mobile && (
                       <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">

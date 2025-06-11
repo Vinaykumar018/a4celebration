@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getOrderById } from '../../services/decoration-orders/order-api';
 import { CheckCircle, Truck, CreditCard, Package, User, MapPin, Calendar, Clock } from "lucide-react"
-
+import ReceiptDownloadButton from './Receipt-order';
 export default function OrderConfirmation() {
   const [isLoaded, setIsLoaded] = useState(false)
   const { orderId } = useParams();
@@ -306,6 +306,7 @@ export default function OrderConfirmation() {
             <button className="px-6 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors">
               Track Order
             </button>
+            <ReceiptDownloadButton orderData={orderData} />
             <button className="px-6 py-2 bg-white border border-amber-300 text-amber-600 rounded-md hover:bg-amber-50 transition-colors">
               Continue Shopping
             </button>

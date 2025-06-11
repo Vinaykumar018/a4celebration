@@ -53,7 +53,7 @@ export default function MyOrders({ userData }) {
       const product = await fetchGiftById(id);
 
 
-      return "http://localhost:3000/" + product.data.featured_image;
+      return "https://a4celebration.com/api/" + product.data.featured_image;
 
     }
 

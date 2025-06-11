@@ -27,22 +27,22 @@ const PincodeDeliveryChecker = ({ onDeliveryAvailable, pincode, setPincode }) =>
         🚚 Check Service Availability
       </p>
 
-      <div className="flex border border-amber-300 rounded-lg overflow-hidden shadow product-shadow">
-        <input
-          type="text"
-          placeholder="Enter Your City Pincode"
-          maxLength={6}
-          value={pincode}
-          onChange={(e) => setPincode(e.target.value)}
-          className="flex-1 px-4 py-2 outline-none rounded-l-lg bg-white text-amber-700 placeholder-amber-400 text-sm"
-        />
-        <button
-          onClick={checkDelivery}
-          className="px-5 py-2 bg-amber-600 text-white font-semibold hover:bg-amber-700 transition-colors duration-200 text-sm"
-        >
-          Check
-        </button>
-      </div>
+   <div className="flex border border-amber-300 rounded-lg overflow-hidden shadow product-shadow">
+  <input
+    type="text"
+    placeholder="Enter Your City Pincode"
+    maxLength={6}
+    value={pincode}
+    onChange={(e) => setPincode(e.target.value)}
+    className="flex-1 min-w-0 px-4 py-2 outline-none rounded-l-lg bg-white text-amber-700 placeholder-amber-400 text-sm"
+  />
+  <button
+    onClick={checkDelivery}
+    className="px-4 sm:px-5 py-2 bg-amber-600 text-white font-semibold hover:bg-amber-700 transition-colors duration-200 text-sm whitespace-nowrap"
+  >
+    Check
+  </button>
+</div>
 
       <div className="min-h-[10px]">
         {error && <p className="text-sm text-red-600 mt-2">{error}</p>}

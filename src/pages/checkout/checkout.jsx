@@ -45,6 +45,7 @@ export default function CheckoutPage() {
 
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.user.userData?.data);
+  console.log(userData, "on refresh")
   useEffect(() => {
 
     const isLoggedIn = localStorage.getItem('isLoggedIn');

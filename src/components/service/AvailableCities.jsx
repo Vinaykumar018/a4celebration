@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import kanpur from '../../assets/Kanpur.png'
 
 const AvailableCities = () => {
   const [selectedCity, setSelectedCity] = useState(null);
@@ -9,7 +10,7 @@ const AvailableCities = () => {
   const availableCities = ["Bengaluru", "Kanpur"];
 
   const cities = [
-    { name: "Kanpur", href: "/pandits/Kanpur", src: "https://a4celebration.com/assets/istockphoto-508964332-612x612-BMOIN5b3.jpg" },
+    { name: "Kanpur", href: "/pandits/Kanpur", src:kanpur  },
     { name: "Bengaluru", href: "/pandits/Bengaluru", src: "https://pujapurohit.in/assets/images/cities/bengluru.webp" },
     { name: "Delhi", href: "/pandits/Delhi", src: "https://pujapurohit.in/assets/images/cities/newdelhi.webp" },
     { name: "Noida", href: "/pandits/Noida", src: "https://firebasestorage.googleapis.com/v0/b/mongodb-asset/o/places%2Fnoida.png?alt=media&token=902ba55d-2469-40cd-9f10-b6f2672f8a10&_gl=1*vlbioo*_ga*MTE0NDIwNTUxMi4xNjU0MjY0Mzg0*_ga_CW55HF8NVT*MTY5NzcyMjAxNS4zNzYuMS4xNjk3NzIyNTM4LjYwLjAuMA.." },

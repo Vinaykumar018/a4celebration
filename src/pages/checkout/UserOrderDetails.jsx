@@ -86,8 +86,52 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
         return orderData;
     };
 
+
+
+     const validateFields = () => {
+        const requiredFields = {
+            username: username.trim(),
+            contactNumber: contactNumber.trim(),
+            email: email.trim(),
+            aptSuite: aptSuite.trim(),
+            streetAddress: streetAddress.trim(),
+            city: city.trim(),
+            zipCode: zipCode.trim(),
+            country: country.trim()
+        };
+
+        const missingFields = Object.entries(requiredFields)
+            .filter(([key, value]) => !value)
+            .map(([key]) => key);
+
+        if (missingFields.length > 0) {
+            toast.error(`Please fill in all required fields: ${missingFields.join(', ')}`);
+            return false;
+        }
+
+        // Validate email format
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            toast.error('Please enter a valid email address');
+            return false;
+        }
+
+        // Validate phone number (basic check for at least 10 digits)
+        const phoneRegex = /^\d{10,}$/;
+        if (!phoneRegex.test(contactNumber)) {
+            toast.error('Please enter a valid contact number (at least 10 digits)');
+            return false;
+        }
+
+        return true;
+    };
+
+
     const handlePlaceOrder = async (event) => {
         event.preventDefault();
+        if (!validateFields()) {
+            return;
+        }
         const orderData = transformToOrderSchema();
 
         try {

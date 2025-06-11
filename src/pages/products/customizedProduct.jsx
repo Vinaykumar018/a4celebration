@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Calendar, User, Phone, Mail, Users, Utensils, DollarSign } from 'lucide-react';
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 function CustomRequestModal({ productId, userId, onClose }) {
   const [formData, setFormData] = useState({
@@ -23,6 +23,49 @@ function CustomRequestModal({ productId, userId, onClose }) {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Regex to check for HTML tags
+    const htmlTagRegex = /<[^>]*>/;
+    // Regex to check for unwanted words
+    const unwantedWordsRegex = /\b(don't|even|unable)\b/i;
+    // Regex for email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Regex for name validation (no special characters)
+    const nameRegex = /^[a-zA-Z\s]*$/;
+    // Regex for phone number (only digits)
+    const phoneRegex = /^[0-9]*$/;
+
+    // Validate based on input name
+    switch (name) {
+      case 'name':
+        if (!nameRegex.test(value)) {
+          setError('Name can only contain letters and spaces.');
+          return;
+        }
+        break;
+      case 'phone_number':
+        if (!phoneRegex.test(value)) {
+          setError('Phone number can only contain digits.');
+          return;
+        }
+        break;
+      case 'email':
+        if (!emailRegex.test(value)) {
+          setError('Please enter a valid email address.');
+          return;
+        }
+        break;
+      default:
+        break;
+    }
+
+    // Check for HTML tags or unwanted words
+    if (htmlTagRegex.test(value) || unwantedWordsRegex.test(value)) {
+      setError('Input contains invalid characters or words.');
+      return; // Prevent updating the state
+    }
+
+    setError(null); // Clear error if input is valid
     setFormData(prev => ({
       ...prev,
       [name]: value
@@ -68,7 +111,7 @@ function CustomRequestModal({ productId, userId, onClose }) {
 
   return (
     <div className="fixed mt-12 inset-0 flex items-center justify-center bg-black/70 bg-opacity-50 z-50 ">
-      <ToastContainer></ToastContainer>
+      <ToastContainer />
       <div className="w-[80vw] h-[90vh] bg-white rounded-lg shadow-lg overflow-y-auto">
         <div className="relative mt-12">
           <button
@@ -144,6 +187,7 @@ function CustomRequestModal({ productId, userId, onClose }) {
                     required
                   />
                 </div>
+                {error && <p className="text-red-500 text-sm">{error}</p>}
               </div>
 
               {/* Phone Number */}
@@ -163,6 +207,7 @@ function CustomRequestModal({ productId, userId, onClose }) {
                     required
                   />
                 </div>
+                {error && <p className="text-red-500 text-sm">{error}</p>}
               </div>
 
               {/* Email */}
@@ -179,6 +224,7 @@ function CustomRequestModal({ productId, userId, onClose }) {
                     placeholder="your.email@example.com"
                   />
                 </div>
+                {error && <p className="text-red-500 text-sm">{error}</p>}
               </div>
 
               {/* Event Date */}
@@ -265,7 +311,6 @@ function CustomRequestModal({ productId, userId, onClose }) {
                     <option value="20 Lakhs - 25 Lakhs">20 Lakhs - 25 Lakhs</option>
                     <option value="25 Lakhs - 30 Lakhs">25 Lakhs - 30 Lakhs</option>
                     <option value="Above 30 Lakhs">Above 30 Lakhs</option>
-
                   </select>
                 </div>
               </div>
@@ -313,7 +358,6 @@ function CustomRequestModal({ productId, userId, onClose }) {
         </div>
       </div>
     </div>
-
   );
 };
 

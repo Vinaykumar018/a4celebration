@@ -78,9 +78,10 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Check } from "lucide-react";
 
-import img1 from '../../assets/slider/Pre pre wedding reattempt.jpg';
-import img2 from '../../assets/slider/birthday30.png';
-import img3 from '../../assets/slider/1680x800-customer-moments-desktop-66e2b6738e4f6 (1).avif';
+import img1 from '../../assets/slider/pre.jpg';
+import img2 from '../../assets/slider/birthday.png';
+import img3 from '../../assets/slider/HappyFathersday(2).jpg';
+import img4 from '../../assets/slider/CorporateGift.jpg';
 
 const slides = [
   {
@@ -98,6 +99,11 @@ const slides = [
     title: "Traditional Theme 3",
     features: ["Custom lighting", "Creative decor"],
   },
+   {
+    image: img4,
+    title: "Traditional Theme 4",
+    features: ["Custom lighting", "Creative decor"],
+  }
 ];
 
 export default function Slider() {

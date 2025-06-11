@@ -42,7 +42,7 @@ const KitsOverview = (kitPart) => {
         }
       `}</style>
 
-      <div className="w-full mt-2 font-poppins bg-amber-50">
+      <div className="w-full sm:mt-2 mt-0 font-poppins bg-amber-50">
 
 
         <div className="rounded-lg shadow-sm divide-y bg-amber-50 product-shadow">

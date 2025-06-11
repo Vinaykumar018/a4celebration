@@ -47,7 +47,7 @@ const DescriptionOverview = (descriptionPart) => {
         }
       `}</style>
 
-      <div className="w-full mt-2 font-poppins bg-amber-50">
+      <div className="w-full mt-4 sm:mt-2 font-poppins bg-amber-50">
         <h2 className="mb-6 text-center text-2xl font-bold text-amber-700 font-playfair">
           Product Overview
         </h2>
@@ -68,10 +68,7 @@ const DescriptionOverview = (descriptionPart) => {
                 className="description text-xs"
                 dangerouslySetInnerHTML={{ __html: decodeHTML(descriptionPart.description) }}
               />
-              <p className="mt-4 text-sm italic text-red-600">
-                <FaInfoCircle className="inline mr-2 text-yellow-600" />
-                Note: If you choose "Without Kit" option, you'll need to arrange the materials yourself.
-              </p>
+             
             </div>
           </details>
 

@@ -456,22 +456,22 @@ const EventManagementDetailsPage = () => {
                     </button>
 
                     <div>
-                  <button
-                    onClick={handleOpen}
-                    className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors"
-                  >
-                    <Settings2Icon />
-                    <span className="font-medium text-sm">Your Customized Requirements</span>
-                  </button>
+                      <button
+                        onClick={handleOpen}
+                        className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors"
+                      >
+                        <Settings2Icon />
+                        <span className="font-medium text-sm">Your Customized Requirements</span>
+                      </button>
 
-                  {showModal && (
-                    <CustomRequestModal
-                      productId={productId}  // replace with actual productId if needed
-                      userId={userData?.data?._id}      // replace with actual userId if needed
-                      onClose={handleClose}
-                    />
-                  )}
-                </div>
+                      {showModal && (
+                        <CustomRequestModal
+                          productId={productId}  // replace with actual productId if needed
+                          userId={userData?.data?._id}      // replace with actual userId if needed
+                          onClose={handleClose}
+                        />
+                      )}
+                    </div>
 
 
                   </div>

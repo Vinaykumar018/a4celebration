@@ -63,7 +63,7 @@ const CardTypeB = ({
 
   return (
     <section className="bg-amber rashi_wrapper mt-2" id="zodiac_Sign">
-      <div className="container-fluid mx-auto md:px-6 sm:px-0 px-0 lg:px-6">
+      <div className="container mx-auto md:px-6 px-3 lg:px-6">
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
             <div>
@@ -163,7 +163,7 @@ const CardTypeB = ({
 
                     {/* Content Section */}
                     <div className="p-4 flex flex-col flex-grow">
-                      <h3 className="text-lg font-bold text-gray-800 mb-2 line-clamp-2">
+                      <h3 className="text-md font-medium mb-1 font-semibold mb-2 line-clamp-2">
                         {service.name}
                       </h3>
 

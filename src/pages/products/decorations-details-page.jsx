@@ -142,7 +142,7 @@ const DecorationsDetailsPage = () => {
           <div className="flex flex-wrap -mx-4">
             {/* Product Images */}
             <div className="w-full md:w-1/2 mb-8 px-4">
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex  flex-col-reverse sm:flex-row gap-4 ">
                 {/* Left Side Thumbnails */}
                 <div className="flex flex-row sm:flex-col gap-4 overflow-x-auto sm:overflow-y-auto sm:max-h-[500px] scrollbar-hide">
                   {serviceData.other_images.map((src, index) => (
@@ -157,7 +157,7 @@ const DecorationsDetailsPage = () => {
                         className="w-full h-full object-cover rounded-md"
                       />
                       {mainImage === "https://a4celebration.com/api/" + src && (
-                        <div className="absolute inset-0 bg-amber-500 bg-opacity-20 rounded-md"></div>
+                        <div className="absolute inset-0 border-2 border-amber-500 rounded-md rounded-md"></div>
                       )}
                     </div>
                   ))}
@@ -315,16 +315,16 @@ const DecorationsDetailsPage = () => {
                 </button>
               </div>
 
-
+              <div className="block md:hidden">
+                <DescriptionOverview description={descriptionPart} />
+              </div>
               <KitsOverview data={kitPart} ></KitsOverview>
 
               {/* Delivery Information */}
               <div className="space-y-4">
 
                 <DeliveryInfo />
-                <div className="block md:hidden">
-                  <DescriptionOverview description={descriptionPart} />
-                </div>
+
               </div>
             </div>
           </div>

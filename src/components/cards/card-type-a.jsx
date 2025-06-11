@@ -128,8 +128,8 @@ const CardTypeA = ({
                   >
                     {/* Image Section */}
                     <div className="sign_box_img flex justify-center mb-2">
-                     <img
-                       src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
+                      <img
+                        src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
                         alt={service.name}
                         className="object-cover rounded-lg h-40 w-full"
                       />
@@ -138,9 +138,9 @@ const CardTypeA = ({
 
                     {/* Content Section */}
                     <div className="sign_box_cont text-center p-1">
-                      <h4 className="text-sm font-medium mb-1">
+                      <h3 className="text-md font-medium mb-1 font-semibold mb-2 line-clamp-2">
                         {words.length > 4 ? `${words.slice(0, 2).join(" ")}` : service.name}
-                      </h4>
+                      </h3>
 
                       {showRating && (
                         <div className="flex justify-center items-center gap-1 text-xs mt-1">

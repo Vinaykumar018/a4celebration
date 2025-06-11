@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import img1 from '../../../assets/banner/Decoration 5.jpg'
 
 // Image sources for CategoryTopBanner
-const desktopImg = 'https://cheetah.cherishx.com/website_layout/2200x450_Pre-wedding_Desktop_20240930_132612.jpg?format=avif';
-const mobileImg = 'https://cheetah.cherishx.com/website_layout/2200x450_Pre-wedding_Desktop_20240930_132612.jpg?format=avif';
+const desktopImg = img1;
+const mobileImg = img1;
 
 const CategoryTopBanner = () => {
   return (
