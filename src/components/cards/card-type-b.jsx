@@ -162,7 +162,7 @@ const CardTypeB = ({
                     </div>
 
                     {/* Content Section */}
-                    <div className="p-4 flex flex-col flex-grow">
+                    <div className="p-4 flex flex-col flex-grow ">
                       <h3 className="text-md font-medium mb-1 font-semibold mb-2 line-clamp-2">
                         {service.name}
                       </h3>

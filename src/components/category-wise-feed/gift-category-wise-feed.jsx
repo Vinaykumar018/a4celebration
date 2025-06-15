@@ -48,7 +48,7 @@ function normalize(str) {
       description="Explore our spiritual services"
       services={filteredProducts}
       baseImageUrl={img1}
-      themeColor="#f472b6"
+      themeColor="#ff7e00"
       section="Decorations"
       sectionSlug="/gifts/e-commerce"
       ctaText="Book Now"

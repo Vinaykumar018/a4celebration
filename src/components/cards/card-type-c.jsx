@@ -61,10 +61,17 @@ const CardTypeC = ({
       },
     },
   };
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price)
+  }
 
   return (
-    <section className="bg-amber-50 md:px-0 sm:px-5 px-5 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
-      <div className="container-fluid mx-auto md:px-6 px-3 lg:px-6">
+    <section className="bg-amber-50 md:px-0  px-2 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
+      <div className="container-fluid  md:px-6 px-3 lg:px-6">
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
             <div>
@@ -167,7 +174,7 @@ const CardTypeC = ({
 
                       {showPrice && (
                         <p className="text-sm font-medium text-gray-700 mb-4">
-                          ${service.price?.toFixed(2) || '0.00'}
+                         {formatPrice(service.price)}
                         </p>
                       )}
 

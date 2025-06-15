@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User, Verified } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createUser } from '../../services/auth/auth';
+import ReCAPTCHA from "react-google-recaptcha";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ const RegisterPage = () => {
     password: ""
   });
   const navigate = useNavigate();
+  const [verified,setVerified]=useState(false);
 
   // Define allowed patterns (more restrictive approach)
   const allowedPatterns = {
@@ -95,6 +97,11 @@ const RegisterPage = () => {
     setInputWarnings(prev => ({ ...prev, [name]: warning }));
     return warning === "";
   };
+
+  function onChange(value) {
+    console.log(value)
+  setVerified(!Verified)
+}
 
   const checkPasswordStrength = (password) => {
     let warning = "";
@@ -355,11 +362,17 @@ const RegisterPage = () => {
               )}
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-amber-500 to-red-500 hover:from-amber-600 hover:to-red-600 text-white font-medium py-2.5 rounded-md transition-all duration-300 shadow-md hover:shadow-lg"
-            >
+         <ReCAPTCHA
+    sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+    onChange={onChange}
+  />
+
+           <button
+  type="submit"
+  disabled={!verified}
+  className={`w-full bg-gradient-to-r from-amber-500 to-red-500 text-white font-medium py-2.5 rounded-md transition-all duration-300 shadow-md
+    ${!verified ? 'opacity-60 cursor-not-allowed shadow-none' : 'hover:from-amber-600 hover:to-red-600 hover:shadow-lg'}`}
+>
               {loading ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>

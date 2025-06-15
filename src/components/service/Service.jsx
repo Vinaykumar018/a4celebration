@@ -115,13 +115,13 @@ const Services = () => {
                     </motion.div>
                   </div>
 
-                  <div className="px-3 py-2 text-center bg-amber-50 flex-grow flex flex-col justify-center border-t border-amber-200">
-                    <h3
-                      className="text-xs font-extrabold text-amber-900 tracking-wide google-font"
+                  <div className="px-2 py-2 text-center bg-amber-50 flex-grow flex flex-col justify-center border-t border-amber-200">
+                    <h4
+                      className="text-xs  font-extrabold text-amber-900 tracking-wide google-font"
                       style={{ textTransform: "uppercase" }}
                     >
                       {category.category_name}
-                    </h3>
+                    </h4>
                   </div>
 
                   {/* Popular badge - you can customize the condition */}

@@ -8,7 +8,6 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import { EyeIcon } from 'lucide-react';
 
 const CardTypeA = ({
-
   services = [],
   baseImageUrl,
   themeColor = "#ff7e00",
@@ -19,10 +18,6 @@ const CardTypeA = ({
   sectionSlug,
   title
 }) => {
-
-
-
-
 
   const renderStars = (rating) => {
     const fullStars = Math.floor(rating);
@@ -54,8 +49,13 @@ const CardTypeA = ({
     },
   };
 
-
-
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price)
+  }
   return (
     <section className="bg-amber-50 md:px-0 sm:px-4 px-4 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="container-fluid mx-auto md:px-6 sm:px-0 px-0 lg:px-6">
@@ -79,22 +79,17 @@ const CardTypeA = ({
                   )}
                 </div>
               </div>
-
             </div>
           </div>
         </div>
-
 
         <Swiper
           modules={[Autoplay, Pagination]}
           autoplay={{
             delay: 1000,
-
           }}
           spaceBetween={30}
           slidesPerView={4}
-
-
           breakpoints={{
             320: {
               slidesPerView: 2,
@@ -118,27 +113,30 @@ const CardTypeA = ({
             const words = service.name.split(" ");
             return (
               <SwiperSlide key={index}>
-                <Link to={`${sectionSlug}/${service.slug_url}`} className="block" state={{
-                  serviceData: service,
-                  sectionData: section
-                }}>
+                <Link 
+                  to={`${sectionSlug}/${service.slug_url}`} 
+                  className="block h-full"
+                  state={{
+                    serviceData: service,
+                    sectionData: section
+                  }}
+                >
                   <div
-                    className="rashi_sign_box bg-white shadow-md rounded-lg overflow-hidden transition-transform duration-300 p-2"
+                    className="rashi_sign_box bg-white shadow-md rounded-lg overflow-hidden transition-transform duration-300 p-2 h-full flex flex-col"
                     style={{ borderRadius: "16px", border: `1px ${themeColor} solid` }}
                   >
-                    {/* Image Section */}
-                    <div className="sign_box_img flex justify-center mb-2">
+                    {/* Image Section - Fixed Height */}
+                    <div className="sign_box_img flex justify-center mb-2 h-40">
                       <img
                         src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
                         alt={service.name}
-                        className="object-cover rounded-lg h-40 w-full"
+                        className="object-cover rounded-lg w-full h-full"
                       />
-
                     </div>
 
-                    {/* Content Section */}
-                    <div className="sign_box_cont text-center p-1">
-                      <h3 className="text-md font-medium mb-1 font-semibold mb-2 line-clamp-2">
+                    {/* Content Section - Flex grow for consistent height */}
+                    <div className="sign_box_cont text-center p-1 flex flex-col flex-grow">
+                      <h3 className="text-md font-medium font-semibold mb-2 line-clamp-2 sm:min-h-[3rem] min-h-[3rem] md:min-h-auto flex items-center justify-center">
                         {words.length > 4 ? `${words.slice(0, 2).join(" ")}` : service.name}
                       </h3>
 
@@ -149,20 +147,22 @@ const CardTypeA = ({
                       )}
 
                       {showPrice && (
-                        <p className="text-xs text-gray-600 mb-1">Price: ${service.price}</p>
+                        <p className="text-xs text-gray-600 mb-2">Price:   {formatPrice(service.price)}</p>
                       )}
 
-                      <Link
-                        to={`${sectionSlug}/${service.slug_url}`}
-                        className="inline-block text-xs px-3 py-1.5 rounded-md uppercase text-white transition-colors duration-300"
-                        style={{ backgroundColor: themeColor }}
-                        state={{
-                          serviceData: service,
-                          sectionData: section
-                        }}
-                      >
-                        {ctaText}
-                      </Link>
+                      <div className="mt-auto">
+                        <Link
+                          to={`${sectionSlug}/${service.slug_url}`}
+                          className="inline-block text-xs px-3 py-1.5 rounded-md uppercase text-white transition-colors duration-300"
+                          style={{ backgroundColor: themeColor }}
+                          state={{
+                            serviceData: service,
+                            sectionData: section
+                          }}
+                        >
+                          {ctaText}
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </Link>

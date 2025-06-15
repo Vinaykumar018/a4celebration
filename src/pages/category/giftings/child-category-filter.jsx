@@ -49,11 +49,11 @@ const ChildCategoryFilter = () => {
   if (!GiftingsCategory) return null;
 
   return (
-    <div className="py-5 mb-8">
-      <h3 className="text-lg font-semibold px-4 mb-4 text-gray-800">Gifting Categories</h3>
+    <div className="py-3 mb-0">
+      <h3 className="text-lg font-semibold  mb-4 text-gray-800">Gifting Categories</h3>
 
       <div className="relative">
-        <div className="flex space-x-6 px-4 pb-2 overflow-x-auto scrollbar-hide p-1">
+        <div className="flex space-x-6  overflow-x-auto scrollbar-hide ">
           {childCategories.map((child) => (
             <div
               key={child.id}
@@ -93,8 +93,7 @@ const ChildCategoryFilter = () => {
         </div>
 
         {/* Gradient fade effect on sides */}
-        <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-        <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+       
       </div>
     </div>
   );

@@ -126,8 +126,8 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
             min={format(new Date(), 'yyyy-MM-dd')}
             disabled={PIN === false}
             className={`px-4 py-1.5 border rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none transition shadow-sm w-full ${PIN === false
-              ? 'border-gray-200 bg-gray-50 cursor-not-allowed pr-8'
-              : 'border-amber-200 hover:border-amber-300 cursor-pointer'
+              ? 'border-gray-200 bg-gray-50 cursor-not-allowed pr-8 sm:pr-20 md:pr-8'
+              : 'border-amber-200 hover:border-amber-300 cursor-pointer pr-8 sm:pr-20 md:pr-8'
               }`}
           />
           {PIN === false && (

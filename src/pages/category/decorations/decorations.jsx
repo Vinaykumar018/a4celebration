@@ -7,14 +7,14 @@ import ChildCategoryFilter from './child-category-filter';
 const Decorations = () => {
   return (
     <>
-   <div className="w-full py-2 px-4"> {/* Removed 'container mx-auto' */}
+   <div className="w-full  px-4"> {/* Removed 'container mx-auto' */}
         <CategoryTopBanner />
 
-        <div className="md:col-span-8">
+        <div className="col-span-12">
           <ChildCategoryFilter />
         </div>
 
-        <div className="md:col-span-9">
+        <div className="col-span-12">
           <CategoryWiseFeed />
         </div>
       </div>

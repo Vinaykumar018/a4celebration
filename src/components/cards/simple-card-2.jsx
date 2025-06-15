@@ -33,9 +33,9 @@ const SimpleCard2 = ({
   };
 
   return (
-    <section className="md:px-0 sm:px-5 px-5 lg:px-0 rashi_wrapper mt-2" id="zodiac_Sign">
-      <div className="container-fluid mx-auto md:px-6 sm:px-0 px-0 lg:px-6">
-        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+    <section className="bg-white rashi_wrapper mt-2" id="zodiac_Sign">
+      <div className="w-full sm:px-0 px-0 ">
+        <div className="grid gap-6 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mb-3">
           {services?.map((service, index) => {
             const words = service.name.split(" ");
             return (

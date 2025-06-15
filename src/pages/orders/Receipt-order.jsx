@@ -23,234 +23,251 @@ const ReceiptDownloadButton = ({ orderData }) => {
   };
 
   const generatePdfReceipt = async () => {
-    try {
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([400, 600]);
+  try {
+    const pdfDoc = await PDFDocument.create();
+    const page = pdfDoc.addPage([400, 650]);
 
-      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-      const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-      page.drawText("DECORATE", {
-        x: 50,
-        y: 550,
-        size: 24,
-        font: boldFont,
-        color: rgb(0.2, 0.2, 0.2),
-      });
+    let yPos = 600;
+    const sectionGap = 30;
+    const lineGap = 18;
 
-      page.drawText("Order Receipt", {
-        x: 50,
-        y: 520,
-        size: 18,
-        font: boldFont,
-        color: rgb(0.85, 0.47, 0.2),
-      });
+    // Header
+    page.drawText("A4 Celebration", {
+      x: 50,
+      y: yPos,
+      size: 24,
+      font: boldFont,
+      color: rgb(0.2, 0.2, 0.2),
+    });
 
-      page.drawLine({
-        start: { x: 50, y: 510 },
-        end: { x: 350, y: 510 },
-        thickness: 1,
-        color: rgb(0.85, 0.47, 0.2),
-      });
+    yPos -= lineGap;
+    page.drawText("Order Receipt", {
+      x: 50,
+      y: yPos,
+      size: 18,
+      font: boldFont,
+      color: rgb(0.85, 0.47, 0.2),
+    });
 
-      // Order information
-      page.drawText(`Order ID: ${orderData?.order_id || 'N/A'}`, {
-        x: 50,
-        y: 490,
-        size: 12,
-        font,
-      });
+    yPos -= 10;
+    page.drawLine({
+      start: { x: 50, y: yPos },
+      end: { x: 350, y: yPos },
+      thickness: 1,
+      color: rgb(0.85, 0.47, 0.2),
+    });
 
-      page.drawText(`Date: ${formatDate(orderData?.orderDetails?.order_requested_date)}`, {
-        x: 50,
-        y: 470,
-        size: 12,
-        font,
-      });
+    yPos -= sectionGap;
 
-      page.drawText(`Status: ${orderData?.orderDetails?.order_status || 'N/A'}`, {
-        x: 50,
-        y: 450,
-        size: 12,
-        font,
-      });
+    // Order Info
+    page.drawText("Order Information", {
+      x: 50,
+      y: yPos,
+      size: 14,
+      font: boldFont,
+      color: rgb(0.85, 0.47, 0.2),
+    });
 
-      // Customer information
-      page.drawText("Customer Details", {
-        x: 50,
-        y: 420,
-        size: 14,
-        font: boldFont,
-        color: rgb(0.85, 0.47, 0.2),
-      });
+    yPos -= lineGap;
+    page.drawText(`Order ID: ${orderData?.order_id || 'N/A'}`, { x: 50, y: yPos, size: 12, font });
+    yPos -= lineGap;
+    page.drawText(`Date: ${formatDate(orderData?.orderDetails?.order_requested_date)}`, { x: 50, y: yPos, size: 12, font });
+    yPos -= lineGap;
+    page.drawText(`Status: ${orderData?.orderDetails?.order_status || 'N/A'}`, { x: 50, y: yPos, size: 12, font });
 
-      page.drawText(`Name: ${orderData?.userDetails?.username || 'N/A'}`, {
-        x: 50,
-        y: 400,
-        size: 12,
-        font,
-      });
+    yPos -= sectionGap;
 
-      page.drawText(`Email: ${orderData?.userDetails?.email || 'N/A'}`, {
-        x: 50,
-        y: 380,
-        size: 12,
-        font,
-      });
+    // Customer Details
+    page.drawText("Customer Details", {
+      x: 50,
+      y: yPos,
+      size: 14,
+      font: boldFont,
+      color: rgb(0.85, 0.47, 0.2),
+    });
 
-      page.drawText(`Phone: ${orderData?.userDetails?.contactNumber || 'N/A'}`, {
-        x: 50,
-        y: 360,
-        size: 12,
-        font,
-      });
+    yPos -= lineGap;
+    page.drawText(`Name: ${orderData?.userDetails?.username || 'N/A'}`, { x: 50, y: yPos, size: 12, font });
+    yPos -= lineGap;
+    page.drawText(`Email: ${orderData?.userDetails?.email || 'N/A'}`, { x: 50, y: yPos, size: 12, font });
+    yPos -= lineGap;
+    page.drawText(`Phone: ${orderData?.userDetails?.contactNumber || 'N/A'}`, { x: 50, y: yPos, size: 12, font });
 
-      // Shipping address
-      page.drawText("Shipping Address", {
-        x: 50,
-        y: 330,
-        size: 14,
-        font: boldFont,
-        color: rgb(0.85, 0.47, 0.2),
-      });
+    yPos -= sectionGap;
 
-      const addressLines = formatAddress().split(', ');
-      addressLines.forEach((line, index) => {
-        page.drawText(line, {
-          x: 50,
-          y: 310 - (index * 20),
-          size: 12,
-          font,
-        });
-      });
+    // Shipping Address
+    page.drawText("Shipping Address", {
+      x: 50,
+      y: yPos,
+      size: 14,
+      font: boldFont,
+      color: rgb(0.85, 0.47, 0.2),
+    });
 
-      // Order items
-      page.drawText("Order Items", {
-        x: 50,
-        y: 250,
-        size: 14,
-        font: boldFont,
-        color: rgb(0.85, 0.47, 0.2),
-      });
+    yPos -= lineGap;
+    const addressLines = formatAddress().split(', ');
+    addressLines.forEach(line => {
+      page.drawText(line, { x: 50, y: yPos, size: 12, font });
+      yPos -= lineGap;
+    });
 
-      let yPos = 230;
-      orderData?.productDetails?.forEach((product, index) => {
-        page.drawText(`${product?.productName || 'Unknown Product'}`, {
-          x: 50,
-          y: yPos,
-          size: 12,
-          font,
-        });
+    yPos -= sectionGap;
 
-        page.drawText(`Qty: ${product?.quantity || 0}`, {
-          x: 200,
-          y: yPos,
-          size: 12,
-          font,
-        });
+    // Order Items
+    page.drawText("Order Items", {
+      x: 50,
+      y: yPos,
+      size: 14,
+      font: boldFont,
+      color: rgb(0.85, 0.47, 0.2),
+    });
 
-        page.drawText(`${currencySymbol}${product?.amount || 0}`, {
-          x: 300,
-          y: yPos,
-          size: 12,
-          font: boldFont,
-        });
+    yPos -= lineGap;
+   const wrapText = (text, maxCharsPerLine = 35) => {
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
 
-        yPos -= 20;
-      });
-
-      // Order summary
-      page.drawText("Order Summary", {
-        x: 50,
-        y: yPos - 30,
-        size: 14,
-        font: boldFont,
-        color: rgb(0.85, 0.47, 0.2),
-      });
-
-      page.drawText(`Subtotal: ${currencySymbol}${orderData?.paymentDetails?.totalAmount || 0}`, {
-        x: 50,
-        y: yPos - 50,
-        size: 12,
-        font,
-      });
-
-      if (orderData?.discountApplied > 0) {
-        page.drawText(`Discount: -${currencySymbol}${orderData.discountApplied}`, {
-          x: 50,
-          y: yPos - 70,
-          size: 12,
-          font,
-          color: rgb(0, 0.5, 0),
-        });
-      }
-
-      page.drawText("Shipping: Free", {
-        x: 50,
-        y: yPos - 90,
-        size: 12,
-        font,
-      });
-
-      page.drawText(`Total: ${currencySymbol}${orderData?.paymentDetails?.totalAmount || 0}`, {
-        x: 50,
-        y: yPos - 120,
-        size: 14,
-        font: boldFont,
-      });
-
-      // Payment information
-      page.drawText("Payment Information", {
-        x: 50,
-        y: yPos - 150,
-        size: 14,
-        font: boldFont,
-        color: rgb(0.85, 0.47, 0.2),
-      });
-
-      page.drawText(`Method: ${orderData?.paymentDetails?.paymentMethodType || 'N/A'}`, {
-        x: 50,
-        y: yPos - 170,
-        size: 12,
-        font,
-      });
-
-      page.drawText(`Status: ${orderData?.paymentDetails?.transactionStatus || 'N/A'}`, {
-        x: 50,
-        y: yPos - 190,
-        size: 12,
-        font,
-      });
-
-      // Footer
-      page.drawText("Thank you for your order!", {
-        x: 50,
-        y: 50,
-        size: 12,
-        font: boldFont,
-        color: rgb(0.85, 0.47, 0.2),
-      });
-
-      page.drawText("For any questions, please contact our customer support.", {
-        x: 50,
-        y: 30,
-        size: 10,
-        font,
-      });
-
-      const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes], { type: "application/pdf" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `Receipt_${orderData?.order_id || 'order'}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (error) {
-      console.error("Error generating PDF:", error);
-      alert("Failed to generate receipt. Please try again.");
+  words.forEach(word => {
+    if ((line + word).length <= maxCharsPerLine) {
+      line += word + ' ';
+    } else {
+      lines.push(line.trim());
+      line = word + ' ';
     }
-  };
+  });
+  if (line) lines.push(line.trim());
+  return lines;
+};
+
+orderData?.productDetails?.forEach((product, index) => {
+  const lines = wrapText(product?.productName || 'Unknown Product');
+
+  lines.forEach((line, i) => {
+    page.drawText(line, {
+      x: 50,
+      y: yPos,
+      size: 12,
+      font,
+    });
+    yPos -= 15;
+  });
+
+  page.drawText(`Qty: ${product?.quantity || 0}`, {
+    x: 50,
+    y: yPos,
+    size: 12,
+    font,
+  });
+
+  page.drawText(`${currencySymbol}${product?.amount || 0}`, {
+    x: 300,
+    y: yPos,
+    size: 12,
+    font: boldFont,
+  });
+
+  yPos -= 25;
+});
+
+
+    yPos -= sectionGap;
+
+    // Order Summary
+    page.drawText("Order Summary", {
+      x: 50,
+      y: yPos,
+      size: 14,
+      font: boldFont,
+      color: rgb(0.85, 0.47, 0.2),
+    });
+
+    yPos -= lineGap;
+    page.drawText(`Subtotal: ${currencySymbol}${orderData?.paymentDetails?.totalAmount || 0}`, { x: 50, y: yPos, size: 12, font });
+    yPos -= lineGap;
+
+    if (orderData?.discountApplied > 0) {
+      page.drawText(`Discount: -${currencySymbol}${orderData.discountApplied}`, {
+        x: 50,
+        y: yPos,
+        size: 12,
+        font,
+        color: rgb(0, 0.5, 0),
+      });
+      yPos -= lineGap;
+    }
+
+    page.drawText("Shipping: Free", { x: 50, y: yPos, size: 12, font });
+    yPos -= lineGap;
+
+    page.drawText(`Total: ${currencySymbol}${orderData?.paymentDetails?.totalAmount || 0}`, {
+      x: 50,
+      y: yPos,
+      size: 14,
+      font: boldFont,
+    });
+
+    yPos -= sectionGap;
+
+  page.drawText("Payment Information", {
+  x: 50,
+  y: yPos,
+  size: 14,
+  font: boldFont,
+  color: rgb(0.85, 0.47, 0.2),
+});
+yPos -= lineGap;
+
+page.drawText(`Method: ${orderData?.paymentDetails?.paymentMethodType || 'N/A'}`, {
+  x: 50,
+  y: yPos,
+  size: 12,
+  font,
+});
+yPos -= lineGap;
+
+page.drawText(`Status: ${orderData?.paymentDetails?.transactionStatus || 'N/A'}`, {
+  x: 50,
+  y: yPos,
+  size: 12,
+  font,
+});
+yPos -= sectionGap; // <--- Add this to move footer down safely
+
+// Footer
+page.drawText("Thank you for your order!", {
+  x: 50,
+  y: yPos,
+  size: 12,
+  font: boldFont,
+  color: rgb(0.85, 0.47, 0.2),
+});
+yPos -= lineGap;
+
+page.drawText("For any questions, please contact our customer support.", {
+  x: 50,
+  y: yPos,
+  size: 10,
+  font,
+});
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Receipt_${orderData?.order_id || 'order'}.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  } catch (error) {
+    console.error("Error generating PDF:", error);
+    alert("Failed to generate receipt. Please try again.");
+  }
+};
+
 
   return (
     <button

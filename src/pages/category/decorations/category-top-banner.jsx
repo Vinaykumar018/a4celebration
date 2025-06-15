@@ -8,7 +8,7 @@ const mobileImg = img1;
 
 const CategoryTopBanner = () => {
   return (
-    <div className="px-3 mt-6">
+    <div className=" mt-3">
       <div className="w-full rounded-3xl overflow-hidden shadow-lg">
         <motion.picture
           initial={{ scale: 1 }}

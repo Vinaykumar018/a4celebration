@@ -56,6 +56,7 @@ const RoutesComponent = () => {
       <Route path="/cart" element={
           isAuthenticated ? <Cart /> : <Navigate to="/login" />
         } />
+      
       <Route path="/help" element={<HelpCentre />} />
       <Route path="/login" element={<LoginPage></LoginPage>} />
       <Route path="/register" element={<RegisterPage></RegisterPage>} />

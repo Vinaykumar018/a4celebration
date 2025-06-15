@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import kanpur from '../../assets/Kanpur.png'
+import kanpur from '../../assets/Kanpur (1).png'
 
 const AvailableCities = () => {
   const [selectedCity, setSelectedCity] = useState(null);
