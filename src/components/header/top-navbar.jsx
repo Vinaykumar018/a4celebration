@@ -55,11 +55,11 @@ const TopNavbar = () => {
     return path.replace(/\\/g, '/').replace(/\/\/+/g, '/');
   };
   return (
-    <div className={`w-full bg-white flex items-center justify-between px-4 py-2 ${isScrolled ? "shadow-md" : ""}`}>
+    <div className={`w-full bg-white flex items-center justify-between px-4 py-2 `}>
       {/* Left Logo */}
-      <div className="flex items-center">
+      <div className="flex items-center w-30 md:w-auto">
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="Logo" className="h-10 w-auto" style={{height:"60px"}} />
+          <img src={logo} alt="Logo" className="h-10 w-auto" style={{ height: "60px" }} />
         </Link>
       </div>
 
@@ -102,10 +102,13 @@ const TopNavbar = () => {
 
             <div
               style={{
-                backgroundImage: `url(${userData.data.profile_image
-                  ? "https://a4celebration.com/api/" + sanitizePath(userData.data.profile_image)
+                backgroundImage: `url(${userData?.data?.profile_image
+                  ? userData.data.social_type === 'google'
+                    ? (userData.data.profile_image)
+                    : "https://a4celebration.com/api/" + sanitizePath(userData.data.profile_image)
                   : unknown
-                  })`,
+                  })`
+                ,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 width: '35px',  // Adjust width as needed

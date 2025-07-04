@@ -21,6 +21,7 @@ const MyCustomOrders = () => {
 
     fetchRequests();
   }, []);
+  console.log(requests)
 const navigate=useNavigate()
   const handleBookNow = (requestId) => {
     // Implement your booking logic here

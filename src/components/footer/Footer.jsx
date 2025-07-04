@@ -31,7 +31,7 @@ const Footer = () => {
                                 </button>
                             </div>
                             <p className="text-xs text-gray-400 mt-2">
-                                By subscribing you agree to our <Link to="" className="text-amber-400 hover:underline">Terms</Link> and <Link to="" className="text-amber-400 hover:underline">Privacy Policy</Link>.
+                                By subscribing you agree to our <Link to="/terms" className="text-amber-400 hover:underline">Terms</Link> and <Link to="/privacy" className="text-amber-400 hover:underline">Privacy Policy</Link>.
                             </p>
                         </div>
                     </div>
@@ -39,62 +39,79 @@ const Footer = () => {
                     {/* Services Column */}
                     <div>
                         <h5 className="text-lg font-medium mb-4 text-amber-500">Our Services</h5>
-                        <ul className="space-y-2">
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">Wedding Decor</Link></li>
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">Corporate Events</Link></li>
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">Birthday Packages</Link></li>
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">Custom Gift Boxes</Link></li>
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">Balloon Decorations</Link></li>
+                        <ul className="space-y-2 pl-0"> {/* Added pl-0 for symmetry */}
+                            <li><Link to="/decorations/wedding-decoration" className="text-gray-300 hover:text-amber-400 transition">Wedding Decor</Link></li>
+                            <li><Link to="/event-management/corporate-event" className="text-gray-300 hover:text-amber-400 transition">Corporate Events</Link></li>
+                            <li><Link to="/decorations/birthday-decoration" className="text-gray-300 hover:text-amber-400 transition">Birthday Packages</Link></li>
+                            <li><Link to="/giftings/customized" className="text-gray-300 hover:text-amber-400 transition">Custom Gift Boxes</Link></li>
+                            <li><Link to="/decorations" className="text-gray-300 hover:text-amber-400 transition">Balloon Decorations</Link></li>
                         </ul>
                     </div>
 
                     {/* Quick Links Column */}
                     <div>
                         <h5 className="text-lg font-medium mb-4 text-amber-500">Quick Links</h5>
-                        <ul className="space-y-2">
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">About Us</Link></li>
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">Gallery</Link></li>
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">Testimonials</Link></li>
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">FAQ</Link></li>
-                            <li><Link to="" className="text-gray-300 hover:text-amber-400 transition">Contact Us</Link></li>
+                        <ul className="space-y-2 pl-0"> {/* Added pl-0 for symmetry */}
+                            <li><Link to="/about" className="text-gray-300 hover:text-amber-400 transition">About Us</Link></li>
+                           
+                            <li><Link to="/help" className="text-gray-300 hover:text-amber-400 transition">FAQ</Link></li>
+                            <li><Link to="/contact" className="text-gray-300 hover:text-amber-400 transition">Contact Us</Link></li>
                         </ul>
                     </div>
 
-                    {/* Contact Column */}
-                    <div>
-                        <h5 className="text-lg font-medium mb-4 text-amber-500">Contact Us</h5>
-                        <ul className="space-y-3">
-                            <li className="flex items-start">
-                                <i className="fas fa-map-marker-alt text-amber-400 mt-1 mr-3"></i>
-                                <span className="text-gray-300">123 Celebration St, Event City</span>
-                            </li>
-                            <li className="flex items-center">
-                                <i className="fas fa-phone text-amber-400 mr-3"></i>
-                                <span className="text-gray-300">+1 (555) 123-4567</span>
-                            </li>
-                            <li className="flex items-center">
-                                <i className="fas fa-envelope text-amber-400 mr-3"></i>
-                                <span className="text-gray-300">info@yourcompany.com</span>
-                            </li>
-                        </ul>
-                        <div className="mt-4">
-                            <h6 className="text-gray-400 mb-2">Follow Us</h6>
-                            <div className="flex space-x-4">
-                                <Link to="" className="text-amber-400 hover:text-amber-300 text-xl">
-                                    <i className="fab fa-instagram"></i>
-                                </Link>
-                                <Link to="" className="text-amber-400 hover:text-amber-300 text-xl">
-                                    <i className="fab fa-facebook"></i>
-                                </Link>
-                                <Link to="" className="text-amber-400 hover:text-amber-300 text-xl">
-                                    <i className="fab fa-pinterest"></i>
-                                </Link>
-                                <Link to="" className="text-amber-400 hover:text-amber-300 text-xl">
-                                    <i className="fab fa-tiktok"></i>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
+                    {/* Contact Column - Now Symmetrical */}
+                   <div>
+  <h5 className="text-lg font-medium mb-4 text-amber-500">Contact Us</h5>
+  <ul className="space-y-2 pl-0">
+  <li>
+    <a
+      href="https://www.google.com/maps/place/195,+Awadhpuri+Rd,+near+ICICI+Bank,+Lakhanpur,+Khyora,+Kanpur,+Uttar+Pradesh+208024"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-gray-300 hover:text-amber-400 transition cursor-pointer"
+    >
+      195, Awadhpuri Rd, near ICICI Bank, Lakhanpur, Khyora, Kanpur, Uttar Pradesh 208024
+    </a>
+  </li>
+  <li>
+    <a
+      href="tel:+91 8750200899"
+      className="text-gray-300 hover:text-amber-400 transition cursor-pointer"
+    >
+     +91 8750200899
+    </a>
+  </li>
+  <li>
+    <a
+      href="mailto:hello@deificdigital.com"
+      className="text-gray-300 hover:text-amber-400 transition cursor-pointer"
+    >
+      hello@deificdigital.com
+    </a>
+  </li>
+  <li>
+    <span className="text-gray-300">Mon-Sat: 10AM–7PM</span>
+  </li>
+</ul>
+
+  <div className="mt-6">
+    <h6 className="text-gray-400 mb-3">Follow Us</h6>
+    <div className="flex space-x-4">
+      <Link to="https://instagram.com" className="text-amber-400 hover:text-amber-300 text-xl transition">
+        <i className="fab fa-instagram"></i>
+      </Link>
+      <Link to="https://facebook.com" className="text-amber-400 hover:text-amber-300 text-xl transition">
+        <i className="fab fa-facebook"></i>
+      </Link>
+      <Link to="https://pinterest.com" className="text-amber-400 hover:text-amber-300 text-xl transition">
+        <i className="fab fa-pinterest"></i>
+      </Link>
+      <Link to="https://tiktok.com" className="text-amber-400 hover:text-amber-300 text-xl transition">
+        <i className="fab fa-tiktok"></i>
+      </Link>
+    </div>
+  </div>
+</div>
                 </div>
             </div>
 
@@ -104,14 +121,24 @@ const Footer = () => {
             {/* Bottom Footer Section */}
             <div className="container mx-auto px-4 py-6">
                 <div className="flex flex-col md:flex-row justify-between items-center">
-                    <div className="text-gray-400 text-sm mb-4 md:mb-0">
-                        &copy; {new Date().getFullYear()} Your Company Name. All rights reserved.
-                    </div>
+                   <div className="text-gray-400 text-sm mb-4 md:mb-0">
+  &copy; {new Date().getFullYear()}{" "}
+  <a
+    href="https://deificdigital.com/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-gray-400 hover:text-white underline cursor-pointer"
+  >
+    Deific Digital
+  </a>. All rights reserved.
+</div>
+
+
                     <div className="flex flex-wrap justify-center space-x-4">
-                        <Link to="" className="text-gray-400 hover:text-amber-400 text-sm">Privacy Policy</Link>
-                        <Link to="" className="text-gray-400 hover:text-amber-400 text-sm">Terms of Service</Link>
-                        <Link to="" className="text-gray-400 hover:text-amber-400 text-sm">Shipping Policy</Link>
-                        <Link to="" className="text-gray-400 hover:text-amber-400 text-sm">Refund Policy</Link>
+                        <Link to="/privacy" className="text-gray-400 hover:text-amber-400 text-sm transition">Privacy Policy</Link>
+                        <Link to="/terms" className="text-gray-400 hover:text-amber-400 text-sm transition">Terms of Service</Link>
+                       
+                        <Link to="/refunds" className="text-gray-400 hover:text-amber-400 text-sm transition">Refund Policy</Link>
                     </div>
                 </div>
             </div>

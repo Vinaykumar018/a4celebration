@@ -5,6 +5,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createUser } from '../../services/auth/auth';
 import ReCAPTCHA from "react-google-recaptcha";
+import GoolgeLoginAuth from "./GoogleLogin";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,8 @@ const RegisterPage = () => {
     password: ""
   });
   const navigate = useNavigate();
-  const [verified,setVerified]=useState(false);
+  const [verified, setVerified] = useState(false);
+  const [recaptchaError, setRecaptchaError] = useState("");
 
   // Define allowed patterns (more restrictive approach)
   const allowedPatterns = {
@@ -98,10 +100,24 @@ const RegisterPage = () => {
     return warning === "";
   };
 
-  function onChange(value) {
-    console.log(value)
-  setVerified(!Verified)
-}
+  const handleRecaptchaChange = (value) => {
+    if (value) {
+      setVerified(true);
+      setRecaptchaError("");
+    } else {
+      setVerified(false);
+    }
+  };
+
+  const handleRecaptchaExpired = () => {
+    setVerified(false);
+    setRecaptchaError("reCAPTCHA verification expired. Please verify again.");
+  };
+
+  const handleRecaptchaError = () => {
+    setVerified(false);
+    setRecaptchaError("Failed to verify reCAPTCHA. Please try again.");
+  };
 
   const checkPasswordStrength = (password) => {
     let warning = "";
@@ -174,6 +190,11 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!verified) {
+      setRecaptchaError("Please verify you're not a robot");
+      return;
+    }
     
     const isUsernameValid = validateInput("username", formData.username);
     const isEmailValid = validateInput("email", formData.email);
@@ -362,17 +383,36 @@ const RegisterPage = () => {
               )}
             </div>
 
-         <ReCAPTCHA
-    sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
-    onChange={onChange}
-  />
+            {/* reCAPTCHA Field */}
+            <div className="space-y-2">
+              <ReCAPTCHA
+                sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI" // This is a test key
+                onChange={handleRecaptchaChange}
+                onExpired={handleRecaptchaExpired}
+                onErrored={handleRecaptchaError}
+                className="flex justify-center"
+              />
+              {recaptchaError && (
+                <div className="text-red-600 text-xs flex items-start">
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    className="h-4 w-4 mr-1 mt-0.5 flex-shrink-0" 
+                    viewBox="0 0 20 20" 
+                    fill="currentColor"
+                  >
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <span>{recaptchaError}</span>
+                </div>
+              )}
+            </div>
 
-           <button
-  type="submit"
-  disabled={!verified}
-  className={`w-full bg-gradient-to-r from-amber-500 to-red-500 text-white font-medium py-2.5 rounded-md transition-all duration-300 shadow-md
-    ${!verified ? 'opacity-60 cursor-not-allowed shadow-none' : 'hover:from-amber-600 hover:to-red-600 hover:shadow-lg'}`}
->
+            <button
+              type="submit"
+              disabled={!verified || loading}
+              className={`w-full bg-gradient-to-r from-amber-500 to-red-500 text-white font-medium py-2.5 rounded-md transition-all duration-300 shadow-md
+                ${!verified ? 'opacity-60 cursor-not-allowed shadow-none' : 'hover:from-amber-600 hover:to-red-600 hover:shadow-lg'}`}
+            >
               {loading ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
@@ -383,6 +423,7 @@ const RegisterPage = () => {
               )}
             </button>
           </form>
+          <GoolgeLoginAuth></GoolgeLoginAuth>
 
           <div className="text-center pt-4 border-t border-amber-200">
             <p className="text-sm text-amber-700">

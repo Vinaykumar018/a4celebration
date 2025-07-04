@@ -113,8 +113,8 @@ const CardTypeA = ({
             const words = service.name.split(" ");
             return (
               <SwiperSlide key={index}>
-                <Link 
-                  to={`${sectionSlug}/${service.slug_url}`} 
+                <Link
+                  to={`${sectionSlug}/${service.slug_url}`}
                   className="block h-full"
                   state={{
                     serviceData: service,

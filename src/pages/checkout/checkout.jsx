@@ -131,14 +131,23 @@ export default function CheckoutPage() {
                               <span className="w-2 h-2 rounded-full bg-green-500 mr-1"></span>
                               {item.stock_left > 0 ? "Ready to Celebrate!" : "Out of Stock"}
                             </div>
-                            <div className="flex items-center gap-1 text-xs text-gray-600">
-                              <Calendar className="h-3 w-3 text-amber-500" />
-                              <span>Date: {new Date(item.service_date).toLocaleDateString()}</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-gray-600">
-                              <Clock className="h-3 w-3 text-amber-500" />
-                              <span>Time: {item.service_time}</span>
-                            </div>
+                            {(item.service_date || item.service_time) && (
+  <>
+    {item.service_date && (
+      <div className="flex items-center gap-1 text-xs text-gray-600">
+        <Calendar className="h-3 w-3 text-amber-500" />
+        <span>Date: {new Date(item.service_date).toLocaleDateString()}</span>
+      </div>
+    )}
+    {item.service_time && (
+      <div className="flex items-center gap-1 text-xs text-gray-600">
+        <Clock className="h-3 w-3 text-amber-500" />
+        <span>Time: {item.service_time}</span>
+      </div>
+    )}
+  </>
+)}
+
                             <div className="flex justify-between items-center mt-1">
                               <span className="text-xs">Qty: {item.quantity}</span>
                               <span className="font-medium text-amber-700">

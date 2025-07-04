@@ -1,28 +1,47 @@
-
-
-import { useState, useEffect, useCallback } from "react"
-import { Share2, Phone, Clock, ChevronLeft, ChevronRight, Check, Gift } from "lucide-react"
-import { useLocation, useNavigate } from "react-router-dom"
-import { useCart } from "../../hooks/cartHook"
+import React, { useState, useEffect, useCallback } from "react";
+import { Share2, Phone, Clock, ChevronLeft, ChevronRight, Check, Gift, PhoneCall, ShoppingCart, Sparkles } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useCart } from "../../hooks/cartHook";
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer, toast } from 'react-toastify';
 import { Settings2Icon } from 'lucide-react';
-import { TimeSlotPicker } from '../../components/delivery/DateTimePicker'
+import { TimeSlotPicker } from '../../components/delivery/DateTimePicker';
 import CustomRequestModal from "./customizedProduct";
 import { TimeSlotPicker2 } from "../../components/delivery/TimeSlotPicker2";
+import RelatedProductSection1 from "../../components/related-products-feed/related-product-section-1";
+import RelatedProductSection3 from "../../components/related-products-feed/related-product-section-3";
+import useUserCartData from '../../hooks/useUserCartData';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
 
 const EventManagementDetailsPage = () => {
-  const location = useLocation()
-  const navigate = useNavigate()
-  const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
-  const { cart, addToCart } = useCart();
-  const [dateTime, setDateTime] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { userData } = useSelector((state) => state.user);
+  const { cartItems: initialCartItems, isLoading: isCartLoading } = useUserCartData();
+  const { addToCart, updateItem } = useCart();
 
   const { serviceData, sectionData } = location.state;
-
   const [showModal, setShowModal] = useState(false);
+  const [dateTime, setDateTime] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isInCart, setIsInCart] = useState(false);
+  const [existingCartItem, setExistingCartItem] = useState(null);
 
+  // Check if item is already in cart
+  useEffect(() => {
+    if (!isCartLoading && initialCartItems) {
+      const foundItem = initialCartItems.find(
+        item => item.product_id === serviceData.product_id
+      );
+      if (foundItem) {
+        setIsInCart(true);
+        setExistingCartItem(foundItem);
+        // Set initial date/time from cart if available
+
+      }
+    }
+  }, [initialCartItems, isCartLoading, serviceData.product_id]);
 
   const handleOpen = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -50,6 +69,7 @@ const EventManagementDetailsPage = () => {
     const timestamp = Date.now().toString().slice(-4);
     return `${prefix}${randomNum}${timestamp}`;
   }, []);
+
   // Countdown timer
   useEffect(() => {
     const timer = setInterval(() => {
@@ -92,7 +112,6 @@ const EventManagementDetailsPage = () => {
     maximumFractionDigits: 0
   }).format(serviceData.price || 0).replace('₹', '₹ ');
 
-
   const decodeHTML = (html) => {
     const txt = document.createElement('textarea');
     txt.innerHTML = html;
@@ -106,44 +125,76 @@ const EventManagementDetailsPage = () => {
 
   const handleBookNow = async () => {
 
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userId = localStorage.getItem('userId');
 
-
+    if (!isLoggedIn || !userId) {
+      toast.info('Please login to book services', {
+        autoClose: 1000, // Toast closes in 2 seconds
+        onClose: () => navigate("/login")
+      });
+      return;
+    }
     if (!dateTime) {
       toast.error('Please select a date and time slot');
       return;
     }
 
+    setIsProcessing(true);
+
+    const formattedTime = dateTime.startTime && dateTime.endTime
+      ? `${dateTime.startTime} - ${dateTime.endTime}`
+      : dateTime; // fallback for TimeSlotPicker2 format
+
     const cartItem = {
       product_id: serviceData.product_id,
       product_name: serviceData.name,
-      quantity,
-      service_date: dateTime
-
-
-
-
+      quantity: 1, // Fixed to 1 for event management items
+      service_date: dateTime.date || dateTime, // handles both picker formats
+      service_time: formattedTime,
+      featured_image: serviceData.featured_image,
+      price: serviceData.price,
+      section: 'event' // or whatever section you're using
     };
-
-    const cartPayload = {
-      userID: userData?.data?._id,
-      items: [cartItem]
-    };
-
 
     try {
-      await addToCart(cartPayload);
-      toast.success('Added to cart!');
+      if (isInCart) {
+        // Update existing item
+        await updateItem(
+          userData?.data?._id,
+          serviceData.product_id,
+          {
+            service_date: dateTime.date || dateTime,
+            service_time: formattedTime
+          }
+        );
+        toast.success('Event details updated!');
+      } else {
+        // Add new item
+        await addToCart({
+          userID: userData?.data?._id,
+          items: [cartItem]
+        });
+        toast.success('Event service booked!');
+      }
+
       setTimeout(() => {
         navigate('/cart');
       }, 1500);
-    }
-    catch (error) {
-      // Error handling
-      toast.error('cant add to cart!', error);
-      console.error(error)
-
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update booking');
+      console.error(error);
+    } finally {
+      setIsProcessing(false);
     }
   };
+
+  // Image handling with fallback
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return '/images/placeholder-product.jpg';
+    return imagePath.startsWith('http') ? imagePath : `https://a4celebration.com/api/${imagePath}`;
+  };
+
 
   return (
     <div className="bg-white min-h-screen">
@@ -409,51 +460,78 @@ const EventManagementDetailsPage = () => {
                   {/* Contact Buttons */}
 
                   <div className="p-4 space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <button className="flex items-center justify-center gap-1 py-2 px-3 rounded-full border border-[#FFD700] bg-[#222222] transition-colors ">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="14"
-                          height="14"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="#FFD700"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                        </svg>
-                        <span className="font-medium text-sm text-white">View Contact</span>
-                      </button>
+                    <div className=" space-y-4">
 
-                      <button className="flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors">
+                      <TimeSlotPicker2
+                        onDateSelect={(selectedDate) => setDateTime(selectedDate)}
+
+                      />
+                    </div>
+                    <div className="grid  gap-3">
+
+                      <Link
+                        to="https://wa.me/919336713280"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors"
+                      >
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="white">
                           <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                         </svg>
                         <span className="font-medium text-sm">WhatsApp</span>
-                      </button>
+                      </Link>
                     </div>
 
-                    <button className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="14"
-                        height="14"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="text-black"
+                    {/* Updated Book Now/Go to Cart buttons */}
+                    {isInCart ? (
+                      <>
+                        <button
+                          onClick={() => navigate('/cart')}
+                          className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors"
+                        >
+                          <ShoppingCart size={20} />
+                          <span className="font-medium text-sm">Go to Cart</span>
+                        </button>
+
+                        <button
+                          onClick={handleBookNow}
+                          disabled={!dateTime}
+                          className={`w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#ff1900] text-white hover:bg-[#e60000] transition-colors ${!dateTime ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                          {isProcessing ? (
+                            <LoadingSpinner size={20} color="text-white" />
+                          ) : (
+                            <>
+                              <Sparkles size={20} />
+                              <span className="font-medium text-sm">Update Booking</span>
+                            </>
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={handleBookNow}
+                        disabled={!dateTime || isProcessing}
+                        className={`w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#ff1900] text-white hover:bg-[#e60000] transition-colors ${!dateTime ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                      </svg>
-                      <span className="font-medium text-sm">Package Enquiry</span>
-                    </button>
+                        {isProcessing ? (
+                          <LoadingSpinner size={20} color="text-white" />
+                        ) : (
+                          <>
+                            <ShoppingCart size={20} />
+                            <span className="font-medium text-sm">Book Now</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+
+                    <Link
+                      to="tel:9336713280"
+                      className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors"
+                    >
+                      <PhoneCall size={15}></PhoneCall>
+                      <span className="font-medium text-sm ml-1">Package Enquiry</span>
+                    </Link>
 
                     <div>
                       <button
@@ -466,8 +544,11 @@ const EventManagementDetailsPage = () => {
 
                       {showModal && (
                         <CustomRequestModal
-                          productId={productId}  // replace with actual productId if needed
-                          userId={userData?.data?._id}      // replace with actual userId if needed
+                          productId={productId}
+                          userId={userData?.data?._id}
+                          name={userData?.data?.username}
+                          email={userData?.data?.email}
+                          phone={userData?.data?.mobile}
                           onClose={handleClose}
                         />
                       )}
@@ -908,72 +989,75 @@ const EventManagementDetailsPage = () => {
 
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <button className="flex items-center justify-center gap-1 py-2 px-3 rounded-full border border-[#FFD700] bg-[#222222] transition-colors ">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#FFD700"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                    </svg>
-                    <span className="font-medium text-sm text-white">View Contact</span>
-                  </button>
+                <div className="grid ">
 
-                  <button className="flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors">
+
+
+
+                  <Link
+                    to="https://wa.me/919336713280"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors"
+                  >
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="white">
                       <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
                     </svg>
                     <span className="font-medium text-sm">WhatsApp</span>
-                  </button>
+                  </Link>
+
                 </div>
 
 
 
-                <button className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#ff1900] text-white hover:bg-[#e60000] transition-colors" onClick={handleBookNow}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-white"
+                {isInCart ? (
+                  <>
+                    <button
+                      onClick={() => navigate('/cart')}
+                      className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors"
+                    >
+                      <ShoppingCart size={20} />
+                      <span className="font-medium text-sm">Go to Cart</span>
+                    </button>
+                    {console.log(dateTime)}
+                    <button
+                      onClick={handleBookNow}
+                      disabled={!dateTime}
+                      className={`w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#ff1900] text-white hover:bg-[#e60000] transition-colors ${!dateTime ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    >
+                      {isProcessing ? (
+                        <LoadingSpinner size={20} color="text-white" />
+                      ) : (
+                        <>
+                          <Sparkles size={20} />
+                          <span className="font-medium text-sm">Update Booking</span>
+                        </>
+                      )}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={handleBookNow}
+                    disabled={!dateTime || isProcessing}
+                    className={`w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#ff1900] text-white hover:bg-[#e60000] transition-colors ${!dateTime ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                  </svg>
-                  <span className="font-medium text-sm" >Book Now</span>
-                </button>
-                <button className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-black"
-                  >
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                    <polyline points="17 8 12 3 7 8"></polyline>
-                    <line x1="12" y1="3" x2="12" y2="15"></line>
-                  </svg>
-                  <span className="font-medium text-sm">Package Enquiry</span>
-                </button>
+                    {isProcessing ? (
+                      <LoadingSpinner size={20} color="text-white" />
+                    ) : (
+                      <>
+                        <ShoppingCart size={20} />
+                        <span className="font-medium text-sm">Book Now</span>
+                      </>
+                    )}
+                  </button>
+                )}
+                <Link
+                  to="tel:9336713280"
+                  className="w-full flex items-center justify-center gap-1 py-2 px-3 rounded-full bg-[#FFD700] text-black hover:bg-[#E6C200] transition-colors"
+                >
+                  <PhoneCall size={15}></PhoneCall>
+                  <span className="font-medium text-sm ml-1">Package Enquiry</span>
+                </Link>
 
 
                 <div>
@@ -1031,6 +1115,16 @@ const EventManagementDetailsPage = () => {
             </div>
           </div>
         </div>
+
+      </div>
+      <h2 className="text-3xl font-bold text-center google-font mt-4">
+        <span className="border-b-[1vw] border-amber-700 rounded-md inline-block">
+          Related Services
+        </span>
+      </h2>
+      <div className="space-y-4 pb-6">
+        <RelatedProductSection3></RelatedProductSection3>
+
       </div>
       <ToastContainer></ToastContainer>
     </div>

@@ -50,6 +50,15 @@ const SimpleCard1 = ({
     },
   };
 
+
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price)
+  }
+
   return (
     <section className="bg-white rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="w-full">
@@ -60,8 +69,8 @@ const SimpleCard1 = ({
             const words = service.name.split(" ");
             return (
               <div key={index} className="h-full">
-                <Link 
-                  to={`${sectionSlug}/${service.slug_url}`} 
+                <Link
+                  to={`${sectionSlug}/${service.slug_url}`}
                   className="block h-full"
                   state={{
                     serviceData: service,
@@ -70,8 +79,8 @@ const SimpleCard1 = ({
                 >
                   <div
                     className="rashi_sign_box bg-white shadow-md rounded-lg overflow-hidden transition-transform duration-300 p-2 h-full flex flex-col"
-                    style={{ 
-                      borderRadius: "16px", 
+                    style={{
+                      borderRadius: "16px",
                       border: `1px ${themeColor} solid`,
                       minHeight: '280px' // optional minimum height
                     }}
@@ -98,17 +107,17 @@ const SimpleCard1 = ({
                       )}
 
                       {showPrice && (
-                        <p className="text-xs text-gray-600 mb-1">Price: ${service.price}</p>
+                        <p className="text-xs text-gray-600 mb-1">Price: {formatPrice(service.price)}</p>
                       )}
 
-                      <div className="mt-auto">
+                      <div className="mt-auto flex justify-center"> {/* Added flex container */}
                         <Link
                           to={`${sectionSlug}/${service.slug_url}`}
                           state={{
                             serviceData: service,
                             sectionData: section
                           }}
-                          className="inline-block text-xs px-3 py-1.5 rounded-md uppercase text-white transition-colors duration-300"
+                          className="inline-block text-xs  px-2 py-1.5 rounded-md uppercase text-white transition-colors duration-300 whitespace-nowrap  "
                           style={{ backgroundColor: themeColor }}
                         >
                           {ctaText}

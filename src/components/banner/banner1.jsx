@@ -1,14 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import img1 from '../../assets/banner/1860 400 BIRTHDAY (1).jpg'
+import { Link } from 'react-router-dom';
 
 // Image sources
-const desktopImg = 'https://cheetah.cherishx.com/website_layout/1680x400_Banner-4_Birthday-Celebrations_Desktop_20240930_132612.jpg?format=avif';
-const mobileImg = 'https://cheetah.cherishx.com/website_layout/800x400_Banner-4_Birthday-Celebrations_Mob_20240930_132612.jpg?format=avif';
+const desktopImg =img1;
+const mobileImg =img1;
 
 const Banner1 = () => {
   return (
     <div className="px-3">
       <div className="w-full rounded-3xl overflow-hidden shadow-lg">
+        <Link to="/decorations/birthday-decoration">
         <motion.picture
           initial={{ scale: 1 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
@@ -26,6 +29,7 @@ const Banner1 = () => {
             loading="lazy"
           />
         </motion.picture>
+        </Link>
       </div>
     </div>
   );

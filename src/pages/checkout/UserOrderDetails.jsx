@@ -77,8 +77,10 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                     quantity: item.quantity
                 })),
                 lastUpdated: new Date()
-            },
-            deliveryNotes: `Service requested for ${cartItems[0]?.service_date} between ${cartItems[0]?.service_time}`,
+            },deliveryNotes: cartItems[0]?.service_date && cartItems[0]?.service_time
+  ? `Service requested for ${cartItems[0].service_date} between ${cartItems[0].service_time}`
+  : 'Your order will be delivered in 7 to 10 days',
+
             discountApplied: 0,
             shippingMethod: 'Standard Delivery'
         };

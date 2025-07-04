@@ -74,25 +74,22 @@ const CardTypeC = ({
       <div className="container-fluid  md:px-6 px-3 lg:px-6">
         <div className="heading_wrapper mb-6">
           <div className="my-12 mb-4">
-            <div>
-              <div className="text-[rgb(94,15,77)]">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-inherit text-2xl sm:text-3xl font-bold">
-                    {section}
-                  </h2>
+            <div className="text-[rgb(94,15,77)]">
+              <div className="flex flex-wrap justify-between items-center gap-2"> {/* Added flex-wrap and gap */}
+                <h2 className="text-inherit text-2xl sm:text-3xl font-bold min-w-[50%] flex-1"> {/* Added min-width */}
+                  {section}
+                </h2>
 
-                  {sectionSlug && (
-                    <Link
-                      to={title.toLowerCase()}
-                      className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium"
-                    >
-                      <span>View All</span>
-                      <EyeIcon className="h-5 w-5" />
-                    </Link>
-                  )}
-                </div>
+                {sectionSlug && (
+                  <Link
+                    to={title.toLowerCase()}
+                    className="flex items-center gap-2 text-amber-600 hover:text-amber-800 cursor-pointer text-sm sm:text-base font-medium whitespace-nowrap"
+                  >
+                    <span>View All</span>
+                    <EyeIcon className="h-5 w-5" />
+                  </Link>
+                )}
               </div>
-
             </div>
           </div>
         </div>
@@ -129,42 +126,36 @@ const CardTypeC = ({
             const words = service.name.split(" ");
             return (
               <SwiperSlide key={index}>
-
-                <Link to={`${sectionSlug}/${service.
-                  slug_url} `} className="block h-full" state={{
-                    serviceData: service,
-                    sectionData: section
-                  }}>
+                <Link
+                  to={`${sectionSlug}/${service.slug_url}`}
+                  className="block h-full"
+                  state={{ serviceData: service, sectionData: section }}
+                >
                   <motion.div
-                    className="h-full bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-                    style={{
-                      borderBottom: `3px solid ${themeColor}`,
-                    }}
+                    className="h-full bg-white rounded-xl shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col"
+                    style={{ borderBottom: `3px solid ${themeColor}` }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    {/* Image Section */}
-                    <div className="sign_box_img flex justify-center p-4 bg-gray-50">
+                    {/* Fixed Image Section (unchanged) */}
+                    <div className="w-full h-48 md:h-56 overflow-hidden flex-shrink-0">
                       <img
                         src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
-
                         alt={service.name}
-                        className="object-cover rounded-lg w-full h-40 md:h-48"
-                        style={{
-                          aspectRatio: '1/1',
-                          objectFit: 'contain'
-                        }}
+                        className="w-full h-full object-cover"
                       />
                     </div>
 
-                    {/* Content Section */}
-                    <div className="sign_box_cont p-5 text-center">
-                      <h4 className="text-md font-medium mb-1 font-semibold mb-2 line-clamp-2">
+                    {/* Fixed Content Section */}
+                    <div className="p-5 text-center flex flex-col h-[200px] "> {/* Fixed height */}
+                      {/* Title with fixed height */}
+                      <h4 className="text-md font-semibold mb-2 line-clamp-2 h-12 overflow-hidden">
                         {words.length > 4 ? `${words.slice(0, 2).join(" ")}` : service.name}
                       </h4>
 
+                      {/* Rating (fixed space) */}
                       {showRating && (
-                        <div className="flex justify-center items-center gap-1 mb-2">
+                        <div className="flex justify-center items-center gap-1 mb-2 h-6">
                           {renderStars(service.rating || 0)}
                           <span className="text-xs text-gray-500 ml-1">
                             ({service.rating?.toFixed(1) || '0.0'})
@@ -172,15 +163,17 @@ const CardTypeC = ({
                         </div>
                       )}
 
+                      {/* Price (fixed space) */}
                       {showPrice && (
-                        <p className="text-sm font-medium text-gray-700 mb-4">
-                         {formatPrice(service.price)}
+                        <p className="text-sm font-medium text-gray-700 mb-4 h-6">
+                          {formatPrice(service.price)}
                         </p>
                       )}
 
-                      <div className="mt-4">
+                      {/* Button pushed to bottom */}
+                      <div className="mt-auto">
                         <motion.button
-                          className="w-full py-2 px-4 rounded-md uppercase font-medium text-sm tracking-wide text-white transition-colors duration-300"
+                          className="w-full py-2 px-4 rounded-md uppercase font-medium text-sm tracking-wide text-white transition-colors duration-300 whitespace-nowrap"
                           style={{ backgroundColor: themeColor }}
                           whileHover={{
                             backgroundColor: '#e67300',

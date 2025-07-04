@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { fetchUserData } from "../../redux/userSlice";
 import MyOrders from "./myOrder";
 import MyCustomOrders from "./MyCustomOrders";
+import { User, Mail, Phone, Shield, LogIn, Home, MapPin, Globe, Hash, Flag, Calendar, VenusAndMars } from 'lucide-react';
 Modal.setAppElement('#root')
 
 
@@ -207,7 +208,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
         onRequestClose();
       }, 2000);
     } catch (error) {
-      toast.error("Failed to update profile. Please try again.", {
+      toast.error(error?.response?.data?.message, {
         position: "top-right",
         autoClose: 3000,
       });
@@ -250,7 +251,7 @@ const EditProfileModal = ({ isOpen, onRequestClose, userData, onSuccess }) => {
       }}
       closeTimeoutMS={200}
     >
-      <ToastContainer />
+  
       <div className="relative">
         <button
           onClick={onRequestClose}
@@ -423,7 +424,11 @@ const Profile = () => {
 
   return (
     <section>
-      <ToastContainer />
+     <ToastContainer 
+      position="top-right"
+      autoClose={5000}
+     
+    />
       <div className="mx-auto mt-5 w-full space-y-4 px-4 text-sm xl:max-w-7xl my-2 ">
         <div>
           <h1 className="text-xl font-extrabold sm:text-3xl">My Account</h1>
@@ -434,9 +439,15 @@ const Profile = () => {
               <div className="h-11 w-11 sm:h-20 sm:w-20">
                 <img
                   className="border-primary-500 h-full w-full rounded-full border-2 p-[3px]"
-                  src={"https://a4celebration.com/api/" + user?.profile_image || "https://png.pngtree.com/png-clipart/20231019/original/pngtree-user-profile-avatar-png-image_13369990.png"}
-                  alt="Profile"
+                  src={
+                    user?.profile_image
+                      ? user?.social_type === "google"
+                        ? user.profile_image
+                        : "https://a4celebration.com/api/" + user.profile_image.replace(/\\/g, '/')
+                      : "https://png.pngtree.com/png-clipart/20231019/original/pngtree-user-profile-avatar-png-image_13369990.png"
+                  }
                 />
+
               </div>
               <div>
                 <div className="flex flex-row items-center space-x-1 py-1">
@@ -467,37 +478,38 @@ const Profile = () => {
               </div>
             </div>
           </div>
-          <div className=" w-full border-b border-gray-400 xl:block pb-2 pl-8">
-            <div id="accountTabs" className="flex flex-row space-x-5">
-              <button
-                className={`px-2 py-2 rounded-lg border text-sm transition-all duration-200 ${activeTab === 'overview'
-                  ? 'bg-black text-white border-black'
-                  : 'bg-white text-black border-gray-300'
-                  }`}
-                onClick={() => setActiveTab('overview')}
-              >
-                Personal details
-              </button>
+          <div className=" w-full border-b border-gray-400 xl:block pb-2 p-6">
+            <div id="accountTabs" className="flex flex-row flex-nowrap space-x-2 overflow-x-auto py-1">
+  <button
+    className={`px-2 py-1 rounded-lg border text-xs sm:text-sm transition-all duration-200 ${activeTab === 'overview'
+      ? 'bg-black text-white border-black'
+      : 'bg-white text-black border-gray-300'
+    }`}
+    onClick={() => setActiveTab('overview')}
+  >
+    Personal details
+  </button>
 
-              <button
-                className={`px-2 py-2 rounded-lg text-sm border transition-all duration-200 ${activeTab === 'accordion2'
-                  ? 'bg-black text-white border-black'
-                  : 'bg-white text-black border-gray-300'
-                  }`}
-                onClick={() => setActiveTab('accordion2')}
-              >
-                My Orders
-              </button>
-              <button
-                className={`px-2 py-2 rounded-lg text-sm border transition-all duration-200 ${activeTab === 'accordion3'
-                  ? 'bg-black text-white border-black'
-                  : 'bg-white text-black border-gray-300'
-                  }`}
-                onClick={() => setActiveTab('accordion3')}
-              >
-                My Customized Orders
-              </button>
-            </div>
+  <button
+    className={`px-2 py-1 rounded-lg text-xs sm:text-sm border transition-all duration-200 ${activeTab === 'accordion2'
+      ? 'bg-black text-white border-black'
+      : 'bg-white text-black border-gray-300'
+    }`}
+    onClick={() => setActiveTab('accordion2')}
+  >
+    My Orders
+  </button>
+
+  <button
+    className={`px-2 py-1 rounded-lg text-xs sm:text-sm border transition-all duration-200 ${activeTab === 'accordion3'
+      ? 'bg-black text-white border-black'
+      : 'bg-white text-black border-gray-300'
+    }`}
+    onClick={() => setActiveTab('accordion3')}
+  >
+    My Custom Orders
+  </button>
+</div>
           </div>
 
 
@@ -525,76 +537,141 @@ const Profile = () => {
 
                   </div>
                   <div className="w-full border-b border-gray-400"></div>
-                  <div className="space-y-2 px-4">
-                    <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                      <div className="w-52 text-sm">Username:</div>
-                      <span className="font-semibold">{user?.username}</span>
-                    </div>
-                    <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                      <div className="w-52 text-sm">Email:</div>
-                      <span className="font-semibold ">{user?.email}</span>
-                    </div>
-                    {user?.mobile && (
-                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                        <div className="w-52 text-sm">Mobile:</div>
-                        <span className="font-semibold">{user?.mobile}</span>
-                      </div>
-                    )}
-                    {user?.gender && (
-                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                        <div className="w-52 text-sm">Gender:</div>
-                        <span className="font-semibold">{user?.gender}</span>
-                      </div>
-                    )}
-                    {user?.address && (
-                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                        <div className="w-52 text-sm">Address:</div>
-                        <span className="font-semibold">{user.address}</span>
-                      </div>
-                    )}
-                    {user?.city && (
-                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                        <div className="w-52 text-sm">City:</div>
-                        <span className="font-semibold">{user.city}</span>
-                      </div>
-                    )}
-                    {user?.country && (
-                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                        <div className="w-52 text-sm">Country:</div>
-                        <span className="font-semibold">{user.country}</span>
-                      </div>
-                    )}
-                    {user?.pincode && (
-                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                        <div className="w-52 text-sm">Pincode:</div>
-                        <span className="font-semibold">{user.pincode}</span>
-                      </div>
-                    )}
-                    {user?.landmark && (
-                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                        <div className="w-52 text-sm">Landmark:</div>
-                        <span className="font-semibold">{user.landmark}</span>
-                      </div>
-                    )}
-                    <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                      <div className="w-52 text-sm">Account Status:</div>
-                      <span className="font-semibold capitalize">{user?.status}</span>
-                    </div>
-                    {user?.social_type && (
-                      <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                        <div className="w-52 text-sm">Login Method:</div>
-                        <span className="font-semibold capitalize">
-                          {user.social_type === 'other' ? 'Email/Password' : user.social_type}
-                        </span>
-                      </div>
-                    )}
-                    <div className="flex flex-col sm:flex-row sm:flex-nowrap sm:items-center">
-                      <div className="w-52 text-sm">Member Since:</div>
-                      <span className="font-semibold">
-                        {new Date(user?.created_at).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </div>
+                 <div className="px-4">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    {/* Column 1 */}
+    <div className="space-y-5">
+      <div className="flex items-start gap-3">
+        <User className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+        <div>
+          <div className="text-xs text-gray-500">Username</div>
+          <div className="font-medium text-gray-800">{user?.username}</div>
+        </div>
+      </div>
+      
+      <div className="flex items-start gap-3">
+        <Mail className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+        <div>
+          <div className="text-xs text-gray-500">Email</div>
+          <div className="font-medium text-gray-800 break-all">{user?.email}</div>
+        </div>
+      </div>
+      
+      {user?.mobile && (
+        <div className="flex items-start gap-3">
+          <Phone className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <div className="text-xs text-gray-500">Mobile</div>
+            <div className="font-medium text-gray-800">{user?.mobile}</div>
+          </div>
+        </div>
+      )}
+      
+      {user?.gender && (
+        <div className="flex items-start gap-3">
+          <VenusAndMars className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <div className="text-xs text-gray-500">Gender</div>
+            <div className="font-medium text-gray-800 capitalize">{user?.gender}</div>
+          </div>
+        </div>
+      )}
+      
+     
+      
+      {user?.social_type && (
+        <div className="flex items-start gap-3">
+          <LogIn className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <div className="text-xs text-gray-500">Login Method</div>
+            <div className="font-medium text-gray-800 capitalize">
+              {user.social_type === 'other' ? 'Email/Password' : user.social_type}
+            </div>
+          </div>
+        </div>
+      )}
+       <div className="flex items-start gap-3">
+        <Calendar className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+        <div>
+          <div className="text-xs text-gray-500">Member Since</div>
+          <div className="font-medium text-gray-800">
+            {new Date(user?.created_at).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    {/* Column 2 */}
+    <div className="space-y-5">
+      {user?.address && (
+        <div className="flex items-start gap-3">
+          <Home className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <div className="text-xs text-gray-500">Address</div>
+            <div className="font-medium text-gray-800">{user.address}</div>
+          </div>
+        </div>
+      )}
+      
+      {user?.city && (
+        <div className="flex items-start gap-3">
+          <MapPin className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <div className="text-xs text-gray-500">City</div>
+            <div className="font-medium text-gray-800">{user.city}</div>
+          </div>
+        </div>
+      )}
+      
+      {user?.country && (
+        <div className="flex items-start gap-3">
+          <Globe className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <div className="text-xs text-gray-500">Country</div>
+            <div className="font-medium text-gray-800">{user.country}</div>
+          </div>
+        </div>
+      )}
+      
+      {user?.pincode && (
+        <div className="flex items-start gap-3">
+          <Hash className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <div className="text-xs text-gray-500">Pincode</div>
+            <div className="font-medium text-gray-800">{user.pincode}</div>
+          </div>
+        </div>
+      )}
+      
+      {user?.landmark && (
+        <div className="flex items-start gap-3">
+          <Flag className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <div className="text-xs text-gray-500">Landmark</div>
+            <div className="font-medium text-gray-800">{user.landmark}</div>
+          </div>
+        </div>
+      )}
+      
+     
+       <div className="flex items-start gap-3">
+        <Shield className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+        <div>
+          <div className="text-xs text-gray-500">Account Status</div>
+          <div className={`font-medium capitalize ${
+            user?.status === 'active' ? 'text-green-600' : 'text-amber-600'
+          }`}>
+            {user?.status}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
                 </div>
               </div>
             </div>

@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heart, ShoppingCart, Star, ChevronRight, Gift, Sparkles } from 'lucide-react';
 import DeliveryInfo from '../../components/delivery/DeliveryInfo';
 import PincodeDeliveryChecker from '../../components/delivery/Delivery-date';
-
 import RelatedProductSection1 from '../../components/related-products-feed/related-product-section-1';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useCart } from '../../hooks/cartHook';
 import { ToastContainer, toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
-import { TimeSlotPicker } from '../../components/delivery/DateTimePicker'
+import { TimeSlotPicker } from '../../components/delivery/DateTimePicker';
 import DescriptionOverview from '../../components/product/description-overview';
 import KitsOverview from '../../components/product/kits-overview';
-import { useDispatch, useSelector } from "react-redux";
-import { Navigate } from 'react-router-dom';
-
+import { useSelector } from "react-redux";
+import useUserCartData from '../../hooks/useUserCartData';
+import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import WishlistButton from '../wishlist/WishlistButton';
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
@@ -38,76 +37,116 @@ const styles = `
   .product-shadow {
     box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.2);
   }
+  
+  .thumbnail-active {
+    border-color: #f59e0b;
+    transform: scale(1.05);
+  }
 `;
 
 const DecorationsDetailsPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const location = useLocation();
   const { serviceData, sectionData } = location.state;
-  const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
+  const { userData } = useSelector((state) => state.user);
+  const { cartItems: initialCartItems, isLoading: isCartLoading } = useUserCartData();
+  const { addToCart, updateItem } = useCart();
 
-  const [mainImage, setMainImage] = useState(
-    "https://a4celebration.com/api/" + serviceData.featured_image
-  );
+  const [mainImage, setMainImage] = useState(serviceData.featured_image);
   const [isDeliveryAvailable, setIsDeliveryAvailable] = useState(false);
   const [pincode, setPincode] = useState("");
   const [isWishlisted, setIsWishlisted] = useState(false);
-  const [quantity, setQuantity] = useState(1);
   const [dateTime, setDateTime] = useState(null);
-  const { cart, addToCart } = useCart(); // This will store 
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isInCart, setIsInCart] = useState(false);
+  const [existingCartItem, setExistingCartItem] = useState(null);
 
+  // Check if item is already in cart
+  useEffect(() => {
+    if (!isCartLoading && initialCartItems) {
+      const foundItem = initialCartItems.find(
+        item => item.product_id === serviceData.product_id
+      );
+      if (foundItem) {
+        setIsInCart(true);
+        setExistingCartItem(foundItem);
+      }
+    }
+  }, [initialCartItems, isCartLoading, serviceData.product_id]);
 
   const handleBookNow = async () => {
     if (!dateTime) {
       toast.error('Please select a date and time slot');
       return;
     }
+     const isLoggedIn = localStorage.getItem('isLoggedIn');
+  const userId = localStorage.getItem('userId');
+      if (!isLoggedIn || !userId) {
+       toast.info('Please login to book services', {
+         autoClose: 1000, // Toast closes in 2 seconds
+         onClose: () => navigate("/login")
+       });
+       return;
+     }
 
+    setIsProcessing(true);
 
     const formattedTime = `${dateTime.startTime} - ${dateTime.endTime}`;
 
     const cartItem = {
       product_id: serviceData.product_id,
       product_name: serviceData.name,
-      quantity,
+      quantity: 1, // Fixed to 1 for decoration items
       service_date: dateTime.date,
       service_time: formattedTime,
       pinCode: pincode,
+      featured_image: serviceData.featured_image,
+      price: serviceData.price,
+      section: 'decoration'
     };
-
-    const cartPayload = {
-      userID: userData?.data?._id,
-      items: [cartItem]
-    };
-
 
     try {
-      await addToCart(cartPayload);
-      toast.success('Added to cart!');
+      if (isInCart) {
+        // Update existing item
+        await updateItem(
+          userData?.data?._id,
+          serviceData.product_id,
+          {
+            service_date: dateTime.date,
+            service_time: formattedTime,
+            pinCode: pincode
+          }
+        );
+        toast.success('Booking details updated!');
+      } else {
+        // Add new item
+        await addToCart({
+          userID: userData?.data?._id,
+          items: [cartItem]
+        });
+        toast.success('Decoration service booked!');
+      }
+
       setTimeout(() => {
         navigate('/cart');
       }, 1500);
-    }
-    catch (error) {
-      // Error handling
-      toast.error('cant add to cart!', error);
-      console.error(error)
-
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to update booking');
+      console.error(error);
+    } finally {
+      setIsProcessing(false);
     }
   };
 
   const changeImage = (src) => {
-    setMainImage("https://a4celebration.com/api/" + src);
+    setMainImage(src);
   };
 
-  // Calculate discount percentage if there's an offer
   const calculateDiscount = () => {
     if (!serviceData.isOffer) return 0;
-    // This is a placeholder - you should replace with your actual discount calculation
-    return 12; // Example 12% discount
+    return Math.round((1 - serviceData.price / (serviceData.price * 1.12)) * 100);
   };
 
-  // Format price with currency symbol
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
@@ -116,20 +155,20 @@ const DecorationsDetailsPage = () => {
     }).format(price);
   };
 
-
   const [descriptionPart, kitPart] = serviceData.description.split('Kit:');
 
-
-
-
+  // Image handling with fallback
+  const getImageUrl = (imagePath) => {
+    if (!imagePath) return '/images/placeholder-product.jpg';
+    return imagePath.startsWith('http') ? imagePath : `https://a4celebration.com/api/${imagePath}`;
+  };
 
   return (
     <>
-      <ToastContainer></ToastContainer>
+      <ToastContainer  autoClose={3000} />
       <style>{styles}</style>
 
-      <div className="bg-gradient-to-b bg-amber-50 font-poppins">
-        {/* Special Offer Ribbon - only show if there's an offer */}
+      <div className="bg-gradient-to-b bg-amber-50 font-poppins pb-8 min-h-screen">
         {serviceData.isOffer && (
           <div className="bg-gradient-to-r from-amber-400 to-amber-500 text-white py-2 px-4 text-center text-sm font-medium flex items-center justify-center gap-2">
             <Gift className="h-4 w-4" />
@@ -140,25 +179,25 @@ const DecorationsDetailsPage = () => {
 
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-wrap -mx-4">
-            {/* Product Images */}
+            {/* Product Images Section */}
             <div className="w-full md:w-1/2 mb-8 px-4">
-              <div className="flex  flex-col-reverse sm:flex-row gap-4 ">
-                {/* Left Side Thumbnails */}
+              <div className="flex flex-col-reverse sm:flex-row gap-4">
+                {/* Thumbnails */}
                 <div className="flex flex-row sm:flex-col gap-4 overflow-x-auto sm:overflow-y-auto sm:max-h-[500px] scrollbar-hide">
-                  {serviceData.other_images.map((src, index) => (
+                  {[serviceData.featured_image, ...serviceData.other_images].map((src, index) => (
                     <div
                       key={index}
-                      className={`relative size-16 sm:size-20 flex-shrink-0 rounded-lg cursor-pointer transition-all duration-300 border-2 ${mainImage === "https://a4celebration.com/api/" + src ? 'border-amber-500 scale-105' : 'border-amber-100'}`}
+                      className={`relative size-16 sm:size-20 flex-shrink-0 rounded-lg cursor-pointer transition-all duration-300 border-2 ${mainImage === src ? 'thumbnail-active' : 'border-amber-100'}`}
                       onClick={() => changeImage(src)}
                     >
                       <img
-                        src={"https://a4celebration.com/api/" + src}
+                        src={getImageUrl(src)}
                         alt={`Thumbnail ${index + 1}`}
                         className="w-full h-full object-cover rounded-md"
+                        onError={(e) => {
+                          e.target.src = '/images/placeholder-product.jpg';
+                        }}
                       />
-                      {mainImage === "https://a4celebration.com/api/" + src && (
-                        <div className="absolute inset-0 border-2 border-amber-500 rounded-md rounded-md"></div>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -166,26 +205,23 @@ const DecorationsDetailsPage = () => {
                 {/* Main Image */}
                 <div className="relative flex-1">
                   <img
-                    src={mainImage}
+                    src={getImageUrl(mainImage)}
                     alt={serviceData.name}
-                    className="w-full h-auto rounded-xl product-shadow border-2 border-amber-100"
-                    id="mainImage"
+                    className="w-full h-auto max-h-[500px] object-contain rounded-xl product-shadow border-2 border-amber-100"
+                    onError={(e) => {
+                      e.target.src = '/images/placeholder-product.jpg';
+                    }}
                   />
-
                   {serviceData.isOffer && (
                     <div className="absolute top-4 left-4 bg-amber-600 text-white text-xs font-bold px-2 py-1 rounded-full animate-pulse">
                       {serviceData.status === 'new' ? 'NEW!' : 'OFFER!'}
                     </div>
                   )}
-
-
                 </div>
               </div>
 
-              <div className="hidden sm:hidden md:block">
-
+              <div className="hidden sm:hidden md:block mt-6">
                 <DescriptionOverview description={descriptionPart} />
-                {/* Special Offer Box */}
                 {serviceData.isOffer && (
                   <div className="mb-6 p-4 bg-white rounded-xl border-2 border-amber-100 shadow-sm mt-6">
                     <div className="flex items-center gap-2 mb-2">
@@ -202,26 +238,11 @@ const DecorationsDetailsPage = () => {
               </div>
             </div>
 
-            {/* Product Details */}
+            {/* Product Details Section */}
             <div className="w-full md:w-1/2 px-4">
               <h2 className="text-3xl font-bold mb-1 font-playfair text-amber-800">
                 {serviceData.name}
               </h2>
-
-              {/* SKU/Product ID */}
-              {/* <div className="mb-4">
-                <p className="text-amber-600">SKU: {serviceData.product_id}</p>
-                {serviceData.child_categories && serviceData.child_categories.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {serviceData.child_categories.map((category, index) => (
-                      <span key={index} className="bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
-                        {category.name}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div> */}
-
 
               {/* Pricing Section */}
               <div className="mb-1 flex items-center">
@@ -231,7 +252,7 @@ const DecorationsDetailsPage = () => {
                 {serviceData.isOffer && (
                   <>
                     <span className="text-gray-500 line-through">
-                      {formatPrice(serviceData.price * 1.12)} {/* Example original price */}
+                      {formatPrice(serviceData.price * 1.12)}
                     </span>
                     <span className="ml-3 bg-amber-100 text-amber-800 text-sm font-medium px-2 py-1 rounded-full">
                       Save {calculateDiscount()}% ✨
@@ -240,7 +261,7 @@ const DecorationsDetailsPage = () => {
                 )}
               </div>
 
-              {/* Rating Section - Placeholder since not in your data */}
+              {/* Rating Section */}
               <div className="border border-gray-300 rounded-lg px-1 inline-flex items-center mb-2">
                 {[...Array(5)].map((_, index) => (
                   <Star
@@ -257,87 +278,102 @@ const DecorationsDetailsPage = () => {
                 {serviceData.short_description || serviceData.description}
               </p>
 
-              {/* Quantity Selector */}
+              {/* Quantity Display (fixed to 1 for decorations) */}
 
-              {/* Date and Time Input Fields with AM/PM */}
+
+              {/* Pincode Checker */}
               <PincodeDeliveryChecker
                 onDeliveryAvailable={setIsDeliveryAvailable}
-                pincode={pincode} setPincode={setPincode}
+                pincode={pincode}
+                setPincode={setPincode}
               />
-              <div className=" space-y-4">
 
+              {/* Time Slot Picker */}
+              <div className="space-y-4 mt-4">
                 <TimeSlotPicker
-                  onTimeSlotSelect={(slot) => {
-                    setDateTime(slot); // This will update with the full slot object
-                  }}
+                  onTimeSlotSelect={setDateTime}
                   PIN={isDeliveryAvailable}
+                  initialDate={isInCart ? existingCartItem?.service_date : null}
+                  initialTime={isInCart ? existingCartItem?.service_time : null}
                 />
               </div>
 
-
               {/* Action Buttons */}
-              <div className="flex space-x-4 mt-8">
-                <div className="relative">
+            <div className="flex space-x-4 mt-8">
+                {isInCart ? (
+                  <>
+                    <button
+                      onClick={() => navigate('/cart')}
+                      className="flex-1 bg-amber-600 hover:bg-amber-700 flex gap-2 items-center justify-center text-white px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 transition-all transform shadow-lg"
+                    >
+                      <ShoppingCart size={20} />
+                      Go to Cart
+                    </button>
+
+                    <button
+                      onClick={handleBookNow}
+                      disabled={!dateTime || isProcessing}
+                      className={`flex-1 bg-orange-600 flex gap-2 items-center justify-center text-white px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-300 focus:ring-offset-2 transition-all transform shadow-lg ${!dateTime ? 'opacity-50 cursor-not-allowed' : 'hover:bg-orange-700 hover:scale-[1.02] hover:shadow-xl'
+                        }`}
+                    >
+                      {isProcessing ? (
+                        <LoadingSpinner size={20} color="text-white" />
+                      ) : (
+                        <>
+                          <Sparkles size={20} />
+                          Update Booking
+                        </>
+                      )}
+                    </button>
+                  </>
+                ) : (
                   <button
+                    onClick={handleBookNow}
+                    disabled={!dateTime || isProcessing}
+
+
                     className={`bg-black flex gap-2 items-center text-yellow-400 px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 transition-all transform shadow-lg ${!dateTime
                       ? 'opacity-50 cursor-not-allowed'
                       : 'hover:bg-gray-900 hover:scale-[1.02] hover:shadow-xl'
                       }`}
-                    onClick={(e) => {
-                      if (!dateTime) {
-                        e.preventDefault();
-                        toast.warning('Please select a date and time slot');
-                      } else {
-                        handleBookNow();
-                      }
-                    }}
                   >
-                    <ShoppingCart size={20} className="text-yellow-400" />
-                    Book Now
+                    {isProcessing ? (
+                      <LoadingSpinner size={20} color="text-white" />
+                    ) : (
+                      <>
+                        <ShoppingCart size={20} />
+                        Book Now
+                      </>
+                    )}
                   </button>
+                )}
 
-                  {/* Warning tooltip */}
-                  {!dateTime && (
-                    <div className="absolute -top-7 left-0 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded whitespace-nowrap">
-                      Please select date and time
-                    </div>
-                  )}
-                </div>
-                <button
-                  className={`flex gap-2 items-center px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-300 focus:ring-offset-2 transition-all border-2 ${isWishlisted ? 'bg-black border-yellow-400 text-yellow-400' : 'border-gray-300 text-yellow-400 hover:border-yellow-400 bg-black'}`}
-                  onClick={() => setIsWishlisted(!isWishlisted)}
-                >
-                  <Heart
-                    size={20}
-                    className={isWishlisted ? 'fill-yellow-400 text-yellow-400' : 'text-yellow-400'}
-                  />
-                  Wishlist
-                </button>
+               <WishlistButton productId={serviceData.product_id} inCart={isInCart}></WishlistButton>
               </div>
+               
 
-              <div className="block md:hidden">
+
+
+              {/* Product Description - Mobile */}
+              <div className="block md:hidden mt-6">
                 <DescriptionOverview description={descriptionPart} />
               </div>
-              <KitsOverview data={kitPart} ></KitsOverview>
+              <KitsOverview data={kitPart} />
 
               {/* Delivery Information */}
-              <div className="space-y-4">
-
+              <div className="space-y-4 mt-6">
                 <DeliveryInfo />
-
               </div>
             </div>
           </div>
 
-          {/* Related Products */}
-          <h2 className="text-3xl font-bold text-center google-font mt-8">
+          {/* Related Products Section */}
+          <h2 className="text-3xl font-bold text-center google-font mt-12 mb-6">
             <span className="border-b-[1vw] border-amber-700 rounded-md inline-block">
-              Related Products
+              Related Services
             </span>
           </h2>
-
-          <div className="space-y-6">
-            <RelatedProductSection1 />
+          <div className="space-y-4">
             <RelatedProductSection1 />
           </div>
         </div>

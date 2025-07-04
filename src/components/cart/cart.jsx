@@ -14,7 +14,7 @@ const Cart = () => {
 
   const [cartItems, setCartItems] = useState([]);
   const { cart, clearCart, removeItem } = useCart();
-
+console.log(cart)
 
   const navigate = useNavigate();
   const [promoCode, setPromoCode] = useState("");
@@ -90,7 +90,7 @@ const Cart = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
           <div className="flex items-center gap-2">
             <ShoppingBag className="h-8 w-12 text-amber-300" />
-            <h1 className="text-2xl sm:text-3xl font-bold text-amber-800">Your Sacred Cart</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-amber-800">Your Cart</h1>
           </div>
           <Link to="/" className="self-start sm:self-auto">
             <button className="border border-amber-300 text-amber-700 hover:bg-amber-100 px-4 py-2 rounded">
@@ -148,21 +148,24 @@ const Cart = () => {
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                              <div className="flex items-center gap-2">
-                                <Calendar className="h-4 w-4 text-amber-600" />
-                                <p className="text-sm text-gray-700">
-                                  <span className="font-medium">Booking Date:</span>{" "}
-                                  {new Date(item.service_date).toLocaleDateString()}
-                                </p>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Clock className="h-4 w-4 text-amber-600" />
-                                <p className="text-sm text-gray-700">
-                                  <span className="font-medium">Booking Time:</span> {item.service_time}
-                                </p>
-                              </div>
-                            </div>
+                            {item.service_date && item.service_time && (
+  <div className="space-y-2">
+    <div className="flex items-center gap-2">
+      <Calendar className="h-4 w-4 text-amber-600" />
+      <p className="text-sm text-gray-700">
+        <span className="font-medium">Booking Date:</span>{" "}
+        {new Date(item.service_date).toLocaleDateString()}
+      </p>
+    </div>
+    <div className="flex items-center gap-2">
+      <Clock className="h-4 w-4 text-amber-600" />
+      <p className="text-sm text-gray-700">
+        <span className="font-medium">Booking Time:</span> {item.service_time}
+      </p>
+    </div>
+  </div>
+)}
+
 
                             <div className="space-y-2">
                               <div className="flex items-center gap-2">
@@ -192,7 +195,7 @@ const Cart = () => {
 
                       <div className="mt-4 pt-4 border-t border-amber-100">
                         <p className="text-xs text-gray-600">
-                          <span className="font-medium">Parampara:</span> Earn a ₹20 statement credit when you spend
+                          <span className="font-medium">A4 Celebration:</span> Earn a ₹20 statement credit when you spend
                           ₹29 on eligible purchases.
                           <Link to="#" className="text-amber-700 hover:underline ml-1">
                             Learn more

@@ -6,13 +6,20 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 // Get all customized requests
 export const getCustomizedRequests = async () => {
   try {
-    const response = await axios.get(`${API_URL}customized/get-all-requests`, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: API_KEY,
-      },
-    });
-    return response.data.data; // adjust depending on your actual response structure
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userId = localStorage.getItem('userId');
+
+    if (isLoggedIn && userId) {
+      const response = await axios.get(`${API_URL}customized/get-all-requests/${userId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: API_KEY,
+        },
+      });
+      return response.data.data; // Adjust as needed based on actual response structure
+    } else {
+      throw new Error('User not logged in or missing user ID');
+    }
   } catch (error) {
     throw error;
   }

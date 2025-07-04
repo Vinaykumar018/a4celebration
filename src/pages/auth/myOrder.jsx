@@ -19,9 +19,20 @@ import useGiftHook from "../../hooks/useGiftHooks";
 import { getProductById } from "../../services/decorations/product-api-service";
 import { getEventByProductId } from "../../services/event-management/events-management-api-service";
 
+import { ToastContainer,toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Navigate, useNavigate } from "react-router-dom";
+
+import axios from "axios";
 export default function MyOrders({ userData }) {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate=useNavigate()
+
+  const [showCancelModal, setShowCancelModal] = useState(false);
+const [selectedOrderId, setSelectedOrderId] = useState(null);
+const [cancellationReason, setCancellationReason] = useState('');
+
 
   // Static image URL for all products
   const { fetchGiftById } = useGiftHook();
@@ -69,62 +80,51 @@ export default function MyOrders({ userData }) {
 
 
   const [customOrder, setCustomOrder] = useState([]);
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const response = await getOrdersByUserId(userData.data._id);
-        const allOrders = response.data;
+ const fetchOrders = async () => {
+  try {
+    const response = await getOrdersByUserId(userData.data._id);
+    const allOrders = response.data;
 
-        // Split into custom and normal orders
-        const customOrders = allOrders.filter(order =>
-          order.orderDetails.products.some(product => product.productId.startsWith("PROD-CUSTOM"))
-        );
+    const customOrders = allOrders.filter(order =>
+      order.orderDetails.products.some(product => product.productId.startsWith("PROD-CUSTOM"))
+    );
 
-        const normalOrders = allOrders.filter(order =>
-          !order.orderDetails.products.some(product => product.productId.startsWith("PROD-CUSTOM"))
-        );
+    const normalOrders = allOrders.filter(order =>
+      !order.orderDetails.products.some(product => product.productId.startsWith("PROD-CUSTOM"))
+    );
 
-        // Store into respective states
-        setOrders(normalOrders);
-        setCustomOrder(customOrders);
+    setOrders(normalOrders);
+    setCustomOrder(customOrders);
 
-        console.log("All Orders:", allOrders);
-
-
-        // Fetch all product images
-        const imageUrls = {};
-        for (const order of allOrders) {
-          for (const product of order.productDetails) {
-            if (!imageUrls[product.productId]) {
-              try {
-                imageUrls[product.productId] = await fetchData(product.productId);
-              } catch (error) {
-                console.error(`Failed to fetch image for ${product.productId}:`, error);
-                imageUrls[product.productId] = staticImageUrl; // fallback image
-              }
-            }
+    const imageUrls = {};
+    for (const order of allOrders) {
+      for (const product of order.productDetails) {
+        if (!imageUrls[product.productId]) {
+          try {
+            imageUrls[product.productId] = await fetchData(product.productId);
+          } catch (error) {
+            console.error(`Failed to fetch image for ${product.productId}:`, error);
+            imageUrls[product.productId] = staticImageUrl;
           }
         }
-
-        setProductImages(imageUrls);
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch orders:", error);
-        setIsLoading(false);
       }
-    };
-
-    if (userData?.data?._id) {
-      fetchOrders();
     }
-  }, [userData]);
 
-  const cancelOrder = (orderId) => {
-    // Implement your cancel order logic here
-    console.log(orders, customOrder)
+    setProductImages(imageUrls);
+    setIsLoading(false);
+  } catch (error) {
+    console.error("Failed to fetch orders:", error);
+    setIsLoading(false);
+  }
+};
+useEffect(() => {
+  if (userData?.data?._id) {
+    fetchOrders();
+  }
+}, [userData]);
 
-    // setOrders(orders.filter(order => order._id !== orderId));
-  };
+
+  
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -142,7 +142,38 @@ export default function MyOrders({ userData }) {
 
 
 
-  console.log(productImages)
+  function handleTrackClick (orderID){
+    navigate(`${orderID}`)
+ 
+};
+
+ const API_KEY = import.meta.env.VITE_API_KEY;
+  const API_URL = import.meta.env.VITE_API_URL;
+
+const handleCancelOrder = async () => {
+  if (!cancellationReason.trim()) {
+    toast.warning("Cancellation reason is required");
+    return;
+  }
+
+  try {
+    await axios.put(
+      `${API_URL}order/cancel-order-status/${selectedOrderId}`,
+      { cancellationReason },
+      {
+        headers: {
+          Authorization: `Bearer ${API_KEY}`,
+        },
+      }
+    );
+    toast.success("Order cancelled successfully");
+    setShowCancelModal(false);
+    setCancellationReason('');
+    fetchOrders(); // <-- refresh order list after cancellation
+  } catch (error) {
+    toast.error(error.response?.data?.message || "Failed to cancel order");
+  }
+};
 
 
 
@@ -156,8 +187,11 @@ export default function MyOrders({ userData }) {
     );
   }
 
+  
+
   return (
     <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-6xl space-y-4 rounded-lg border border-gray-200 bg-white py-4 shadow">
+       <ToastContainer position="top-center" autoClose={2000} />
       <div className="flex items-center justify-center mb-2">
         <Package className="w-6 h-6 sm:w-8 sm:h-8 text-amber-500 mr-2 sm:mr-3" />
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-center text-gray-800">
@@ -253,18 +287,22 @@ export default function MyOrders({ userData }) {
                   </td>
                   <td className="py-4 px-2">
                     <div className="flex space-x-2">
-                      <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-1 px-3 sm:py-2 sm:px-4 rounded flex items-center text-xs sm:text-sm">
-                        <Truck className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                      <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-1 px-3 sm:py-2 sm:px-4 rounded flex items-center text-xs sm:text-sm" onClick={() =>handleTrackClick(order.order_id) } >
+                        <Truck className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2"/>
                         Track
                       </button>
-                      {order.orderDetails.order_status === 'processing' && (
-                        <button
-                          className="border border-gray-200 hover:bg-gray-100 text-gray-500 font-semibold py-1 px-3 sm:py-2 sm:px-4 rounded flex items-center text-xs sm:text-sm"
-                          onClick={() => cancelOrder(order._id)}
-                        >
-                          <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-amber-500" />
-                        </button>
-                      )}
+                    {(order.orderDetails.order_status === 'processing' || order.orderDetails.order_status === 'pending') && (
+  <button
+    className="border border-gray-200 hover:bg-gray-100 text-gray-500 font-semibold py-1 px-3 sm:py-2 sm:px-4 rounded flex items-center text-xs sm:text-sm"
+    onClick={() => {
+      setSelectedOrderId(order._id);
+      setShowCancelModal(true);
+    }}
+  >
+    <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 text-amber-500" />
+  </button>
+)}
+
                     </div>
                   </td>
                 </tr>
@@ -334,7 +372,7 @@ export default function MyOrders({ userData }) {
                 </div>
 
                 <div className="flex justify-end space-x-2 mt-2">
-                  <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-1 px-2 rounded flex items-center text-xs">
+                  <button className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-1 px-2 rounded flex items-center text-xs" onClick={() =>handleTrackClick(order.order_id) }>
                     <Truck className="w-3 h-3 mr-1" />
                     Track
                   </button>
@@ -359,6 +397,36 @@ export default function MyOrders({ userData }) {
           <span className="text-xs sm:text-sm font-medium">Your order history</span>
         </div>
       </div>
+
+      {showCancelModal && (
+  <div className="fixed inset-0 z-50 bg-black bg-opacity-40 flex justify-center items-center">
+    <div className="bg-white rounded p-6 w-[90%] max-w-md shadow-lg">
+      <h2 className="text-lg font-semibold mb-4">Cancel Order</h2>
+      <textarea
+        className="w-full border p-2 rounded mb-4"
+        rows="4"
+        placeholder="Enter cancellation reason"
+        value={cancellationReason}
+        onChange={(e) => setCancellationReason(e.target.value)}
+      />
+      <div className="flex justify-end space-x-2">
+        <button
+          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-1 px-4 rounded"
+          onClick={() => setShowCancelModal(false)}
+        >
+          Close
+        </button>
+        <button
+          className="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-4 rounded"
+          onClick={() => handleCancelOrder()}
+        >
+          Confirm Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

@@ -25,12 +25,18 @@ import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import DecorationsDetailsPage from "../pages/products/decorations-details-page";
 import Order from "../pages/orders/order";
+import ProfileOrderConfirmation from "../pages/orders/ProfileOrderConfirmation";
 import EventManagementDetailsPage from "../pages/products/event-management-details-page";
 import GiftsDetailsPage from "../pages/products/gifts-details-page";
 import CustomizedCheckoutPage from "../pages/checkout/customizedCheckout";
 import Services from "../pages/category/services-section/Services";
 import CateringEventsDetailsPage from "../pages/products/catering-events-details-page";
 import ArtistManagementDetailsPage from "../pages/products/artist-management-details-page";
+import ContactPage from "../pages/contact/Contact";
+import AboutUs from "../pages/about-us/AboutUs";
+import PrivacyPolicy from "../pages/privacy-policy/PrivacyPolicy";
+import TermsOfService from "../pages/terms-conditions/Terms";
+import RefundPolicy from "../pages/refund/Refund";
 const RoutesComponent = () => {
 
 
@@ -79,6 +85,12 @@ const RoutesComponent = () => {
       <Route path="/event-catering/:slug" element={<Caterings></Caterings>} />
        <Route path="/event-catering/service/:slug" element={<CateringEventsDetailsPage />} />
 
+        <Route path="/contact" element={<ContactPage></ContactPage>} />
+         <Route path="/about" element={<AboutUs></AboutUs>} />
+         <Route path="/privacy" element={<PrivacyPolicy></PrivacyPolicy>} />
+          <Route path="/terms" element={<TermsOfService></TermsOfService>} />
+          <Route path="/refunds" element={<RefundPolicy></RefundPolicy>} />
+
 
       {/* Protected Routes */}
 
@@ -106,6 +118,12 @@ const RoutesComponent = () => {
         path="/order/:orderId"
         element={
           isAuthenticated ? <Order /> : <Navigate to="/login" />
+        }
+      />
+      <Route
+        path="/profile/:orderId"
+        element={
+          isAuthenticated ? <ProfileOrderConfirmation></ProfileOrderConfirmation> : <Navigate to="/login" />
         }
       />
 

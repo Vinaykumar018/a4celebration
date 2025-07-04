@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { getOrderById } from '../../services/decoration-orders/order-api';
 import { CheckCircle, Truck, CreditCard, Package, User, MapPin, Calendar, Clock } from "lucide-react"
 import ReceiptDownloadButton from './Receipt-order';
@@ -191,6 +191,7 @@ export default function OrderConfirmation() {
                   <div className="flex items-start">
                     <Clock className="h-5 w-5 text-amber-500 mr-2 mt-0.5" />
                     <p className="text-gray-700">{orderData?.deliveryNotes || 'No delivery notes available'}</p>
+                    {console.log(orderData?.deliveryNotes)}
                   </div>
                   <div className="mt-2">
                     <p className="text-sm text-gray-600">
@@ -303,13 +304,19 @@ export default function OrderConfirmation() {
             We'll notify you when your order ships. You can track your order status anytime.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="px-6 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors">
-              Track Order
-            </button>
+           <Link 
+  to="/profile" 
+  className="px-6 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors"
+>
+  Track Order
+</Link>
             <ReceiptDownloadButton orderData={orderData} />
-            <button className="px-6 py-2 bg-white border border-amber-300 text-amber-600 rounded-md hover:bg-amber-50 transition-colors">
+            <Link
+              to="/"
+              className="px-6 py-2 bg-white border border-amber-300 text-amber-600 rounded-md hover:bg-amber-50 transition-colors"
+            >
               Continue Shopping
-            </button>
+            </Link>
           </div>
         </div>
       </div>

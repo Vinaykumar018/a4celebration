@@ -63,10 +63,7 @@ const KitsOverview = (kitPart) => {
                 className="kit text-xs"
                 dangerouslySetInnerHTML={{ __html: '<ul>' + decodeHTML(kitPart.data).split('</p><p>').join('') }}
               />
-              <p className="mt-4 text-sm italic text-red-600">
-                <FaInfoCircle className="inline mr-2 text-yellow-600" />
-                Note: If you choose "Without Kit" option, you'll need to arrange the materials yourself.
-              </p>
+
             </div>
           </details>
 

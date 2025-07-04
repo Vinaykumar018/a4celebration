@@ -10,6 +10,7 @@ import Footer from './components/footer/Footer'
 import { useDispatch } from 'react-redux';
 import { fetchUserData } from './redux/userSlice';
 import ScrollToTop from './components/service/ScrollToTop';
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 
 function App() {
@@ -27,6 +28,12 @@ function App() {
   return (
     <>
 
+
+      <GoogleOAuthProvider clientId="590949563897-n033hboekn0vtsu906gl6evll817f1gc.apps.googleusercontent.com">
+      {/* Other components */}
+    
+   
+
       <Router>
       <ScrollToTop />
         <Navbar></Navbar>
@@ -34,6 +41,7 @@ function App() {
         <RoutesComponent />
         <Footer></Footer>  {/* Use the Routes Component */}
       </Router>
+       </GoogleOAuthProvider>
 
     </>
   )

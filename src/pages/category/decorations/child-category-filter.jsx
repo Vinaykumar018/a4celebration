@@ -93,7 +93,7 @@ const ChildCategoryFilter = () => {
         </div>
 
         {/* Gradient fade effect on sides */}
-       
+
       </div>
     </div>
   );

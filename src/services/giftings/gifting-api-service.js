@@ -97,3 +97,19 @@ export const deleteProduct = async (id) => {
     throw error;
   }
 };
+
+
+export const getGiftProductById = async (productId) => {
+  try {
+    const response = await axios.get(`${API_URL}giftings/get-product/${productId}`, {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    throw error;
+  }
+};

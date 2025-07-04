@@ -1,14 +1,17 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
+import bannerImage from '../../assets/banner/Gift.jpg'
+import { Link } from 'react-router-dom';
 // Image sources for Banner2
-const desktopImg = 'https://cheetah.cherishx.com/website_layout/1680x400_Banner-5_Gifts_Desktop_20240930_132612.jpg?format=avif';
-const mobileImg = 'https://cheetah.cherishx.com/website_layout/800x400_Banner-5_Gifts_Mobile_20240930_132612.jpg?format=avif';
+const desktopImg = bannerImage;
+const mobileImg = bannerImage;
 
 const Banner2 = () => {
   return (
     <div className="px-3 mt-6">
       <div className="w-full rounded-3xl overflow-hidden shadow-lg">
+        <Link to="/giftings">
+
         <motion.picture
           initial={{ scale: 1 }}
           transition={{ duration: 0.5, ease: 'easeInOut' }}
@@ -26,6 +29,7 @@ const Banner2 = () => {
             loading="lazy"
           />
         </motion.picture>
+        </Link>
       </div>
     </div>
   );

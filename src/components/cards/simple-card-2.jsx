@@ -32,6 +32,14 @@ const SimpleCard2 = ({
     );
   };
 
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price)
+  }
+
   return (
     <section className="bg-white rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="w-full sm:px-0 px-0 ">
@@ -49,23 +57,19 @@ const SimpleCard2 = ({
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {/* Image Section */}
-                  <div className="sign_box_img flex justify-center p-4 bg-gray-50">
-
+                  {/* Fixed Image Section */}
+                  <div className="w-full h-48 md:h-56 overflow-hidden"> {/* Set fixed height */}
                     <img
-                      src={`${"https://a4celebration.com/api/" + service.featured_image}`}
+                      src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
                       alt={service.name}
-                      className="object-cover rounded-lg w-full h-40 md:h-48"
-                      style={{
-                        aspectRatio: '1/1',
-                        objectFit: 'contain'
-                      }}
+                      className="w-full h-full object-cover"
                     />
                   </div>
 
+                  {/* Content Section remains same */}
                   {/* Content Section */}
                   <div className="sign_box_cont p-5 text-center">
-                    <h4 className="text-lg font-semibold text-gray-800 mb-2 line-clamp-2">
+                    <h4 className="text-md font-medium mb-1 font-semibold mb-2 line-clamp-2">
                       {words.length > 4 ? `${words.slice(0, 2).join(" ")}` : service.name}
                     </h4>
 
@@ -80,14 +84,13 @@ const SimpleCard2 = ({
 
                     {showPrice && (
                       <p className="text-sm font-medium text-gray-700 mb-4">
-                        ${service.price?.toFixed(2) || '0.00'}
+                        {formatPrice(service.price)}
                       </p>
                     )}
 
                     <div className="mt-4">
-
                       <motion.button
-                        className="w-full py-2 px-4 rounded-md uppercase font-medium text-sm tracking-wide text-white transition-colors duration-300"
+                        className="w-full py-2 px-4 rounded-md uppercase font-medium text-sm tracking-wide text-white transition-colors duration-300 whitespace-nowrap"
                         style={{ backgroundColor: themeColor }}
                         whileHover={{
                           backgroundColor: '#e67300',

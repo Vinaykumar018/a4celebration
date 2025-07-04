@@ -92,7 +92,7 @@ const ChildCategoryFilter = () => {
           ))}
         </div>
 
-     
+
       </div>
     </div>
   );
