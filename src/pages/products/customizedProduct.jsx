@@ -372,27 +372,68 @@
 import { useState } from 'react';
 import { X, Calendar, User, Phone, Mail, Users, Utensils, DollarSign } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
+import { useCustomModalData } from '../../context/CustomModalContext';
+import { useEffect } from 'react';
 
-function CustomRequestModal({ productId, userId, onClose, name, email }) {
-  console.log(name)
+function CustomRequestModal({ onClose }) {
+  const { customModalData } = useCustomModalData();
+
+  // Null check to prevent rendering when data is not available
+  if (!customModalData) return null;
+
+  const {
+    productId,
+    userId,
+    name,
+    email,
+    requestedEventId,
+    requestedIdName,
+    requestedEventImage
+  } = customModalData;
+
   const [formData, setFormData] = useState({
-    product_id: productId,
-    user_id: userId,
+    product_id: '',
+    user_id: '',
     phone_number: '',
-    name: name || '',
-    email: email || '',
+    name: '',
+    email: '',
     event_date: '',
     guest_count: '',
     food_preference: '',
     budget_range: '',
     special_requirements: '',
-    package_customizations: ''
+    package_customizations: '',
+    requestedEventId: '',
+    requestedIdName: '',
+    requestedEventImage: ''
   });
-  
+
+  useEffect(() => {
+    // Initialize the formData once modal data is available
+    setFormData({
+      product_id: productId || '',
+      user_id: userId || '',
+      phone_number: '',
+      name: name || '',
+      email: email || '',
+      event_date: '',
+      guest_count: '',
+      food_preference: '',
+      budget_range: '',
+      special_requirements: '',
+      package_customizations: '',
+      requestedEventId: requestedEventId || '',
+      requestedIdName: requestedIdName || '',
+      requestedEventImage: requestedEventImage || ''
+    });
+  }, [customModalData]);
+
+  console.log(requestedEventId, requestedIdName, requestedEventImage);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const AUTH_TOKEN = import.meta.env.VITE_API_KEY;
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -445,7 +486,7 @@ function CustomRequestModal({ productId, userId, onClose, name, email }) {
         throw new Error('Please fill all required fields');
       }
 
-      const response = await fetch('https://a4celebration.com/api/api/customized/create-request', {
+      const response = await fetch(`${API_URL}customized/create-request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -468,8 +509,8 @@ function CustomRequestModal({ productId, userId, onClose, name, email }) {
   };
 
   return (
-  <div className="fixed inset-x-0 top-[80px] md:top-[110px] bottom-0 flex justify-center bg-black/50 z-50overflow-y-auto scrollbar-hide bg-black/80">
- <ToastContainer />
+    <div className="fixed inset-x-0 top-[80px] md:top-[110px] bottom-0 flex justify-center bg-black/50 z-50overflow-y-auto scrollbar-hide bg-black/80">
+      <ToastContainer />
       <div className="bg-white rounded-lg shadow-lg w-full max-w-md max-h-[90vh] overflow-y-auto scrollbar-hide">
         <div className="sticky top-0 bg-white z-10 border-b border-gray-200">
           <div className="p-4 flex justify-between items-center">
@@ -689,7 +730,7 @@ function CustomRequestModal({ productId, userId, onClose, name, email }) {
           )}
         </div>
       </div>
-</div>
+    </div>
   );
 };
 

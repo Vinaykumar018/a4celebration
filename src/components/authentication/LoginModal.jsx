@@ -45,7 +45,7 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
     } catch (error) {
       console.error("Login error:", error);
       setWrongPassword(true);
-      toast.error(error.response?.data?.message || "Login failed. Please check your credentials.");
+      toast.error("Login failed. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -55,7 +55,7 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
 
   return (
     <>
-      <ToastContainer />
+     
       <div className="fixed inset-0 flex items-center justify-center bg-black/70 bg-opacity-50 z-50">
         <div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="relative">
@@ -167,7 +167,7 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
                   </label>
                 </div>
                 <Link
-                  to="/forgot-password"
+                  to="/forget-password"
                   className="text-sm font-medium text-amber-600 hover:text-amber-800 hover:underline"
                   onClick={onClose}
                 >

@@ -19,6 +19,7 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^3.0.1",
     "jwt-decode": "^4.0.0",
+    "lottie-react": "^2.4.1",
     "lucide-react": "^0.487.0",
     "pdf-lib": "^1.17.1",
     "react": "^19.0.0",

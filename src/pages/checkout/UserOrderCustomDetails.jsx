@@ -711,7 +711,7 @@ export const UserOrderCustomDetails = ({ cartItems = [], currencySymbol, userDat
             },
             productDetails: cartItems.map(item => ({
                 productId: item.product_id,
-                productName: item.name,
+                productName: item.requestedIdName,
                 amount: item.final_price,
                 quantity: 1
             })),
@@ -811,12 +811,20 @@ export const UserOrderCustomDetails = ({ cartItems = [], currencySymbol, userDat
         return true;
     };
         
-    const handlePlaceOrder = async (event) => {
-        event.preventDefault();
-        if (!validateFields()) {
-            return;
-        }
-        
+     const [isSubmitting, setIsSubmitting] = useState(false);
+
+const handlePlaceOrder = async (event) => {
+    event.preventDefault();
+    
+    // Early return if validation fails
+    if (!validateFields()) {
+        return;
+    }
+
+    // Set submitting state at the beginning
+    setIsSubmitting(true);
+
+    try {
         // Sanitize all inputs before processing
         const sanitizedData = {
             username: sanitizeInput(username),
@@ -848,78 +856,83 @@ export const UserOrderCustomDetails = ({ cartItems = [], currencySymbol, userDat
             pincode: sanitizedData.zipCode
         };
 
-        try {
-            if (paymentMethod === "razorpay") {
-                const response = await placeOrder(orderData);
-                const { order, razorpayOrderId } = response.data;
+        if (paymentMethod === "razorpay") {
+            const response = await placeOrder(orderData);
+            const { order, razorpayOrderId } = response.data;
 
-                const options = {
-                    key: import.meta.env.VITE_RAZORPAY_KEY,
-                    amount: orderData.paymentDetails.totalAmount * 100,
-                    currency: "INR",
-                    name: "A4 CELEBRATION",
-                    description: "Order Payment",
-                    order_id: razorpayOrderId,
-                    handler: async function (response) {
-                        try {
-                            const verificationResponse = await axios.post(
-                                `${API_URL}orders/verify-payment`,
-                                {
-                                    order_id: order.order_id,
-                                    razorpayOrderId,
-                                    payment_id: response.razorpay_payment_id,
-                                    signature: response.razorpay_signature,
+            const options = {
+                key: import.meta.env.VITE_RAZORPAY_KEY,
+                amount: orderData.paymentDetails.totalAmount * 100,
+                currency: "INR",
+                name: "A4 CELEBRATION",
+                description: "Order Payment",
+                order_id: razorpayOrderId,
+                handler: async function (response) {
+                    try {
+                        setIsSubmitting(true); // Set submitting again for payment verification
+                        const verificationResponse = await axios.post(
+                            `${API_URL}orders/verify-payment`,
+                            {
+                                order_id: order.order_id,
+                                razorpayOrderId,
+                                payment_id: response.razorpay_payment_id,
+                                signature: response.razorpay_signature,
+                            },
+                            {
+                                headers: {
+                                    Authorization: API_KEY,
                                 },
-                                {
-                                    headers: {
-                                        Authorization: API_KEY,
-                                    },
-                                }
-                            );
-
-                            if (verificationResponse.data.status === 'success') {
-                                await updateRequestStatus(customProductID, { status: 'confirmed' });
-                                toast.success("Payment Successful. Order Confirmed.");
-                                setTimeout(() => {
-                                    clearCart(userData._id);
-                                    navigate(`/order/${order.order_id}`);
-                                }, 2000);
                             }
-                        } catch (error) {
-                            toast.error("Payment failed");
-                            console.error('Payment verification failed:', error);
-                            alert(error.response?.data?.message || 'Payment verification failed. Please contact support.');
+                        );
+
+                        if (verificationResponse.data.status === 'success') {
+                            await updateRequestStatus(customProductID, { status: 'confirmed' });
+                            toast.success("Payment Successful. Order Confirmed.");
+                            setTimeout(() => {
+                                clearCart(userData._id);
+                                navigate(`/order/${order.order_id}`);
+                            }, 2000);
                         }
+                    } catch (error) {
+                        toast.error("Payment verification failed");
+                        console.error('Payment verification failed:', error);
+                    } finally {
+                        setIsSubmitting(false);
+                    }
+                },
+                prefill: { 
+                    name: sanitizedData.username, 
+                    email: sanitizedData.email, 
+                    contact: sanitizedData.contactNumber 
+                },
+                theme: { color: "#F37254" },
+                modal: {
+                    ondismiss: function () {
+                        setIsSubmitting(false);
+                        alert('Payment window closed. Your order is not confirmed.');
                     },
-                    prefill: { 
-                        name: sanitizedData.username, 
-                        email: sanitizedData.email, 
-                        contact: sanitizedData.contactNumber 
-                    },
-                    theme: { color: "#F37254" },
-                    modal: {
-                        ondismiss: function () {
-                            alert('Payment window closed. Your order is not confirmed.');
-                        },
-                    },
-                };
+                },
+            };
 
-                const razorpay = new window.Razorpay(options);
-                razorpay.open();
-            } else {
-                const response = await placeOrder(orderData);
-                const order = response.data.order;
+            const razorpay = new window.Razorpay(options);
+            razorpay.open();
+        } else {
+            // For Cash on Delivery
+            const response = await placeOrder(orderData);
+            const order = response.data.order;
 
-                await updateRequestStatus(customProductID, { status: 'confirmed' });
-                toast.success("Order placed successfully with Cash on Delivery.");
-                clearCart(userData._id);
-                navigate(`/order/${order.order_id}`);
-            }
-        } catch (error) {
-            console.error('Order failed:', error);
-            toast.error('Order placement failed. Please try again.');
+            await updateRequestStatus(customProductID, { status: 'confirmed' });
+            toast.success("Order placed successfully with Cash on Delivery.");
+            clearCart(userData._id);
+            navigate(`/order/${order.order_id}`);
         }
-    };
+    } catch (error) {
+        console.error('Order failed:', error);
+        toast.error(error.response?.data?.message || 'Order placement failed. Please try again.');
+    } finally {
+        setIsSubmitting(false);
+    }
+};
 
     // Helper function to handle input changes with validation
     const handleInputChange = (e, validator, setter, fieldName) => {
@@ -1299,13 +1312,43 @@ export const UserOrderCustomDetails = ({ cartItems = [], currencySymbol, userDat
 
             {/* Submit Button */}
             <button
-                type="submit"
-                className="w-full py-4 text-lg rounded-xl font-bold bg-gradient-to-r from-amber-500 to-amber-500 hover:from-amber-600 hover:to-amber-600 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2"
-            >
-                <Sparkles className="h-5 w-5" />
-                Complete Your Celebration Booking
-                <Sparkles className="h-5 w-5" />
-            </button>
+                          type="submit"
+                          disabled={isSubmitting}
+                          className={`w-full py-4 text-lg rounded-xl font-bold bg-gradient-to-r from-amber-500 to-amber-500 hover:from-amber-600 hover:to-amber-600 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                              }`}
+                      >
+                          {isSubmitting ? (
+                              <>
+                                  <svg
+                                      className="animate-spin h-5 w-5 text-white"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                  >
+                                      <circle
+                                          className="opacity-25"
+                                          cx="12"
+                                          cy="12"
+                                          r="10"
+                                          stroke="currentColor"
+                                          strokeWidth="4"
+                                      ></circle>
+                                      <path
+                                          className="opacity-75"
+                                          fill="currentColor"
+                                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                      ></path>
+                                  </svg>
+                                  Processing Your Booking...
+                              </>
+                          ) : (
+                              <>
+                                  <Sparkles className="h-5 w-5" />
+                                  Complete Your Celebration Booking
+                                  <Sparkles className="h-5 w-5" />
+                              </>
+                          )}
+                      </button>
         </form>
     );
 };

@@ -12,6 +12,9 @@ import RelatedProductSection1 from "../../components/related-products-feed/relat
 import RelatedProductSection3 from "../../components/related-products-feed/related-product-section-3";
 import useUserCartData from '../../hooks/useUserCartData';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import { useCustomModalData } from "../../context/CustomModalContext";
+
+
 
 const EventManagementDetailsPage = () => {
   const location = useLocation();
@@ -19,6 +22,7 @@ const EventManagementDetailsPage = () => {
   const { userData } = useSelector((state) => state.user);
   const { cartItems: initialCartItems, isLoading: isCartLoading } = useUserCartData();
   const { addToCart, updateItem } = useCart();
+  const { setCustomModalData } = useCustomModalData();
 
   const { serviceData, sectionData } = location.state;
   const [showModal, setShowModal] = useState(false);
@@ -43,7 +47,25 @@ const EventManagementDetailsPage = () => {
     }
   }, [initialCartItems, isCartLoading, serviceData.product_id]);
 
-  const handleOpen = () => setShowModal(true);
+  const handleOpen = () => {
+    if (!serviceData || !userData?.data) {
+      console.warn("Required data missing to open modal.");
+      return;
+    }
+
+    setCustomModalData({
+      requestedEventId: serviceData.product_id,
+      requestedIdName: `${serviceData.name} (Customized)`,
+      productId: productId,
+      userId: userData.data._id,
+      name: userData.data.username,
+      email: userData.data.email,
+      phone: userData.data.mobile,
+      requestedEventImage: serviceData.featured_image,
+    });
+
+    setShowModal(true);
+  };
   const handleClose = () => setShowModal(false);
 
   // Use serviceData for dynamic content
@@ -168,21 +190,21 @@ const EventManagementDetailsPage = () => {
             service_time: formattedTime
           }
         );
-        toast.success('Event details updated!');
+        toast.success('Cart details updated!');
       } else {
         // Add new item
         await addToCart({
           userID: userData?.data?._id,
           items: [cartItem]
         });
-        toast.success('Event service booked!');
+        toast.success('Added to cart!');
       }
 
       setTimeout(() => {
         navigate('/cart');
       }, 1500);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update booking');
+      toast.error(error.response?.data?.message || 'Failed to update cart');
       console.error(error);
     } finally {
       setIsProcessing(false);
@@ -195,6 +217,11 @@ const EventManagementDetailsPage = () => {
     return imagePath.startsWith('http') ? imagePath : `https://a4celebration.com/api/${imagePath}`;
   };
 
+
+  useEffect(() => {
+  console.log('Component rendered');
+  return () => console.log('Component unmounted');
+}, []);
 
   return (
     <div className="bg-white min-h-screen">
@@ -543,14 +570,7 @@ const EventManagementDetailsPage = () => {
                       </button>
 
                       {showModal && (
-                        <CustomRequestModal
-                          productId={productId}
-                          userId={userData?.data?._id}
-                          name={userData?.data?.username}
-                          email={userData?.data?.email}
-                          phone={userData?.data?.mobile}
-                          onClose={handleClose}
-                        />
+                        <CustomRequestModal onClose={() => setShowModal(false)} />
                       )}
                     </div>
 

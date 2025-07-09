@@ -52,6 +52,8 @@ export default function CustomizedCheckoutPage() {
 
   const [cartItems, setCartItems] = useState([]);
 
+  
+
 
   useEffect(() => {
 
@@ -70,7 +72,7 @@ export default function CustomizedCheckoutPage() {
     const fetchCustomizedRequest = async () => {
       try {
         const response = await getCustomizedRequestsByID(id);
-       
+       console.log("custom response",response)
         setCartItems([response])
       } catch (error) {
         console.error("Error fetching customized request:", error);
@@ -144,8 +146,8 @@ export default function CustomizedCheckoutPage() {
           {/* Placeholder Image Box */}
           <div className="w-20 h-20 relative rounded-lg overflow-hidden border-2 border-amber-200 shadow-sm">
             <img
-              src="/default.jpg" // Use a fallback image or field if available
-              alt={item.name}
+            src={`https://a4celebration.com/api/${item.requestedEventImage}`}
+              alt={item.requestedIdName}
               className="object-cover w-full h-full"
             />
             <div className="absolute top-1 right-1 bg-white rounded-full p-1 shadow">
@@ -154,7 +156,7 @@ export default function CustomizedCheckoutPage() {
           </div>
 
           <div className="flex-1 space-y-1">
-            <h3 className="font-medium text-amber-800 capitalize">{item.name}</h3>
+            <h3 className="font-medium text-amber-800 capitalize">{item.requestedIdName}</h3>
 
             <div className="bg-green-100 text-green-800 border border-green-300 px-2 py-1 rounded-full text-xs inline-flex items-center">
               <span className="w-2 h-2 rounded-full bg-green-500 mr-1"></span>

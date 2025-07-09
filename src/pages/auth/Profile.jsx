@@ -11,6 +11,7 @@ import { fetchUserData } from "../../redux/userSlice";
 import MyOrders from "./myOrder";
 import MyCustomOrders from "./MyCustomOrders";
 import { User, Mail, Phone, Shield, LogIn, Home, MapPin, Globe, Hash, Flag, Calendar, VenusAndMars } from 'lucide-react';
+import MyCustomConfirmedOrders from "./MyCustomConfirmedOrders";
 Modal.setAppElement('#root')
 
 
@@ -507,6 +508,15 @@ const Profile = () => {
     }`}
     onClick={() => setActiveTab('accordion3')}
   >
+    My Custom Requests
+  </button>
+    <button
+    className={`px-2 py-1 rounded-lg text-xs sm:text-sm border transition-all duration-200 ${activeTab === 'accordion4'
+      ? 'bg-black text-white border-black'
+      : 'bg-white text-black border-gray-300'
+    }`}
+    onClick={() => setActiveTab('accordion4')}
+  >
     My Custom Orders
   </button>
 </div>
@@ -693,6 +703,18 @@ const Profile = () => {
 
               <div id="accOverview" className="animate-nk-acc-tab block space-y-12 px-4">
                 <MyCustomOrders></MyCustomOrders>
+              </div>
+            </div>
+          )}
+
+
+           {activeTab === 'accordion4' && (
+            <div className="animate-nk-acc-tab block space-y-12 px-4">
+
+
+
+              <div id="accOverview" className="animate-nk-acc-tab block space-y-12 px-4">
+               <MyCustomConfirmedOrders userData={userData}></MyCustomConfirmedOrders>
               </div>
             </div>
           )}

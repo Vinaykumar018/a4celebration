@@ -117,21 +117,21 @@ const DecorationsDetailsPage = () => {
             pinCode: pincode
           }
         );
-        toast.success('Booking details updated!');
+        toast.success('Cart details updated!');
       } else {
         // Add new item
         await addToCart({
           userID: userData?.data?._id,
           items: [cartItem]
         });
-        toast.success('Decoration service booked!');
+        toast.success('Added to cart!');
       }
 
       setTimeout(() => {
         navigate('/cart');
       }, 1500);
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to update booking');
+      toast.error(error.response?.data?.message || 'Failed to update cart');
       console.error(error);
     } finally {
       setIsProcessing(false);

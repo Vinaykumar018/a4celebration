@@ -37,6 +37,8 @@ import AboutUs from "../pages/about-us/AboutUs";
 import PrivacyPolicy from "../pages/privacy-policy/PrivacyPolicy";
 import TermsOfService from "../pages/terms-conditions/Terms";
 import RefundPolicy from "../pages/refund/Refund";
+import ForgetPassword from "../components/authentication/ForgetPassword";
+import ProfileCustomOrderConfirmation from "../pages/orders/ProfileCustomizedOrderConfirmation";
 const RoutesComponent = () => {
 
 
@@ -67,6 +69,7 @@ const RoutesComponent = () => {
       <Route path="/login" element={<LoginPage></LoginPage>} />
       <Route path="/register" element={<RegisterPage></RegisterPage>} />
       <Route path="/profile" element={<Profile></Profile>} />
+      <Route path="/forget-password" element={<ForgetPassword></ForgetPassword>} />
 
       <Route path="/event-management/service/:slug" element={<EventManagementDetailsPage />} />
 
@@ -124,6 +127,12 @@ const RoutesComponent = () => {
         path="/profile/:orderId"
         element={
           isAuthenticated ? <ProfileOrderConfirmation></ProfileOrderConfirmation> : <Navigate to="/login" />
+        }
+      />
+       <Route
+        path="/profile/custom/:orderId"
+        element={
+          isAuthenticated ?<ProfileCustomOrderConfirmation></ProfileCustomOrderConfirmation> : <Navigate to="/login" />
         }
       />
 

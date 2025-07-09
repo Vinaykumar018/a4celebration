@@ -2,6 +2,8 @@ import React from 'react';
 import { motion } from "framer-motion";
 import { Link } from 'react-router-dom';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
+import Lottie from 'lottie-react';
+import animationData from './Animation - 1751703073724.json'; // Replace with your Lottie file path
 
 const SimpleCard2 = ({
   title = "Featured Services",
@@ -40,6 +42,29 @@ const SimpleCard2 = ({
     }).format(price)
   }
 
+  // Empty state handling
+  if (services.length === 0) {
+    return (
+      <section className="bg-white rashi_wrapper mt-2" id="zodiac_Sign">
+        <div className="w-full flex flex-col items-center justify-center py-12">
+          <div className="w-64 h-64">
+            <Lottie 
+              animationData={animationData} 
+              loop={true} 
+              autoplay={true}
+            />
+          </div>
+          <h3 className="text-lg font-medium text-gray-600 mt-4">
+            No items found
+          </h3>
+          <p className="text-sm text-gray-500 mt-2">
+            We couldn't find any event management services at the moment
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="bg-white rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="w-full sm:px-0 px-0 ">
@@ -58,7 +83,7 @@ const SimpleCard2 = ({
                   whileTap={{ scale: 0.98 }}
                 >
                   {/* Fixed Image Section */}
-                  <div className="w-full h-48 md:h-56 overflow-hidden"> {/* Set fixed height */}
+                  <div className="w-full h-48 md:h-56 overflow-hidden">
                     <img
                       src={service.featured_image ? "https://a4celebration.com/api/" + service.featured_image : baseImageUrl}
                       alt={service.name}
@@ -66,7 +91,6 @@ const SimpleCard2 = ({
                     />
                   </div>
 
-                  {/* Content Section remains same */}
                   {/* Content Section */}
                   <div className="sign_box_cont p-5 text-center">
                     <h4 className="text-md font-medium mb-1 font-semibold mb-2 line-clamp-2">

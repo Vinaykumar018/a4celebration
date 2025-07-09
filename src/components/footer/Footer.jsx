@@ -1,6 +1,8 @@
 import React from "react";
 import footer from '../../assets/A4 Celebration 1 (3).png'
 import { Link } from "react-router-dom";
+import { FaMapMarkerAlt, FaPhone, FaEnvelope, FaClock, FaInstagram, FaWhatsapp, FaFacebook, FaTwitter } from 'react-icons/fa';
+
 
 const Footer = () => {
     return (
@@ -96,20 +98,26 @@ const Footer = () => {
 
   <div className="mt-6">
     <h6 className="text-gray-400 mb-3">Follow Us</h6>
-    <div className="flex space-x-4">
-      <Link to="https://instagram.com" className="text-amber-400 hover:text-amber-300 text-xl transition">
-        <i className="fab fa-instagram"></i>
-      </Link>
-      <Link to="https://facebook.com" className="text-amber-400 hover:text-amber-300 text-xl transition">
-        <i className="fab fa-facebook"></i>
-      </Link>
-      <Link to="https://pinterest.com" className="text-amber-400 hover:text-amber-300 text-xl transition">
-        <i className="fab fa-pinterest"></i>
-      </Link>
-      <Link to="https://tiktok.com" className="text-amber-400 hover:text-amber-300 text-xl transition">
-        <i className="fab fa-tiktok"></i>
-      </Link>
-    </div>
+     <div className="flex gap-4">
+                    <a href="https://www.instagram.com/a4celebration/" className="p-1 bg-black text-white rounded-full hover:bg-yellow-600 transition">
+                      <FaInstagram className="text-xl" />
+                    </a>
+                    <a
+                      href="https://wa.me/918750200899"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 p-1 bg-black text-white rounded-full hover:bg-yellow-600 transition"
+                    >
+                      <FaWhatsapp className="text-xl" />
+    
+                    </a>
+                    <a href="https://www.facebook.com/profile.php?id=61562203856563" className="p-1 bg-black text-white rounded-full hover:bg-yellow-600 transition">
+                      <FaFacebook className="text-xl" />
+                    </a>
+                    <a href="#" className="p-1 bg-black text-white rounded-full hover:bg-yellow-600 transition">
+                      <FaTwitter className="text-xl" />
+                    </a>
+                  </div>
   </div>
 </div>
                 </div>

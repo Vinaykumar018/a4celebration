@@ -34,7 +34,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
 
 
     const transformToOrderSchema = () => {
-       
+
         const totalAmount = cartItems.reduce(
             (sum, item) => sum + (item.price * (item.quantity || 1)),
             0
@@ -77,9 +77,9 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                     quantity: item.quantity
                 })),
                 lastUpdated: new Date()
-            },deliveryNotes: cartItems[0]?.service_date && cartItems[0]?.service_time
-  ? `Service requested for ${cartItems[0].service_date} between ${cartItems[0].service_time}`
-  : 'Your order will be delivered in 7 to 10 days',
+            }, deliveryNotes: cartItems[0]?.service_date && cartItems[0]?.service_time
+                ? `Service requested for ${cartItems[0].service_date} between ${cartItems[0].service_time}`
+                : 'Your order will be delivered in 7 to 10 days',
 
             discountApplied: 0,
             shippingMethod: 'Standard Delivery'
@@ -90,7 +90,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
 
 
 
-     const validateFields = () => {
+    const validateFields = () => {
         const requiredFields = {
             username: username.trim(),
             contactNumber: contactNumber.trim(),
@@ -128,23 +128,28 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
         return true;
     };
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // ... other functions remain the same until handlePlaceOrder ...
 
     const handlePlaceOrder = async (event) => {
         event.preventDefault();
+
+        // Prevent multiple submissions
+        if (isSubmitting) return;
+
         if (!validateFields()) {
             return;
         }
+
+        setIsSubmitting(true);
         const orderData = transformToOrderSchema();
 
         try {
             if (paymentMethod === "razorpay") {
                 // Create order on backend first
                 const response = await placeOrder(orderData);
-
-
                 const { order, razorpayOrderId } = response.data;
-
-
 
                 // Initialize Razorpay payment
                 const options = {
@@ -171,17 +176,17 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                                 }
                             );
 
-
-
                             if (verificationResponse.data.status === 'success') {
                                 toast.success("Payment Successful");
                                 // Add a small delay before navigation
                                 setTimeout(() => {
                                     clearCart(userData._id);
+                                    setIsSubmitting(false);
                                     navigate(`/order/${order.order_id}`);
                                 }, 2000);
                             }
                         } catch (error) {
+                            setIsSubmitting(false);
                             toast.error("Payment failed");
                             console.error('Payment verification failed:', error);
                             alert(error.response?.data?.message || 'Payment verification failed. Please contact support.');
@@ -191,6 +196,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                     theme: { color: "#F37254" },
                     modal: {
                         ondismiss: function () {
+                            setIsSubmitting(false);
                             alert('Payment window closed. Your order is not confirmed.');
                         }
                     }
@@ -199,15 +205,16 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
                 const razorpay = new window.Razorpay(options);
                 razorpay.open();
             } else {
-
+                // For COD orders
                 const response = await placeOrder(orderData);
-
                 clearCart(userData._id);
+                setIsSubmitting(false);
                 navigate(`/order/${response.data.order.order_id}`);
             }
         } catch (error) {
+            setIsSubmitting(false);
             console.error('Order failed:', error);
-            alert('Order placement failed. Please try again.');
+            toast.error('Order placement failed. Please try again.');
         }
     };
 
@@ -572,11 +579,41 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData }) =
             {/* Submit Button */}
             <button
                 type="submit"
-                className="w-full py-4 text-lg rounded-xl font-bold bg-gradient-to-r from-amber-500 to-amber-500 hover:from-amber-600 hover:to-amber-600 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2"
+                disabled={isSubmitting}
+                className={`w-full py-4 text-lg rounded-xl font-bold bg-gradient-to-r from-amber-500 to-amber-500 hover:from-amber-600 hover:to-amber-600 text-white shadow-lg hover:shadow-xl transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''
+                    }`}
             >
-                <Sparkles className="h-5 w-5" />
-                Complete Your Celebration Booking
-                <Sparkles className="h-5 w-5" />
+                {isSubmitting ? (
+                    <>
+                        <svg
+                            className="animate-spin h-5 w-5 text-white"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                            ></circle>
+                            <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            ></path>
+                        </svg>
+                        Processing Your Booking...
+                    </>
+                ) : (
+                    <>
+                        <Sparkles className="h-5 w-5" />
+                        Complete Your Celebration Booking
+                        <Sparkles className="h-5 w-5" />
+                    </>
+                )}
             </button>
         </form>
     );

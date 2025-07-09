@@ -202,16 +202,22 @@ const TopNavbar = () => {
               <User className="h-5 w-5 mr-2" /> Log In
             </button>
           )}
-          <Link to="/help" className="flex items-center text-gray-700 hover:text-amber-500">
+          <Link to="/help" className="flex items-center text-gray-700 hover:text-amber-500" onClick={()=>{
+            setIsMobileMenuOpen(false)
+          }}>
             <HelpCircle className="h-5 w-5 mr-2" /> Help Center
           </Link>
-          <Link to="/wishlist" className="flex items-center text-gray-700 hover:text-amber-500">
+          <Link to="/wishlist" className="flex items-center text-gray-700 hover:text-amber-500" onClick={()=>{
+            setIsMobileMenuOpen(false)
+          }}>
             <Heart className="h-5 w-5 mr-2" /> Wishlist
           </Link>
-          <Link to="/cart" className="flex items-center text-gray-700 hover:text-amber-500">
+          <Link to="/cart" className="flex items-center text-gray-700 hover:text-amber-500" onClick={()=>{
+            setIsMobileMenuOpen(false)
+          }}>
             <ShoppingCart className="h-5 w-5 mr-2" /> Cart
           </Link>
-          <div className="flex items-center text-gray-700 hover:text-amber-500" onClick={handleOpenModal}>
+          <div className="flex items-center text-gray-700 hover:text-amber-500" onClick={handleOpenModal} >
             <MapPin className="h-5 w-5 mr-2 text-amber-500" /> Kanpur
           </div>
         </div>

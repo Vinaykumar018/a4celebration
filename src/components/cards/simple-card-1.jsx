@@ -6,6 +6,8 @@ import 'swiper/swiper-bundle.css';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { EyeIcon } from 'lucide-react';
+import Lottie from 'lottie-react';
+import animationData from './Animation - 1751703073724.json'; // Replace with your Lottie file path
 
 const SimpleCard1 = ({
   title = "Featured Services",
@@ -50,7 +52,6 @@ const SimpleCard1 = ({
     },
   };
 
-
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-IN", {
       style: "currency",
@@ -59,11 +60,31 @@ const SimpleCard1 = ({
     }).format(price)
   }
 
+  if (services.length === 0) {
+    return (
+      <section className="bg-white rashi_wrapper mt-2" id="zodiac_Sign">
+        <div className="w-full flex flex-col items-center justify-center py-12">
+          <div className="w-64 h-64">
+            <Lottie 
+              animationData={animationData} 
+              loop={true} 
+              autoplay={true}
+            />
+          </div>
+          <h3 className="text-lg font-medium text-gray-600 mt-4">
+            No items found
+          </h3>
+          <p className="text-sm text-gray-500 mt-2">
+            We couldn't find any services matching your criteria
+          </p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="bg-white rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="w-full">
-        {/* ... your existing heading code ... */}
-
         <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-4 auto-rows-fr">
           {services?.map((service, index) => {
             const words = service.name.split(" ");
@@ -82,10 +103,9 @@ const SimpleCard1 = ({
                     style={{
                       borderRadius: "16px",
                       border: `1px ${themeColor} solid`,
-                      minHeight: '280px' // optional minimum height
+                      minHeight: '280px'
                     }}
                   >
-                    {/* Image Section - Fixed Height */}
                     <div className="sign_box_img flex justify-center mb-2 h-40">
                       <img
                         src={`${"https://a4celebration.com/api/" + service.featured_image}`}
@@ -94,7 +114,6 @@ const SimpleCard1 = ({
                       />
                     </div>
 
-                    {/* Content Section - Flex Grow */}
                     <div className="sign_box_cont text-center p-1 flex flex-col flex-grow">
                       <h4 className="text-sm font-medium mb-1 line-clamp-2">
                         {service.name}
@@ -110,7 +129,7 @@ const SimpleCard1 = ({
                         <p className="text-xs text-gray-600 mb-1">Price: {formatPrice(service.price)}</p>
                       )}
 
-                      <div className="mt-auto flex justify-center"> {/* Added flex container */}
+                      <div className="mt-auto flex justify-center">
                         <Link
                           to={`${sectionSlug}/${service.slug_url}`}
                           state={{
