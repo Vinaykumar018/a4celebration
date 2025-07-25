@@ -154,8 +154,8 @@ const GiftsDetailsPage = () => {
   };
 
   const calculateDiscount = () => {
-    if (!serviceData.isOffer) return 0;
-    return Math.round((1 - serviceData.price / (serviceData.price * 1.12)) * 100);
+    if (!serviceData.mrp_price) return 0;
+    return Math.round((1 - serviceData.price / (serviceData.mrp_price )) * 100);
   };
 
   const formatPrice = (price) => {
@@ -173,6 +173,10 @@ const GiftsDetailsPage = () => {
     if (!imagePath) return '/images/placeholder-product.jpg';
     return imagePath.startsWith('http') ? imagePath : `https://a4celebration.com/api/${imagePath}`;
   };
+
+  useEffect(() => {
+  setMainImage(serviceData.featured_image); // Reset to new product's image
+}, [serviceData]); // Trigger when `serviceData` updates
 
   return (
     <>
@@ -260,16 +264,16 @@ const GiftsDetailsPage = () => {
                 <span className="text-2xl font-bold text-amber-700 mr-2">
                   {formatPrice(serviceData.price)}
                 </span>
-                {serviceData.isOffer && (
+               
                   <>
                     <span className="text-gray-500 line-through">
-                      {formatPrice(serviceData.price * 1.12)}
+                      {formatPrice(serviceData.mrp_price)}
                     </span>
                     <span className="ml-3 bg-amber-100 text-amber-800 text-sm font-medium px-2 py-1 rounded-full">
                       Save {calculateDiscount()}% ✨
                     </span>
                   </>
-                )}
+              
               </div>
 
               {/* Rating Section */}
@@ -331,8 +335,8 @@ const GiftsDetailsPage = () => {
               <div className="flex space-x-4 mt-8">
                 <button
                   onClick={handleBookNow}
-                  disabled={!pincode || isProcessing}
-                  className={`bg-gradient-to-r from-amber-500 to-amber-600 flex gap-2 items-center justify-center text-white px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 transition-all transform shadow-lg min-w-[150px] ${!pincode || isProcessing ? 'opacity-50 cursor-not-allowed' : 'hover:from-amber-600 hover:to-amber-700 hover:scale-[1.02] hover:shadow-xl'
+                  disabled={!isDeliveryAvailable || isProcessing}
+                  className={`bg-gradient-to-r from-amber-500 to-amber-600 flex gap-2 items-center justify-center text-white px-6 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-2 transition-all transform shadow-lg min-w-[150px] ${!isDeliveryAvailable || isProcessing ? 'opacity-50 cursor-not-allowed' : 'hover:from-amber-600 hover:to-amber-700 hover:scale-[1.02] hover:shadow-xl'
                     }`}
                 >
                   {isProcessing ? (

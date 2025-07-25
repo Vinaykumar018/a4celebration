@@ -85,7 +85,7 @@ const SimpleCard1 = ({
   return (
     <section className="bg-white rashi_wrapper mt-2" id="zodiac_Sign">
       <div className="w-full">
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-4 auto-rows-fr">
+        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-4 auto-rows-fr">
           {services?.map((service, index) => {
             const words = service.name.split(" ");
             return (
@@ -125,9 +125,14 @@ const SimpleCard1 = ({
                         </div>
                       )}
 
-                      {showPrice && (
-                        <p className="text-xs text-gray-600 mb-1">Price: {formatPrice(service.price)}</p>
-                      )}
+                     {showPrice && (
+  <p className="mb-2 text-xs text-gray-600 ">
+    Price: <span className="text-gray-600 font-medium">{formatPrice(service.price)}</span>
+    <span className="ml-2 text-red-400 line-through font-light">
+      {formatPrice(service.mrp_price)}
+    </span>
+  </p>
+)}
 
                       <div className="mt-auto flex justify-center">
                         <Link

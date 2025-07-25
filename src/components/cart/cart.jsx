@@ -7,6 +7,8 @@ import { Trash2, ShoppingBag, Gift, Info, Calendar, Clock } from "lucide-react";
 import { useDispatch } from "react-redux";
 import useUserCartData from "../../hooks/useUserCartData";
 import { useCart } from '../../hooks/cartHook';
+import axios from "axios";
+import { getCoupon } from "../../services/coupon-service/coupon";
 
 
 const Cart = () => {
@@ -67,6 +69,22 @@ console.log(cart)
     }
   };
 
+
+ const [coupons, setCoupons] = useState([]);
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const response = await getCoupon();
+        setCoupons(response);
+      } catch (error) {
+        console.error('Error fetching coupons:', error);
+      }
+    };
+    fetchCoupons();
+  }, []);
+
+  console.log(coupons)
+
   return (
     <div className="min-h-screen bg-white font-poppins">
       <ToastContainer />
@@ -125,6 +143,7 @@ console.log(cart)
                         className="text-gray-500 hover:text-red-500 hover:bg-red-50 p-2 rounded-full"
                         onClick={() => handleRemoveItem(item.product_id)}
                       >
+                        {console.log(item)}
                         <Trash2 className="h-5 w-5" />
                       </button>
                     </div>
@@ -168,12 +187,23 @@ console.log(cart)
 
 
                             <div className="space-y-2">
-                              <div className="flex items-center gap-2">
-                                <div className="flex flex-col space-y-1">
-                                  <p className="text-xs text-green-600">Get it by Monday, Jul 7</p>
-                                  <p className="text-xs text-gray-600">When you order by 8:00 Today</p>
-                                </div>
-                              </div>
+                              {item.product_id.startsWith("PROD-GIFT") && (
+  <div className="flex items-center gap-2">
+    <div className="flex flex-col space-y-1">
+      <p className="text-xs text-green-600">
+        Get it by {new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString("en-US", {
+          weekday: "long",
+          month: "short",
+          day: "numeric",
+        })}
+      </p>
+      <p className="text-xs text-gray-600">
+        When you order by 8:00 Today
+      </p>
+    </div>
+  </div>
+)}
+
 
                               <div className="flex flex-col space-y-1 mt-2">
                                 <p className="text-sm text-gray-700">
@@ -193,15 +223,7 @@ console.log(cart)
                         </div>
                       </div>
 
-                      <div className="mt-4 pt-4 border-t border-amber-100">
-                        <p className="text-xs text-gray-600">
-                          <span className="font-medium">A4 Celebration:</span> Earn a ₹20 statement credit when you spend
-                          ₹29 on eligible purchases.
-                          <Link to="#" className="text-amber-700 hover:underline ml-1">
-                            Learn more
-                          </Link>
-                        </p>
-                      </div>
+                      
                     </div>
                   </div>
                 </div>
@@ -217,18 +239,105 @@ console.log(cart)
                   <h2 className="text-center text-amber-800 font-bold">Order Summary</h2>
                 </div>
                 <div className="p-6 space-y-6">
-                  <div className="flex items-center space-x-2">
-                    <input
-                      type="text"
-                      placeholder="Enter Promo code here..."
-                      className="border border-amber-200 focus:border-amber-400 px-3 py-2 rounded w-full"
-                      value={promoCode}
-                      onChange={(e) => setPromoCode(e.target.value)}
-                    />
-                    <button className="border border-amber-200 text-amber-700 hover:bg-amber-100 px-4 py-2 rounded">
-                      Apply
-                    </button>
-                  </div>
+                <div className="space-y-3">
+  {coupons.map((coupon) => {
+    // Determine coupon status
+    const isExpired = new Date(coupon.expiryDate) < new Date();
+    const isUsedUp = coupon.usedCount >= coupon.usageLimit;
+    const isActive = coupon.isActive && !isExpired && !isUsedUp;
+
+    // Choose color scheme based on status
+    let colorScheme = {
+      bgFrom: 'from-amber-50',
+      bgTo: 'to-amber-100',
+      border: 'border-amber-200',
+      textCode: 'text-amber-700',
+      textDesc: 'text-amber-600',
+      textDate: 'text-amber-500',
+      textValue: 'text-amber-700',
+      badgeBg: 'bg-amber-200',
+      badgeText: 'text-amber-800'
+    };
+
+    if (!isActive) {
+      colorScheme = {
+        bgFrom: 'from-rose-50',
+        bgTo: 'to-rose-100',
+        border: 'border-rose-200',
+        textCode: 'text-rose-700',
+        textDesc: 'text-rose-600',
+        textDate: 'text-rose-500',
+        textValue: 'text-rose-700',
+        badgeBg: 'bg-rose-200',
+        badgeText: 'text-rose-800'
+      };
+    } else if (coupon.discountType === 'fixed') {
+      colorScheme = {
+        bgFrom: 'from-blue-50',
+        bgTo: 'to-blue-100',
+        border: 'border-blue-200',
+        textCode: 'text-blue-700',
+        textDesc: 'text-blue-600',
+        textDate: 'text-blue-500',
+        textValue: 'text-blue-700',
+        badgeBg: 'bg-blue-200',
+        badgeText: 'text-blue-800'
+      };
+    }
+
+    // Format discount value
+    const discountValue = coupon.discountType === 'percentage' 
+      ? `${coupon.discountValue}% OFF` 
+      : `₹${coupon.discountValue} OFF`;
+
+    // Format expiry date
+    const expiryDate = isExpired 
+      ? 'Expired' 
+      : `Valid until ${new Date(coupon.expiryDate).toLocaleDateString()}`;
+
+    return (
+      <div 
+        key={coupon._id}
+        className={`relative p-4 rounded-lg bg-gradient-to-r ${colorScheme.bgFrom} ${colorScheme.bgTo} border-2 ${colorScheme.border} border-dashed ${!isActive ? 'opacity-70' : ''}`}
+      >
+        <div className="flex justify-between items-center">
+          <div>
+            <span className={`font-bold text-lg ${colorScheme.textCode}`}>
+              {coupon.code}
+            </span>
+            <p className={`text-sm ${colorScheme.textDesc}`}>
+              {coupon.discountType === 'percentage' 
+                ? `Get ${coupon.discountValue}% discount on your order`
+                : `Get ₹${coupon.discountValue} discount on your order`}
+            </p>
+            <p className={`text-xs ${colorScheme.textDate} mt-1`}>
+              {expiryDate}
+            </p>
+            {isUsedUp && (
+              <p className="text-xs text-rose-500 mt-1">
+                Usage limit reached
+              </p>
+            )}
+          </div>
+          <div className={`font-bold text-xl ${!isActive ? 'line-through' : ''} ${colorScheme.textValue}`}>
+            {discountValue}
+          </div>
+        </div>
+
+        {!isActive && (
+          <div className={`absolute top-0 right-0 ${colorScheme.badgeBg} ${colorScheme.badgeText} text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg`}>
+            {isExpired ? 'Expired' : isUsedUp ? 'Used Up' : 'Inactive'}
+          </div>
+        )}
+        {isActive && coupon.discountValue >= 20 && (
+          <div className={`absolute top-0 right-0 ${colorScheme.badgeBg} ${colorScheme.badgeText} text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg`}>
+            Hot Deal
+          </div>
+        )}
+      </div>
+    );
+  })}
+</div>
 
                   <hr className="bg-amber-100" />
 

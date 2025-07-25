@@ -59,9 +59,10 @@ export default function MyCustomConfirmedOrders({ userData }) {
   };
 
   function handleTrackClick(orderID) {
-    navigate(`${orderID}`);
+    navigate(`${"custom/"+orderID}`);
   };
 
+ 
   const API_KEY = import.meta.env.VITE_API_KEY;
   const API_URL = import.meta.env.VITE_API_URL;
 

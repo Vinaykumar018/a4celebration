@@ -143,8 +143,8 @@ const DecorationsDetailsPage = () => {
   };
 
   const calculateDiscount = () => {
-    if (!serviceData.isOffer) return 0;
-    return Math.round((1 - serviceData.price / (serviceData.price * 1.12)) * 100);
+    if (!serviceData.mrp_price) return 0;
+    return Math.round((1 - serviceData.price / (serviceData.mrp_price)) * 100);
   };
 
   const formatPrice = (price) => {
@@ -162,6 +162,11 @@ const DecorationsDetailsPage = () => {
     if (!imagePath) return '/images/placeholder-product.jpg';
     return imagePath.startsWith('http') ? imagePath : `https://a4celebration.com/api/${imagePath}`;
   };
+
+
+  useEffect(() => {
+  setMainImage(serviceData.featured_image); // Reset to new product's image
+}, [serviceData]); // Trigger when `serviceData` updates
 
   return (
     <>
@@ -249,16 +254,14 @@ const DecorationsDetailsPage = () => {
                 <span className="text-2xl font-bold text-amber-700 mr-2">
                   {formatPrice(serviceData.price)}
                 </span>
-                {serviceData.isOffer && (
-                  <>
+              
                     <span className="text-gray-500 line-through">
-                      {formatPrice(serviceData.price * 1.12)}
+                      {formatPrice(serviceData.mrp_price)}
                     </span>
                     <span className="ml-3 bg-amber-100 text-amber-800 text-sm font-medium px-2 py-1 rounded-full">
                       Save {calculateDiscount()}% ✨
                     </span>
-                  </>
-                )}
+                
               </div>
 
               {/* Rating Section */}

@@ -3,89 +3,120 @@ import {
   Store,
   Truck,
   Undo2,
-  Lock
+  ShieldCheck,
+  BadgeCheck,
+  Users,
+  Star,
+  CreditCard,
+  IndianRupee
 } from 'lucide-react';
 
 const DeliveryInfo = () => {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
-
-        .font-poppins {
-          font-family: 'Poppins', sans-serif;
-        }
-
-        .font-playfair {
-          font-family: 'Playfair Display', serif;
-        }
-
-        .animate-pulse {
-          animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.5; }
-        }
-
-        .product-shadow {
-          box-shadow: 0 10px 25px -5px rgba(244, 114, 182, 0.2);
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+        .font-poppins { font-family: 'Poppins', sans-serif; }
       `}</style>
 
-      <div className="bg-amber-50 p-4 text-sm space-y-2 font-poppins rounded-lg shadow-sm product-shadow">
-        <p className="text-xl font-bold mb-4 text-amber-700 font-playfair">Get it in 7 days</p>
-
-        <div className="space-y-3">
-          {/* Store Pickup */}
-          <div className="flex items-start gap-2">
-            <Store className="w-4 h-4 text-amber-500 mt-1" />
-            <div>
-              <span className="font-semibold">Store Pickup: </span>
-              <span>Order now for pickup on <strong>Wed, Jul 7</strong> at Neykart Store. </span>
-              <span className="cursor-pointer text-amber-600 underline hover:text-amber-800">
-                Discover all pickup locations
-              </span>
-            </div>
+      <div className="bg-yellow-50 p-3 rounded-lg shadow-sm max-w-2xl mx-auto border border-yellow-100">
+        {/* Delivery Section */}
+        <div className="mb-3">
+          <div className="flex items-center gap-2 mb-2">
+            <Truck className="w-5 h-5 text-yellow-700" />
+            <h3 className="font-semibold text-yellow-900">Delivery Options</h3>
           </div>
-
-          {/* Shipping */}
-          <div className="flex items-start gap-2">
-            <Truck className="w-4 h-4 text-amber-500 mt-1" />
-            <div>
-              <span className="font-semibold">Shipping &amp; Delivery: </span>
-              <span>Available in your Area. </span>
-              <span className="cursor-pointer text-amber-600 underline hover:text-amber-800">
-                Enter your location
-              </span>
+          
+          <div className="space-y-2">
+            <div className="flex items-start gap-2 p-2 bg-white rounded-md border border-yellow-100">
+              <Store className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-medium text-yellow-900 text-sm">Services Orders</p>
+                <p className="text-gray-600 text-xs">On time (before 1 hr of requested)</p>
+              </div>
             </div>
-          </div>
-
-          {/* Easy Return */}
-          <div className="flex items-start gap-2">
-            <Undo2 className="w-4 h-4 text-amber-500 mt-1" />
-            <div>
-              <span className="font-semibold">Easy Return: </span>
-              <span>Return this item until Jul 22. </span>
-              <a href="#" className="text-amber-600 underline hover:text-amber-800">Return Policy</a>
+            
+            <div className="flex items-start gap-2 p-2 bg-white rounded-md border border-yellow-100">
+              <Truck className="w-4 h-4 text-yellow-600 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-medium text-yellow-900 text-sm">Ecommerce Orders</p>
+                <p className="text-gray-600 text-xs">3-7 business days delivery</p>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Trust symbols */}
-        <div className="pt-3">
-          <img
-            src="http://localhost:3001/image/trust-symbols_a.webp"
-            alt="transaction"
-            className="w-full h-auto object-contain"
-          />
+        {/* Payment Section */}
+        <div className="mb-3">
+          <div className="flex items-center gap-2 mb-2">
+            <ShieldCheck className="w-5 h-5 text-yellow-700" />
+            <h3 className="font-semibold text-yellow-900">Payment Methods</h3>
+          </div>
+          
+          <div className="grid grid-cols-3 gap-2 mb-2">
+            <div className="p-2 bg-white rounded-md border border-yellow-100 flex flex-col items-center">
+              <img 
+                src="https://masteriyo.com/wp-content/uploads/2023/12/razorpay-integration.webp" 
+                alt="Razorpay" 
+                className="h-10 object-contain mb-1"
+              />
+             <span className="text-xs text-yellow-800">RazorPay</span>
+            
+            </div>
+            
+            <div className="p-2 bg-white rounded-md border border-yellow-100 flex flex-col items-center">
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/f/fa/UPI-Logo.png" 
+                alt="Razorpay" 
+                className="h-10 object-cover mb-1"
+              />
+              <span className="text-xs text-yellow-800">UPI</span>
+            </div>
+            
+            <div className="p-2 bg-white rounded-md border border-yellow-100 flex flex-col items-center">
+             <img 
+                src="https://media.istockphoto.com/id/537487845/vector/payment-by-cash.jpg?s=612x612&w=0&k=20&c=ikEp0CWBCwizA4xdzFGUw1QO0FBGfjE1_iq-aOco8Dg=" 
+                alt="Razorpay" 
+                className="h-10 object-cover mb-1"
+              />
+               <span className="text-xs text-yellow-800">COD</span>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-1 text-xs text-yellow-700">
+            <ShieldCheck className="w-3 h-3" />
+            <span>100% Secure Payments</span>
+          </div>
         </div>
 
-        {/* Secure Transaction */}
-        <div className="flex items-center gap-2 mt-4">
-          <Lock className="w-5 h-5 text-amber-500" />
-          <span className="text-amber-600">Secure Transaction</span>
+        {/* Trust Badges */}
+        <div className="bg-yellow-100 p-2 rounded-md">
+          <div className="flex items-center gap-2 mb-2">
+            <Star className="w-5 h-5 text-yellow-700" />
+            <h3 className="font-semibold text-yellow-900 text-sm">Why Customers Trust Us</h3>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="flex items-center gap-1">
+              <Users className="w-4 h-4 text-yellow-700" />
+              <span>10K+ Customers</span>
+            </div>
+            
+            <div className="flex items-center gap-1">
+              <BadgeCheck className="w-4 h-4 text-yellow-700" />
+              <span>Original Images</span>
+            </div>
+            
+            <div className="flex items-center gap-1">
+              <Undo2 className="w-4 h-4 text-yellow-700" />
+              <span>Expert Decorators</span>
+            </div>
+            
+            <div className="flex items-center gap-1">
+              <ShieldCheck className="w-4 h-4 text-yellow-700" />
+              <span>Secure Payments</span>
+            </div>
+          </div>
         </div>
       </div>
     </>

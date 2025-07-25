@@ -147,8 +147,13 @@ const RelatedSectionCardA = ({
                       )}
 
                       {showPrice && (
-                        <p className="text-xs text-gray-600 mb-2">Price:   {formatPrice(service.price)}</p>
-                      )}
+  <p className="mb-2 text-xs text-gray-600 ">
+    Price: <span className="text-gray-600 font-medium">{formatPrice(service.price)}</span>
+    <span className="ml-2 text-red-400 line-through font-light">
+      {formatPrice(service.mrp_price)}
+    </span>
+  </p>
+)}
 
                       <div className="mt-auto">
                         <Link

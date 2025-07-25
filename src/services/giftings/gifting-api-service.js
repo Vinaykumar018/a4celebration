@@ -18,7 +18,10 @@ export const getAllProducts = async () => {
         'Content-Type': 'application/json',
       },
     });
-    return response.data;
+    const activeProducts = response.data.data.filter(product => product.status === "active");
+  
+ 
+  return activeProducts;
   } catch (error) {
     console.error('Error fetching products:', error);
     throw error;

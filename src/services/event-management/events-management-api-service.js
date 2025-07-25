@@ -11,8 +11,11 @@ export const getAllEvents = async () => {
         'Content-Type': 'application/json',
       },
     });
-    return response.data;
-  } catch (error) {
+    const activeProducts = response.data.data.filter(product => product.status === "active");
+  
+ 
+  return activeProducts;
+  } catch (error) {z
     console.error('Error fetching wedding events:', error);
     throw error;
   }

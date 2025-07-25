@@ -223,6 +223,8 @@ const EventManagementDetailsPage = () => {
   return () => console.log('Component unmounted');
 }, []);
 
+
+
   return (
     <div className="bg-white min-h-screen">
 

@@ -37,6 +37,8 @@ export const { startLoading, setUserData, setError, logout } = userSlice.actions
 
 export const fetchUserData = (userId) => async (dispatch) => {
   dispatch(startLoading());
+  console.log("hello");
+
   try {
     const response = await axios.get(`${API_URL}user/get-user/${userId}`, {
       headers: {
@@ -44,14 +46,20 @@ export const fetchUserData = (userId) => async (dispatch) => {
         'Content-Type': 'application/json',
       },
     });
-    if (response.data) {
+
+    const userData = response.data?.data;
+    console.log(userData?.status === "active");
+
+    if (userData && userData.status === "active") {
       dispatch(setUserData(response.data));
     } else {
-      dispatch(setError('No data found'));
+      dispatch(setError('User is not active'));
     }
+
   } catch (error) {
     dispatch(setError(error.message));
   }
 };
+
 
 export default userSlice.reducer;

@@ -18,7 +18,7 @@ const useGiftHook = () => {
     setGiftLoading(true);
     try {
       const data = await getAllProducts();
-      setGiftList(data.data);
+      setGiftList(data);
     } catch (err) {
       setGiftError(err);
     } finally {

@@ -154,14 +154,14 @@ const CardTypeB = ({
                             <span className="font-bold" style={{ color: themeColor }}>
                               {formatPrice(service.price)}
                             </span>
-                            {service.isOffer && service.price && (
+                           
                               <span className="text-xs text-gray-500 line-through">
-                                {formatPrice(Math.round(service.price * 1.2))}
+                                {formatPrice(Math.round(service.mrp_price ))}
                               </span>
-                            )}
+                          
                           </div>
                         </div>
-                      )}
+          )}
                     </div>
 
                     {/* Content Section */}

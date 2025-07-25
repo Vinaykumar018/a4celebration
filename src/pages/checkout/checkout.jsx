@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import useUserCartData from "../../hooks/useUserCartData";
 import { fetchUserData } from "../../redux/userSlice";
-
+import { applyCoupon } from "../../services/coupon-service/coupon";
+import { useState } from "react";
 
 
 // Add this in your main CSS file or at the top of your component
@@ -42,10 +43,14 @@ const styles = `
 export default function CheckoutPage() {
 
 
-
+  const [couponCode, setCouponCode] = useState("");
+  const [couponApplied, setCouponApplied] = useState(false);
+  const [couponMessage, setCouponMessage] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.user.userData?.data);
-  console.log(userData, "on refresh")
+
   useEffect(() => {
 
     const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -54,13 +59,76 @@ export default function CheckoutPage() {
       dispatch(fetchUserData(userId));
     }
   }, [dispatch]);
+  
 
 
   const { cartItems, isLoading } = useUserCartData();
   const currencySymbol = "₹";
+  console.log(cartItems)
 
 
+  // Calculate totals with proper decimal handling
+const subtotal = parseFloat(cartItems.reduce(
+  (sum, item) => sum + (item.price * item.quantity), 
+  0
+).toFixed(2));
 
+ const handleApplyCoupon = async () => {
+  if (!couponCode.trim()) {
+    setCouponMessage("Please enter a coupon code");
+    return;
+  }
+
+  setIsApplyingCoupon(true);
+
+  try {
+    const result = await applyCoupon(couponCode.trim()); // Trim the coupon code before sending
+   
+
+    if (result.valid) {
+      // Handle percentage or fixed discount
+      let calculatedDiscount = 0;
+      if (result.discountType === "percentage") {
+        calculatedDiscount = (subtotal * result.discountValue) / 100;
+        // Round to 2 decimal places for currency
+        calculatedDiscount = parseFloat(calculatedDiscount.toFixed(2));
+      } else if (result.discountType === "fixed") {
+        calculatedDiscount = Math.min(result.discountValue, subtotal); // Ensure discount doesn't exceed total
+      }
+
+      // Ensure total doesn't go negative
+      const newTotal = subtotal - calculatedDiscount;
+      if (newTotal < 0) {
+        calculatedDiscount = subtotal;
+      }
+
+      setDiscountAmount(calculatedDiscount);
+      setCouponApplied(true);
+      setCouponMessage(result.message || "Coupon applied successfully!");
+    } else {
+      setCouponApplied(false);
+      setDiscountAmount(0);
+      setCouponMessage(result.message || "Invalid coupon code");
+    }
+  } catch (error) {
+    console.error("Coupon application error:", error);
+    setCouponApplied(false);
+    setDiscountAmount(0);
+    setCouponMessage(error.message || "Failed to apply coupon. Please try again.");
+  } finally {
+    setIsApplyingCoupon(false);
+  }
+};
+
+const handleRemoveCoupon = () => {
+  setCouponCode("");
+  setCouponApplied(false);
+  setDiscountAmount(0);
+  setCouponMessage("");
+};
+
+
+const total = Math.max(0, (subtotal - discountAmount)) // Ensure total doesn't go negative
 
 
   return (
@@ -132,21 +200,21 @@ export default function CheckoutPage() {
                               {item.stock_left > 0 ? "Ready to Celebrate!" : "Out of Stock"}
                             </div>
                             {(item.service_date || item.service_time) && (
-  <>
-    {item.service_date && (
-      <div className="flex items-center gap-1 text-xs text-gray-600">
-        <Calendar className="h-3 w-3 text-amber-500" />
-        <span>Date: {new Date(item.service_date).toLocaleDateString()}</span>
-      </div>
-    )}
-    {item.service_time && (
-      <div className="flex items-center gap-1 text-xs text-gray-600">
-        <Clock className="h-3 w-3 text-amber-500" />
-        <span>Time: {item.service_time}</span>
-      </div>
-    )}
-  </>
-)}
+                              <>
+                                {item.service_date && (
+                                  <div className="flex items-center gap-1 text-xs text-gray-600">
+                                    <Calendar className="h-3 w-3 text-amber-500" />
+                                    <span>Date: {new Date(item.service_date).toLocaleDateString()}</span>
+                                  </div>
+                                )}
+                                {item.service_time && (
+                                  <div className="flex items-center gap-1 text-xs text-gray-600">
+                                    <Clock className="h-3 w-3 text-amber-500" />
+                                    <span>Time: {item.service_time}</span>
+                                  </div>
+                                )}
+                              </>
+                            )}
 
                             <div className="flex justify-between items-center mt-1">
                               <span className="text-xs">Qty: {item.quantity}</span>
@@ -165,7 +233,7 @@ export default function CheckoutPage() {
                         <span className="text-gray-600">Subtotal ({cartItems.length} items):</span>
                         <span className="font-medium">
                           {currencySymbol}
-                          {cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                          {subtotal.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
@@ -183,8 +251,10 @@ export default function CheckoutPage() {
                         </span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span className="text-gray-600">Saving/Promo Code:</span>
-                        <span>-</span>
+                        <span className="text-gray-600">Discount:</span>
+                        <span className={`font-medium ${discountAmount > 0 ? 'text-green-600' : ''}`}>
+                          {discountAmount > 0 ? `-${currencySymbol}${discountAmount.toFixed(2)}` : '-'}
+                        </span>
                       </div>
 
                       <div className="my-2 bg-gradient-to-r from-transparent via-amber-200 to-transparent h-px"></div>
@@ -193,7 +263,7 @@ export default function CheckoutPage() {
                         <span className="text-amber-800">Total:</span>
                         <span className="text-amber-800">
                           {currencySymbol}
-                          {cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0).toFixed(2)}
+                          {total.toFixed(2)}
                         </span>
                       </div>
 
@@ -202,12 +272,34 @@ export default function CheckoutPage() {
                           <input
                             placeholder="🎁 Enter Promo code..."
                             className="border-2 border-amber-200 rounded-lg px-3 py-2 focus:border-amber-400 w-full focus:ring-2 focus:ring-amber-200 outline-none transition-all"
-                            value=""
+                            value={couponCode}
+                            onChange={(e) => setCouponCode(e.target.value)}
+                            disabled={couponApplied}
                           />
-                          <button className="border-2 border-amber-300 bg-amber-500 text-white hover:bg-amber-600 px-4 py-2 rounded-lg flex items-center shadow-sm hover:shadow-md transition-all">
-                            Apply
+                          <button
+                            onClick={couponApplied ? handleRemoveCoupon : handleApplyCoupon}
+                            disabled={isApplyingCoupon}
+                            className={`border-2 border-amber-300 ${couponApplied
+                                ? 'bg-green-500 text-white hover:bg-green-600'
+                                : 'bg-amber-500 text-white hover:bg-amber-600'
+                              } px-4 py-2 rounded-lg flex items-center shadow-sm hover:shadow-md transition-all`}
+                          >
+                            {isApplyingCoupon ? 'Applying...' : couponApplied ? 'Applied!' : 'Apply'}
                           </button>
                         </div>
+                        {couponMessage && (
+                          <p className={`mt-2 text-sm ${couponApplied ? 'text-green-600' : 'text-red-600'}`}>
+                            {couponMessage}
+                          </p>
+                        )}
+                        {couponApplied && (
+                          <button
+                            onClick={handleRemoveCoupon}
+                            className="mt-2 text-xs text-amber-700 hover:text-amber-900 underline"
+                          >
+                            Remove coupon
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -230,7 +322,13 @@ export default function CheckoutPage() {
 
             {/* Checkout Form (Bottom on mobile, left on desktop) */}
             <div className="lg:col-span-2 order-2 lg:order-1">
-              <UserOrderDetails cartItems={cartItems} currencySymbol={currencySymbol} userData={userData} />
+             <UserOrderDetails 
+  cartItems={cartItems} 
+  currencySymbol={currencySymbol} 
+  userData={userData} 
+  discountAmount={discountAmount}
+  total={total}
+/>
             </div>
           </div>
         </div>

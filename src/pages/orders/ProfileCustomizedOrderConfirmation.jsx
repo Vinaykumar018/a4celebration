@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getOrderById, getOrdersByProductId } from '../../services/decoration-orders/order-api';
+import { getOrderById } from '../../services/decoration-orders/order-api';
 import { CheckCircle, Truck, CreditCard, Package, User, MapPin, Calendar, Clock, XCircle, Loader2, ChevronRight } from "lucide-react";
 import ReceiptDownloadButton from './Receipt-order';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'react-toastify';
 
-export default function ProfileCustomOrderConfirmation() {
+export default function ProfileCustomizedOrderConfirmation() {
   const [isLoaded, setIsLoaded] = useState(false);
   const { orderId } = useParams();
   const [orderData, setOrderData] = useState(null);
@@ -16,9 +16,7 @@ export default function ProfileCustomOrderConfirmation() {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const data = await getOrdersByProductId(orderId);
-        console.log(data.data)
-
+        const data = await getOrderById(orderId);
         setOrderData(data?.data);
       } catch (err) {
         setError(err?.response?.data?.message || 'Failed to fetch order');
@@ -81,7 +79,7 @@ export default function ProfileCustomOrderConfirmation() {
     }
   };
 
-
+  
 
 
   if (loading) return (
@@ -89,15 +87,15 @@ export default function ProfileCustomOrderConfirmation() {
       <Loader2 className="w-12 h-12 animate-spin text-amber-500" />
     </div>
   );
-
+  
   if (error) return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center p-6 max-w-md bg-red-50 rounded-lg">
         <XCircle className="w-12 h-12 mx-auto text-red-500 mb-4" />
         <h2 className="text-xl font-bold text-red-700 mb-2">Error Loading Order</h2>
         <p className="text-gray-600 mb-4">{error}</p>
-        <Link
-          to="/profile"
+        <Link 
+          to="/profile" 
           className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors inline-block"
         >
           Back to Profile
@@ -105,15 +103,15 @@ export default function ProfileCustomOrderConfirmation() {
       </div>
     </div>
   );
-
+  
   if (!orderData) return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center p-6 max-w-md bg-amber-50 rounded-lg">
         <Package className="w-12 h-12 mx-auto text-amber-500 mb-4" />
         <h2 className="text-xl font-bold text-amber-700 mb-2">Order Not Found</h2>
         <p className="text-gray-600 mb-4">We couldn't find details for this order.</p>
-        <Link
-          to="/"
+        <Link 
+          to="/" 
           className="px-4 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors inline-block"
         >
           Continue Shopping
@@ -136,7 +134,7 @@ export default function ProfileCustomOrderConfirmation() {
       <div className="max-w-4xl mx-auto">
         {/* Success Animation */}
         <AnimatePresence>
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
@@ -179,7 +177,7 @@ export default function ProfileCustomOrderConfirmation() {
                 </motion.h1>
               </>
             )}
-
+            
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -204,36 +202,36 @@ export default function ProfileCustomOrderConfirmation() {
           className="mb-6"
         >
           <div className="mb-6">
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-amber-100">
-              <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-                <Truck className="w-5 h-5 mr-2 text-amber-600" />
-                Order Progress
-              </h3>
-
-              <div className="relative">
-                {/* Horizontal progress line */}
-                <div className="absolute left-4 right-4 top-1/2 h-0.5 bg-gray-200 -translate-y-1/2"></div>
-
-                <div className="flex justify-between relative z-10">
-                  {statusSteps.map((step, index) => (
-                    <div key={step.id} className="flex flex-col items-center" style={{ width: `${100 / statusSteps.length}%` }}>
-                      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mb-2
+  <div className="bg-white p-4 rounded-lg shadow-sm border border-amber-100">
+    <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+      <Truck className="w-5 h-5 mr-2 text-amber-600" />
+      Order Progress
+    </h3>
+    
+    <div className="relative">
+      {/* Horizontal progress line */}
+      <div className="absolute left-4 right-4 top-1/2 h-0.5 bg-gray-200 -translate-y-1/2"></div>
+      
+      <div className="flex justify-between relative z-10">
+        {statusSteps.map((step, index) => (
+          <div key={step.id} className="flex flex-col items-center" style={{ width: `${100/statusSteps.length}%` }}>
+            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mb-2
               ${step.active ? 'bg-amber-500 text-white' : 'bg-gray-200 text-gray-500'}`}>
-                        {step.active ? (
-                          <CheckCircle className="w-4 h-4" />
-                        ) : (
-                          <span className="text-xs font-medium">{index + 1}</span>
-                        )}
-                      </div>
-                      <h4 className={`text-xs sm:text-sm font-medium text-center ${step.active ? 'text-gray-900' : 'text-gray-500'}`}>
-                        {step.label}
-                      </h4>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {step.active ? (
+                <CheckCircle className="w-4 h-4" />
+              ) : (
+                <span className="text-xs font-medium">{index + 1}</span>
+              )}
             </div>
+            <h4 className={`text-xs sm:text-sm font-medium text-center ${step.active ? 'text-gray-900' : 'text-gray-500'}`}>
+              {step.label}
+            </h4>
           </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
         </motion.div>
 
         {/* Order Status Card */}
@@ -253,7 +251,7 @@ export default function ProfileCustomOrderConfirmation() {
                 {orderData?.orderDetails?.order_status || 'Unknown'}
               </span>
             </div>
-
+            
             <div className="p-4">
               <div className="flex flex-col md:flex-row md:items-center justify-between">
                 <div className="flex items-center mb-2 md:mb-0">
@@ -263,13 +261,13 @@ export default function ProfileCustomOrderConfirmation() {
                       new Date(orderData.orderDetails.lastUpdated).toLocaleString() : 'N/A'}
                   </span>
                 </div>
-
-
+                
+               
               </div>
-
+              
               {/* Status-specific messages */}
               {orderData?.orderDetails?.order_status?.toLowerCase() === 'processing' && (
-                <motion.div
+                <motion.div 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="mt-3 p-3 bg-blue-50 rounded text-sm text-blue-800"
@@ -277,9 +275,9 @@ export default function ProfileCustomOrderConfirmation() {
                   Your order is being processed. We'll notify you once it's confirmed.
                 </motion.div>
               )}
-
+              
               {orderData?.orderDetails?.order_status?.toLowerCase() === 'shipped' && (
-                <motion.div
+                <motion.div 
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="mt-3 p-3 bg-green-50 rounded text-sm text-green-800"
@@ -350,28 +348,43 @@ export default function ProfileCustomOrderConfirmation() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
           >
+            
+            {console.log(orderData)}
             <div className="bg-white border border-amber-200 rounded-lg shadow-sm h-full">
-              <div className="bg-amber-50 p-4 border-b border-amber-200">
-                <div className="flex items-center text-amber-700 font-semibold text-lg">
-                  <Calendar className="mr-2 h-5 w-5" />
-                  Delivery Information
-                </div>
-              </div>
-              <div className="p-4">
-                <div className="space-y-3">
-                  <div className="flex items-start">
-                    <Clock className="h-5 w-5 text-amber-500 mr-2 mt-0.5" />
-                    <p className="text-gray-700">{orderData?.deliveryNotes || 'No delivery notes available'}</p>
-                  </div>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-600">
-                      <span className="font-medium">Order Date:</span> {orderData?.orderDetails?.order_requested_date || 'N/A'} at{" "}
-                      {orderData?.orderDetails?.order_requested_time || 'N/A'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <div className="bg-amber-50 p-4 border-b border-amber-200">
+    <div className="flex items-center text-amber-700 font-semibold text-lg">
+      <Calendar className="mr-2 h-5 w-5" />
+      Delivery Information
+    </div>
+  </div>
+  <div className="p-4">
+    <div className="space-y-3">
+      
+
+      <div className="mt-2">
+        <p className="text-sm text-gray-600">
+          <span className="font-medium">Order Date:</span>{" "}
+          {orderData?.orderDetails?.order_requested_date || 'N/A'} at{" "}
+          {orderData?.orderDetails?.order_requested_time || 'N/A'}
+        </p>
+      </div>
+
+      <div className="mt-2">
+        <p className="text-sm text-green-700 font-semibold">
+          Your service will be delivered as requested on{" "}
+          {orderData?.orderDetails?.products?.[0]?.order_requested_date
+            ? new Date(orderData.orderDetails.products[0].order_requested_date).toLocaleDateString('en-IN', {
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
+              })
+            : 'N/A'}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
           </motion.div>
 
           {/* Payment Details */}
@@ -399,7 +412,7 @@ export default function ProfileCustomOrderConfirmation() {
                     </span>
                   </p>
                   {orderData?.paymentDetails?.transactionStatus?.toLowerCase() === 'failed' && (
-                    <motion.div
+                    <motion.div 
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="p-2 bg-red-50 rounded text-xs text-red-700"
@@ -431,7 +444,7 @@ export default function ProfileCustomOrderConfirmation() {
               <div className="space-y-4">
                 {orderData?.productDetails?.length ? (
                   orderData.productDetails.map((product, index) => (
-                    <motion.div
+                    <motion.div 
                       key={index}
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
@@ -489,7 +502,7 @@ export default function ProfileCustomOrderConfirmation() {
         >
           {orderData?.orderDetails?.order_status?.toLowerCase() !== 'cancelled' ? (
             <p className="text-gray-600 mb-4">
-              {orderData?.orderDetails?.order_status?.toLowerCase() === 'delivered'
+              {orderData?.orderDetails?.order_status?.toLowerCase() === 'delivered' 
                 ? 'We hope you love your purchase! Need help with anything?'
                 : 'We\'ll notify you when your order ships. You can track your order status anytime.'}
             </p>
@@ -498,10 +511,10 @@ export default function ProfileCustomOrderConfirmation() {
               Your order has been cancelled. We're sorry to see you go!
             </p>
           )}
-
+          
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/profile"
+            <Link 
+              to="/profile" 
               className="px-6 py-2 bg-amber-600 text-white rounded-md hover:bg-amber-700 transition-colors"
             >
               {orderData?.orderDetails?.order_status?.toLowerCase() === 'delivered' ? 'Leave a Review' : 'Track Order'}
