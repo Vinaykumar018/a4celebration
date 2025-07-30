@@ -65,6 +65,7 @@ export default function CheckoutPage() {
   const { cartItems, isLoading } = useUserCartData();
   const currencySymbol = "₹";
   console.log(cartItems)
+ 
 
 
   // Calculate totals with proper decimal handling

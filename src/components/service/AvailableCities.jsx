@@ -1,15 +1,22 @@
-import { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import kanpur from '../../assets/Kanpur (1).png'
+import kanpur from '../../assets/Kanpur (1).png';
+import { fetchProducts } from '../../redux/productSlice';
+
+import { useDispatch, useSelector } from "react-redux";
+import { setLocation } from "../../redux/locationSlice";
+
+
+ // Adjust path as needed
 
 const AvailableCities = () => {
-  const [selectedCity, setSelectedCity] = useState(null);
 
-  const availableCities = ["Bengaluru", "Kanpur"];
 
-  const cities = [
+  const dispatch = useDispatch();
+  const selectedCity = useSelector((state) => state.location.currentLocation);
+console.log(selectedCity)
+ const cities = [
     { name: "Kanpur", href: "/pandits/Kanpur", src:kanpur  },
     { name: "Bengaluru", href: "/pandits/Bengaluru", src: "https://pujapurohit.in/assets/images/cities/bengluru.webp" },
     { name: "Delhi", href: "/pandits/Delhi", src: "https://pujapurohit.in/assets/images/cities/newdelhi.webp" },
@@ -19,20 +26,10 @@ const AvailableCities = () => {
     { name: "Mumbai", href: "/pandits/Mumbai", src: "https://pujapurohit.in/assets/images/cities/mumbai.webp" },
   ];
 
+
   const handleCityClick = (city) => {
-    const isAvailable = availableCities.includes(city.name);
-    if (isAvailable) {
-      setSelectedCity(city.name);
-      // navigate or do something with city.href if needed
-    } else {
-      toast.warn("Service not available in your location", {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: true,
-        theme: "colored",
-        style: { background: '#D4AF37', color: '#000' }
-      });
-    }
+    dispatch(setLocation(city.name));
+    dispatch(fetchProducts())
   };
 
   return (
@@ -47,7 +44,6 @@ const AvailableCities = () => {
 
         <div className="flex flex-wrap items-center w-full">
           {cities.map((city, index) => {
-            const isAvailable = availableCities.includes(city.name);
             const isSelected = selectedCity === city.name;
 
             return (
@@ -55,7 +51,7 @@ const AvailableCities = () => {
                 key={index}
                 onClick={() => handleCityClick(city)}
                 className={`relative cursor-pointer h-full w-24 md:w-32 flex flex-col justify-center items-center px-2 m-2 p-1 rounded-lg shadow-md transition duration-300
-                  ${isAvailable ? "bg-amber-50 hover:shadow-lg border border-amber-200" : "bg-amber-50 hover:shadow-lg border border-amber-200"}`}
+                  bg-amber-50 hover:shadow-lg border border-amber-200`}
               >
                 <img
                   loading="lazy"
@@ -66,13 +62,11 @@ const AvailableCities = () => {
                   src={city.src}
                 />
 
-                <p className={`text-sm font-semibold mt-2 ${
-                  isAvailable ? "text-amber-900" : "text-amber-800"
-                }`}>
+                <p className="text-sm font-semibold mt-2 text-amber-900">
                   {city.name}
                 </p>
 
-                {isAvailable && isSelected && (
+                {isSelected && (
                   <FaCheckCircle className="absolute top-1 right-1 text-green-600 text-xl bg-amber-100 rounded-full" />
                 )}
               </div>
@@ -81,7 +75,6 @@ const AvailableCities = () => {
         </div>
       </div>
 
-      {/* Toast Container */}
       <ToastContainer 
         toastStyle={{
           backgroundColor: '#D4AF37',

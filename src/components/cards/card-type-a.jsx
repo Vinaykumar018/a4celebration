@@ -6,6 +6,9 @@ import 'swiper/swiper-bundle.css';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { Autoplay, Pagination } from 'swiper/modules';
 import { EyeIcon } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchRatingsForProduct } from '../../redux/ratingSlice';
+import StarRating from '../ratings/StarRating';
 
 const CardTypeA = ({
   services = [],
@@ -19,23 +22,9 @@ const CardTypeA = ({
   title
 }) => {
 
-  const renderStars = (rating) => {
-    const fullStars = Math.floor(rating);
-    const halfStar = rating % 1 !== 0;
-    const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
 
-    return (
-      <>
-        {[...Array(fullStars)].map((_, i) => (
-          <FaStar key={`full-${i}`} className="text-yellow-400 text-xs" />
-        ))}
-        {halfStar && <FaStarHalfAlt className="text-yellow-400 text-xs" />}
-        {[...Array(emptyStars)].map((_, i) => (
-          <FaRegStar key={`empty-${i}`} className="text-yellow-400 text-xs" />
-        ))}
-      </>
-    );
-  };
+
+ 
 
   const titleVariants = {
     hidden: { opacity: 0, y: -20 },
@@ -142,21 +131,25 @@ const CardTypeA = ({
 
                       {showRating && (
                         <div className="flex justify-center items-center gap-1 text-xs mt-1">
-                          {renderStars(service.rating || 0)}
+                          <StarRating product_id={service.product_id} />
+
+
+                          {/* //call a function for each product id  */}
+                        
                         </div>
                       )}
 
-                      
+
 
 
                       {showPrice && (
-  <p className="mb-2 text-xs text-gray-600 ">
-    Price: <span className="text-gray-600 font-medium">{formatPrice(service.price)}</span>
-    <span className="ml-2 text-red-400 line-through font-light">
-      {formatPrice(service.mrp_price)}
-    </span>
-  </p>
-)}
+                        <p className="mb-2 text-xs text-gray-600 ">
+                          Price: <span className="text-gray-600 font-medium">{formatPrice(service.price)}</span>
+                          <span className="ml-2 text-red-400 line-through font-light">
+                            {formatPrice(service.mrp_price)}
+                          </span>
+                        </p>
+                      )}
 
                       <div className="mt-auto">
                         <Link

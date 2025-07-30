@@ -13,6 +13,9 @@ import { useSelector } from "react-redux";
 import useUserCartData from '../../hooks/useUserCartData';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import WishlistButton from '../wishlist/WishlistButton';
+import CompactRating from '../../components/ratings/RatingWithReviews';
+import CompactReviewSlider from '../../components/ratings/Rating';
+
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
@@ -60,6 +63,7 @@ const DecorationsDetailsPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
   const [existingCartItem, setExistingCartItem] = useState(null);
+   const { cart, clearCart, removeItem } = useCart();
 
   // Check if item is already in cart
   useEffect(() => {
@@ -79,15 +83,15 @@ const DecorationsDetailsPage = () => {
       toast.error('Please select a date and time slot');
       return;
     }
-     const isLoggedIn = localStorage.getItem('isLoggedIn');
-  const userId = localStorage.getItem('userId');
-      if (!isLoggedIn || !userId) {
-       toast.info('Please login to book services', {
-         autoClose: 1000, // Toast closes in 2 seconds
-         onClose: () => navigate("/login")
-       });
-       return;
-     }
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userId = localStorage.getItem('userId');
+    if (!isLoggedIn || !userId) {
+      toast.info('Please login to book services', {
+        autoClose: 1000, // Toast closes in 2 seconds
+        onClose: () => navigate("/login")
+      });
+      return;
+    }
 
     setIsProcessing(true);
 
@@ -119,6 +123,8 @@ const DecorationsDetailsPage = () => {
         );
         toast.success('Cart details updated!');
       } else {
+
+         await clearCart(userId)
         // Add new item
         await addToCart({
           userID: userData?.data?._id,
@@ -165,12 +171,12 @@ const DecorationsDetailsPage = () => {
 
 
   useEffect(() => {
-  setMainImage(serviceData.featured_image); // Reset to new product's image
-}, [serviceData]); // Trigger when `serviceData` updates
+    setMainImage(serviceData.featured_image); // Reset to new product's image
+  }, [serviceData]); // Trigger when `serviceData` updates
 
   return (
     <>
-      <ToastContainer  autoClose={3000} />
+      <ToastContainer autoClose={3000} />
       <style>{styles}</style>
 
       <div className="bg-gradient-to-b bg-amber-50 font-poppins pb-8 min-h-screen">
@@ -240,7 +246,9 @@ const DecorationsDetailsPage = () => {
                     </p>
                   </div>
                 )}
+                <CompactReviewSlider product_id={serviceData.product_id}></CompactReviewSlider>
               </div>
+                
             </div>
 
             {/* Product Details Section */}
@@ -254,27 +262,21 @@ const DecorationsDetailsPage = () => {
                 <span className="text-2xl font-bold text-amber-700 mr-2">
                   {formatPrice(serviceData.price)}
                 </span>
-              
-                    <span className="text-gray-500 line-through">
-                      {formatPrice(serviceData.mrp_price)}
-                    </span>
-                    <span className="ml-3 bg-amber-100 text-amber-800 text-sm font-medium px-2 py-1 rounded-full">
-                      Save {calculateDiscount()}% ✨
-                    </span>
-                
+
+                <span className="text-gray-500 line-through">
+                  {formatPrice(serviceData.mrp_price)}
+                </span>
+                <span className="ml-3 bg-amber-100 text-amber-800 text-sm font-medium px-2 py-1 rounded-full">
+                  Save {calculateDiscount()}% ✨
+                </span>
+
               </div>
 
+
               {/* Rating Section */}
-              <div className="border border-gray-300 rounded-lg px-1 inline-flex items-center mb-2">
-                {[...Array(5)].map((_, index) => (
-                  <Star
-                    key={index}
-                    className={`${index < 4 ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
-                    size={12}
-                  />
-                ))}
-                <span className="ml-1 text-gray-600 text-xs">4.5 | 120 reviews</span>
-              </div>
+              
+               <CompactRating product_id={serviceData.product_id}></CompactRating>
+              
 
               {/* Short Description */}
               <p className="text-gray-700 mb-1 border-l-4 border-amber-300 pl-4 py-1 bg-amber-50 rounded-r-lg text-sm">
@@ -302,7 +304,7 @@ const DecorationsDetailsPage = () => {
               </div>
 
               {/* Action Buttons */}
-            <div className="flex space-x-4 mt-8">
+              <div className="flex space-x-4 mt-8">
                 {isInCart ? (
                   <>
                     <button
@@ -351,20 +353,30 @@ const DecorationsDetailsPage = () => {
                   </button>
                 )}
 
-               <WishlistButton productId={serviceData.product_id} inCart={isInCart}></WishlistButton>
+                <WishlistButton productId={serviceData.product_id} inCart={isInCart}></WishlistButton>
               </div>
-               
+
 
 
 
               {/* Product Description - Mobile */}
+              
               <div className="block md:hidden mt-6">
-                <DescriptionOverview description={descriptionPart} />
+                    <DescriptionOverview description={descriptionPart} />
+               
+
               </div>
+
+            
               <KitsOverview data={kitPart} />
+                <div className="block md:hidden mt-2">
+                    <CompactReviewSlider product_id={serviceData.product_id}></CompactReviewSlider>
+               
+
+              </div>
 
               {/* Delivery Information */}
-              <div className="space-y-4 mt-6">
+              <div className="space-y-4 mt-3">
                 <DeliveryInfo />
               </div>
             </div>

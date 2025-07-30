@@ -18,7 +18,7 @@ export const applyCoupon = async (code) => {
 
 export const getCoupon = async (code) => {
   try {
-    const response = await axios.get(`${API_URL}/get/allcoupons`);
+    const response = await axios.get(`${API_URL}get/allcoupons`);
     return response.data;
   } catch (error) {
     console.error('Error fetching coupons:', error);

@@ -10,6 +10,7 @@ import { Autoplay, Pagination } from "swiper/modules"
 import { EyeIcon } from "lucide-react"
 import GiftWishlistButton from "../../pages/wishlist/giftWishlistButton"
 import GiftCardWishlistButton from "../../pages/wishlist/giftCardWishlistButton"
+import StarRating from "../ratings/StarRating"
 
 
 const CardTypeB = ({
@@ -176,7 +177,7 @@ const CardTypeB = ({
                         </p>
                       )}
 
-                      {showRating && <div className="mb-3">{renderStars(service.rating)}</div>}
+                      {showRating && <div className="mb-3"><StarRating product_id={service.product_id} /></div>}
 
                       <p className="text-gray-600 mb-4 line-clamp-2 text-sm h-[35px] overflow-hidden">
                         {service.short_description || "Beautiful gift package"}

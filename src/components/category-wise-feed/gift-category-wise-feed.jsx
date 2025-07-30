@@ -7,13 +7,13 @@ import { useParams } from 'react-router-dom';
 import useGiftHook from '../../hooks/useGiftHooks';
 
 const GiftCategoryWiseFeed = () => {
-
+const selectedCity = useSelector((state) => state.location.currentLocation); 
   const { slug } = useParams();
 const { giftList, giftLoading, giftError, fetchGifts } = useGiftHook();
 
   useEffect(() => {
     fetchGifts();
-  }, []);
+  }, [selectedCity]);
   
 
   // Filter products based on slug matching childCategoryId

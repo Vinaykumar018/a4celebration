@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import Lottie from 'lottie-react';
 import animationData from './Animation - 1751703073724.json'; // Replace with your Lottie file path
+import StarRating from '../ratings/StarRating';
 
 const SimpleCard2 = ({
   title = "Featured Services",
@@ -99,10 +100,7 @@ const SimpleCard2 = ({
 
                     {showRating && (
                       <div className="flex justify-center items-center gap-1 mb-2">
-                        {renderStars(service.rating || 0)}
-                        <span className="text-xs text-gray-500 ml-1">
-                          ({service.rating?.toFixed(1) || '0.0'})
-                        </span>
+                      <StarRating product_id={service.product_id} />
                       </div>
                     )}
 

@@ -14,6 +14,8 @@ import RelatedSectionCardA from '../../components/related-products-feed/related-
 import useUserCartData from '../../hooks/useUserCartData';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import GiftWishlistButton from '../wishlist/giftWishlistButton';
+import CompactRating from '../../components/ratings/RatingWithReviews';
+import CompactReviewSlider from '../../components/ratings/Rating';
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
@@ -52,7 +54,7 @@ const GiftsDetailsPage = () => {
 
   const { userData } = useSelector((state) => state.user);
   const { cartItems: initialCartItems, isLoading: isCartLoading } = useUserCartData();
-  const { addToCart, updateItem, getCart } = useCart();
+  const { addToCart, updateItem, getCart, clearCart } = useCart();
 
   const [mainImage, setMainImage] = useState(serviceData.featured_image);
   const [isDeliveryAvailable, setIsDeliveryAvailable] = useState(false);
@@ -92,15 +94,15 @@ const GiftsDetailsPage = () => {
       return;
     }
 
-     const isLoggedIn = localStorage.getItem('isLoggedIn');
-  const userId = localStorage.getItem('userId');
-   if (!isLoggedIn || !userId) {
-  toast.info('Please login to book gift items', {
-    autoClose: 1000, // Toast closes in 2 seconds
-    onClose: () => navigate("/login")
-  });
-  return;
-}
+    const isLoggedIn = localStorage.getItem('isLoggedIn');
+    const userId = localStorage.getItem('userId');
+    if (!isLoggedIn || !userId) {
+      toast.info('Please login to book gift items', {
+        autoClose: 1000, // Toast closes in 2 seconds
+        onClose: () => navigate("/login")
+      });
+      return;
+    }
 
     setIsProcessing(true);
 
@@ -129,6 +131,8 @@ const GiftsDetailsPage = () => {
         );
         toast.success('Cart updated successfully!');
       } else {
+
+        await clearCart(userId)
         await addToCart({
           userID: userData?.data?._id,
           items: [cartItem]
@@ -155,7 +159,7 @@ const GiftsDetailsPage = () => {
 
   const calculateDiscount = () => {
     if (!serviceData.mrp_price) return 0;
-    return Math.round((1 - serviceData.price / (serviceData.mrp_price )) * 100);
+    return Math.round((1 - serviceData.price / (serviceData.mrp_price)) * 100);
   };
 
   const formatPrice = (price) => {
@@ -175,12 +179,12 @@ const GiftsDetailsPage = () => {
   };
 
   useEffect(() => {
-  setMainImage(serviceData.featured_image); // Reset to new product's image
-}, [serviceData]); // Trigger when `serviceData` updates
+    setMainImage(serviceData.featured_image); // Reset to new product's image
+  }, [serviceData]); // Trigger when `serviceData` updates
 
   return (
     <>
-      <ToastContainer  autoClose={3000} />
+      <ToastContainer autoClose={3000} />
       <style>{styles}</style>
 
       <div className="bg-gradient-to-b bg-amber-50 font-poppins pb-6 min-h-screen">
@@ -250,6 +254,7 @@ const GiftsDetailsPage = () => {
                     </p>
                   </div>
                 )}
+                <CompactReviewSlider product_id={serviceData.product_id}></CompactReviewSlider>
               </div>
             </div>
 
@@ -264,65 +269,55 @@ const GiftsDetailsPage = () => {
                 <span className="text-2xl font-bold text-amber-700 mr-2">
                   {formatPrice(serviceData.price)}
                 </span>
-               
-                  <>
-                    <span className="text-gray-500 line-through">
-                      {formatPrice(serviceData.mrp_price)}
-                    </span>
-                    <span className="ml-3 bg-amber-100 text-amber-800 text-sm font-medium px-2 py-1 rounded-full">
-                      Save {calculateDiscount()}% ✨
-                    </span>
-                  </>
-              
+
+                <>
+                  <span className="text-gray-500 line-through">
+                    {formatPrice(serviceData.mrp_price)}
+                  </span>
+                  <span className="ml-3 bg-amber-100 text-amber-800 text-sm font-medium px-2 py-1 rounded-full">
+                    Save {calculateDiscount()}% ✨
+                  </span>
+                </>
+
               </div>
 
               {/* Rating Section */}
-              <div className="border border-gray-300 rounded-lg px-1 inline-flex items-center mb-2">
-                {[...Array(5)].map((_, index) => (
-                  <Star
-                    key={index}
-                    className={`${index < 4 ? 'text-yellow-500 fill-yellow-500' : 'text-gray-300'}`}
-                    size={12}
-                  />
-                ))}
-                <span className="ml-1 text-gray-600 text-xs">4.5 | 120 reviews</span>
-              </div>
-
+              <CompactRating product_id={serviceData.product_id}></CompactRating>
               {/* Short Description */}
               <p className="text-gray-700 mb-1 border-l-4 border-amber-300 pl-4 py-1 bg-amber-50 rounded-r-lg text-sm">
                 {serviceData.short_description || serviceData.description}
               </p>
 
               {/* Quantity Selector */}
-            <div className="mb-6">
-  <label className="block text-sm font-medium text-amber-700 mb-2">
-    Quantity <span className="text-amber-500">✧</span>
-  </label>
-  <div className="flex items-center">
-    <button
-      onClick={decreaseQuantity}
-      className="p-2 border-2 border-amber-300 rounded-l-lg bg-gradient-to-b from-amber-100 to-amber-50 hover:from-amber-200 hover:to-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-1 disabled:opacity-50 transition-all duration-200"
-      disabled={quantity <= 1}
-    >
-      <Minus size={16} className="text-amber-700" />
-    </button>
-    
-    <div className="px-4 py-2 border-t-2 border-b-2 border-amber-300 bg-gradient-to-b from-amber-50 to-white text-center w-14 font-medium text-amber-800">
-      {quantity}
-    </div>
-    
-    <button
-      onClick={increaseQuantity}
-      className="p-2 border-2 border-amber-300 rounded-r-lg bg-gradient-to-b from-amber-100 to-amber-50 hover:from-amber-200 hover:to-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-1 disabled:opacity-50 transition-all duration-200"
-      disabled={quantity >= 99}
-    >
-      <Plus size={16} className="text-amber-700" />
-    </button>
-  </div>
-  
-  {/* Decorative elements */}
- 
-</div>
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-amber-700 mb-2">
+                  Quantity <span className="text-amber-500">✧</span>
+                </label>
+                <div className="flex items-center">
+                  <button
+                    onClick={decreaseQuantity}
+                    className="p-2 border-2 border-amber-300 rounded-l-lg bg-gradient-to-b from-amber-100 to-amber-50 hover:from-amber-200 hover:to-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-1 disabled:opacity-50 transition-all duration-200"
+                    disabled={quantity <= 1}
+                  >
+                    <Minus size={16} className="text-amber-700" />
+                  </button>
+
+                  <div className="px-4 py-2 border-t-2 border-b-2 border-amber-300 bg-gradient-to-b from-amber-50 to-white text-center w-14 font-medium text-amber-800">
+                    {quantity}
+                  </div>
+
+                  <button
+                    onClick={increaseQuantity}
+                    className="p-2 border-2 border-amber-300 rounded-r-lg bg-gradient-to-b from-amber-100 to-amber-50 hover:from-amber-200 hover:to-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-300 focus:ring-offset-1 disabled:opacity-50 transition-all duration-200"
+                    disabled={quantity >= 99}
+                  >
+                    <Plus size={16} className="text-amber-700" />
+                  </button>
+                </div>
+
+                {/* Decorative elements */}
+
+              </div>
 
               {/* Pincode Checker */}
               <PincodeDeliveryChecker
@@ -357,6 +352,12 @@ const GiftsDetailsPage = () => {
                 <DescriptionOverview description={descriptionPart} />
               </div>
               <KitsOverview data={kitPart} />
+
+              <div className="block md:hidden mt-2">
+                <CompactReviewSlider product_id={serviceData.product_id}></CompactReviewSlider>
+
+
+              </div>
 
               {/* Delivery Information */}
               <div className="space-y-4 mt-6">

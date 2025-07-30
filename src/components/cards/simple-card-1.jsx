@@ -8,6 +8,7 @@ import { Autoplay, Pagination } from 'swiper/modules';
 import { EyeIcon } from 'lucide-react';
 import Lottie from 'lottie-react';
 import animationData from './Animation - 1751703073724.json'; // Replace with your Lottie file path
+import StarRating from '../ratings/StarRating';
 
 const SimpleCard1 = ({
   title = "Featured Services",
@@ -121,7 +122,7 @@ const SimpleCard1 = ({
 
                       {showRating && (
                         <div className="flex justify-center items-center gap-1 text-xs mt-1">
-                          {renderStars(service.rating || 0)}
+                         <StarRating product_id={service.product_id} />
                         </div>
                       )}
 

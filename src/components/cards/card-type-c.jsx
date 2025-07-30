@@ -9,6 +9,7 @@ import { EyeIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEvents, removeEvent } from '../../redux/eventManagementSlice';
+import StarRating from '../ratings/StarRating';
 
 const CardTypeC = ({
   title = "Featured Services",
@@ -156,10 +157,7 @@ const CardTypeC = ({
                       {/* Rating (fixed space) */}
                       {showRating && (
                         <div className="flex justify-center items-center gap-1 mb-2 h-6">
-                          {renderStars(service.rating || 0)}
-                          <span className="text-xs text-gray-500 ml-1">
-                            ({service.rating?.toFixed(1) || '0.0'})
-                          </span>
+                          <StarRating product_id={service.product_id} />
                         </div>
                       )}
 

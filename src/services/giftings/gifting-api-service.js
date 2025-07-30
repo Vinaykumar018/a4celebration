@@ -11,6 +11,7 @@ const API_KEY = import.meta.env.VITE_API_KEY;
  * Array of products
  */
 export const getAllProducts = async () => {
+  const selectedCity = localStorage.getItem('user_location');
   try {
     const response = await axios.get(`${API_URL}giftings/get-all-products`, {
       headers: {
@@ -18,10 +19,23 @@ export const getAllProducts = async () => {
         'Content-Type': 'application/json',
       },
     });
-    const activeProducts = response.data.data.filter(product => product.status === "active");
-  
- 
-  return activeProducts;
+
+
+    const activeProducts = response.data.data.filter((product) => {
+      if (!Array.isArray(product.available_cities)) {
+        // If available_cities doesn't exist, only check status
+        return product.status === 'active';
+      } else {
+        // If available_cities exists, check both status and selectedCity
+        return (
+          product.status === 'active' &&
+          product.available_cities.includes(selectedCity)
+        );
+      }
+    });
+
+    return activeProducts;
+   
   } catch (error) {
     console.error('Error fetching products:', error);
     throw error;

@@ -21,7 +21,7 @@ const EventManagementDetailsPage = () => {
   const navigate = useNavigate();
   const { userData } = useSelector((state) => state.user);
   const { cartItems: initialCartItems, isLoading: isCartLoading } = useUserCartData();
-  const { addToCart, updateItem } = useCart();
+  const { addToCart, updateItem,clearCart } = useCart();
   const { setCustomModalData } = useCustomModalData();
 
   const { serviceData, sectionData } = location.state;
@@ -192,6 +192,9 @@ const EventManagementDetailsPage = () => {
         );
         toast.success('Cart details updated!');
       } else {
+
+
+          await clearCart(userId)
         // Add new item
         await addToCart({
           userID: userData?.data?._id,

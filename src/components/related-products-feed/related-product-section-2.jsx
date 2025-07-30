@@ -8,6 +8,7 @@ const RelatedProductSection2 = () => {
   useEffect(() => {
     fetchGifts();
   }, []);
+  
 
   return (
  

@@ -17,7 +17,11 @@ import CityModal from "../locations/CityModal"; // Ensure you import CityModal
 import { useSelector } from 'react-redux';
 import { FaUser } from "react-icons/fa6";
 import unknown from '../../assets/profile/360_F_332596535_lAdLhf6KzbW6PWXBWeIFTovTii1drkbT.jpg'
+
+
 const TopNavbar = () => {
+  const selectedCity = useSelector((state) => state.location.currentLocation);
+  
 
 
   const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
@@ -139,7 +143,7 @@ const TopNavbar = () => {
 
         <div className="flex items-center hover:text-amber-500 cursor-pointer" onClick={handleOpenModal}>
           <MapPin className="h-5 w-5 text-amber-500" />
-          <span className="ml-1 text-sm font-medium">KANPUR</span>
+          <span className="ml-1 text-sm font-medium">{selectedCity?selectedCity:"Kanpur"}</span>
         </div>
       </div>
 
@@ -168,7 +172,11 @@ const TopNavbar = () => {
             <Menu className="h-6 w-6 text-gray-700" />
           )}
         </button>
+         <div className="flex items-center text-gray-700 hover:text-amber-500" onClick={handleOpenModal} >
+            <MapPin className="h-5 w-5 mr-1 text-amber-500" /> {selectedCity?selectedCity:"Kanpur"}
+          </div>
       </div>
+      
 
       {/* Mobile Slideout Menu */}
       {isMobileMenuOpen && (
@@ -217,9 +225,7 @@ const TopNavbar = () => {
           }}>
             <ShoppingCart className="h-5 w-5 mr-2" /> Cart
           </Link>
-          <div className="flex items-center text-gray-700 hover:text-amber-500" onClick={handleOpenModal} >
-            <MapPin className="h-5 w-5 mr-2 text-amber-500" /> Kanpur
-          </div>
+         
         </div>
       )}
 

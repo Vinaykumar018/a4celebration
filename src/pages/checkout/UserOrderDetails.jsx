@@ -11,6 +11,17 @@ import { placeOrder } from "../../services/decoration-orders/order-api";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaExclamationTriangle } from "react-icons/fa";
+
+
+const NotProvidedWarning = () => {
+    return (
+        <div className="inline-flex items-center gap-1 text-red-600 font-medium">
+            <FaExclamationTriangle className="text-red-500" />
+            <span>Not provided</span>
+        </div>
+    );
+};
 
 
 export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData, discountAmount = 0, // Add this
@@ -29,7 +40,21 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData, dis
     const [city, setCity] = useState('');
     const [zipCode, setZipCode] = useState('');
     const [country, setCountry] = useState('');
-    
+    const[CartPin, setCartPin] = useState(false);
+    useEffect(() => {
+        if (cartItems && cartItems.length > 0 && cartItems[0]?.pinCode) {
+            console.log(cartItems);
+            setCartPin(true)
+            setZipCode(cartItems[0]?.pinCode);
+
+        } else {
+            setZipCode(userData?.pincode || '');
+        }
+    }, [cartItems, userData]);
+
+
+
+
 
     useEffect(() => {
         if (userData) {
@@ -39,7 +64,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData, dis
             setAptSuite(userData.address || '');
             setStreetAddress(userData.address || '');
             setCity(userData.city || '');
-            setZipCode(userData.pincode || '');
+
             setCountry(userData.country || '');
         }
     }, [userData]);
@@ -100,7 +125,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData, dis
                 subtotal: subtotal, // Add this
                 discountAmount: discountAmount, // Add this
                 totalAmount: total, // Change this from totalAmount to total
-              
+
                 transactionId: null,
                 transactionStatus: 'pending',
                 transactionDate: null,
@@ -125,7 +150,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData, dis
                 lastUpdated: new Date()
             },
             deliveryNotes: deliveryNotes.join('; '),
-            discountApplied: discountAmount ,
+            discountApplied: discountAmount,
             shippingMethod: 'Standard Delivery'
         };
 
@@ -193,7 +218,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData, dis
 
                 const options = {
                     key: import.meta.env.VITE_RAZORPAY_KEY,
-                   amount: total * 100,
+                    amount: total * 100,
                     currency: "INR",
                     name: "A4 CELEBRATION",
                     description: "Order Payment",
@@ -285,17 +310,17 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData, dis
                             <div className="flex items-center gap-2">
                                 <User className="h-4 w-4 text-amber-600" />
                                 <span className="font-medium">Name:</span>
-                                <span>{username || 'Not provided'}</span>
+                                <span>{username || <NotProvidedWarning></NotProvidedWarning>}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Phone className="h-4 w-4 text-amber-600" />
                                 <span className="font-medium">Phone:</span>
-                                <span>{contactNumber || 'Not provided'}</span>
+                                <span>{contactNumber || <NotProvidedWarning></NotProvidedWarning>}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Mail className="h-4 w-4 text-amber-600" />
                                 <span className="font-medium">Email:</span>
-                                <span>{email || 'Not provided'}</span>
+                                <span>{email || <NotProvidedWarning></NotProvidedWarning>}</span>
                             </div>
                         </div>
                     </div>
@@ -378,7 +403,7 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData, dis
                                 <div>
                                     <p className="font-medium">Address</p>
                                     <p className="text-amber-700">
-                                        {aptSuite || 'Not provided'}
+                                        {aptSuite || <NotProvidedWarning></NotProvidedWarning>}
                                         {city && `, ${city}`}
                                         {zipCode && `, ${zipCode}`}
                                     </p>
@@ -453,16 +478,21 @@ export const UserOrderDetails = ({ cartItems = [], currencySymbol, userData, dis
                                     Zip/Postal Code <span className="text-amber-500">*</span>
                                 </label>
                                 <input
-                                    id="zipCode"
-                                    name="zipCode"
-                                    className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
-                                    required
-                                    placeholder="Postal code"
-                                    value={zipCode}
-                                    onChange={(e) => setZipCode(e.target.value)}
-                                />
+    id="zipCode"
+    name="zipCode"
+    className="w-full border-2 border-amber-200 rounded-lg p-3 focus:border-amber-400 focus:ring-2 focus:ring-amber-200 outline-none transition-all"
+    required
+    placeholder="Postal code"
+    value={zipCode}
+    onChange={(e) => setZipCode(e.target.value)}
+    readOnly={!!CartPin}
+/>
+
+
                             </div>
+
                         </div>
+                        {console.log(CartPin, "in ui ")}
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-2">
