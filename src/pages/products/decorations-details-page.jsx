@@ -15,6 +15,7 @@ import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import WishlistButton from '../wishlist/WishlistButton';
 import CompactRating from '../../components/ratings/RatingWithReviews';
 import CompactReviewSlider from '../../components/ratings/Rating';
+import MetaTags from '../../components/SEO/MetaTags';
 
 
 const styles = `
@@ -176,6 +177,12 @@ const DecorationsDetailsPage = () => {
 
   return (
     <>
+
+    <MetaTags
+  title="Event Decoration Services | Baby Shower, Wedding, Birthday & More - Kanpur"
+  description="Find the best decoration services in Kanpur for Baby Shower, Birthday Parties, Baby Welcome, Bachelorette, Pre-Wedding, Wedding, First Night, Festival, and Car Decorations. Book your event decor now!"
+  keywords="Baby Shower Decoration Kanpur, Birthday Decoration Kanpur, Baby Welcome Decoration, Bachelorette Party Decor, Pre Wedding Decoration, Wedding Decoration Services, First Night Room Decor, Festival Decoration, Car Decoration Kanpur"
+/>
       <ToastContainer autoClose={3000} />
       <style>{styles}</style>
 

@@ -13,6 +13,7 @@ import RelatedProductSection3 from "../../components/related-products-feed/relat
 import useUserCartData from '../../hooks/useUserCartData';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import { useCustomModalData } from "../../context/CustomModalContext";
+import MetaTags from "../../components/SEO/MetaTags";
 
 
 
@@ -229,6 +230,14 @@ const EventManagementDetailsPage = () => {
 
 
   return (
+
+    <>
+    <MetaTags
+        title="Event Management Categories | Destination Wedding, Corporate, College & Marriage Events"
+        description="Explore top Event Management services in Kanpur including Destination Weddings, Marriage Events, College Functions, and Corporate Event Planning. Organize your event with professional excellence."
+        keywords="Destination Wedding Planner Kanpur, Marriage Event Management, College Event Organizers, Corporate Event Planning Kanpur, Best Event Managers"
+      />
+  
     <div className="bg-white min-h-screen">
 
       <div className="bg-gradient-to-r bg-yellow-600 text-white py-2 px-4 text-center text-sm font-medium flex items-center justify-center gap-2">
@@ -1153,6 +1162,7 @@ const EventManagementDetailsPage = () => {
       </div>
       <ToastContainer></ToastContainer>
     </div>
+      </>
   )
 }
 

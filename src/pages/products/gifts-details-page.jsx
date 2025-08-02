@@ -16,6 +16,7 @@ import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import GiftWishlistButton from '../wishlist/giftWishlistButton';
 import CompactRating from '../../components/ratings/RatingWithReviews';
 import CompactReviewSlider from '../../components/ratings/Rating';
+import MetaTags from '../../components/SEO/MetaTags';
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
@@ -184,6 +185,11 @@ const GiftsDetailsPage = () => {
 
   return (
     <>
+   <MetaTags
+  title="Gifting Categories | Plants, Customized Gifts, Hampers & Loved One Presents"
+  description="Discover the best gifting categories including indoor Plants, Customized Gifts, Luxury Hampers, and thoughtful presents for your Loved Ones. Perfect gifts for every occasion in Kanpur."
+  keywords="Gift Plants, Customized Gifts Kanpur, Gift Hampers, Personalized Presents, Gifts for Loved Ones, Kanpur Gift Shop"
+/>
       <ToastContainer autoClose={3000} />
       <style>{styles}</style>
 

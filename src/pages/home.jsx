@@ -16,12 +16,19 @@ import ProductSection5 from '../components/product/product-section-5';
 import ProductSection6 from '../components/product/product-section-6';
 import WhyChooseUs from '../components/service/WhyChooseUs';
 import CustomerReviewSlider from '../components/service/CustomerReviewSlider';
+import MetaTags from '../components/SEO/MetaTags';
 
 
 const Home = () => {
   return (
     <>
       <div className='bg-yellow-50'>
+
+        <MetaTags
+          title="Best Event Planners in Kanpur"
+          description="Top birthday, wedding, and corporate event organizers in Kanpur."
+          keywords="Best Event Planners in Kanpur, Birthday Decoration, Wedding Event Management, Corporate Events"
+        />
         <Slider></Slider>
         <Service></Service>
         <AvailableCities></AvailableCities>

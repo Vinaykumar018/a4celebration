@@ -315,7 +315,7 @@ const total = Math.max(0, (subtotal - discountAmount)) // Ensure total doesn't g
                     Our team will contact you within 24 hours to finalize your celebration details and confirm the decoration timings.
                   </p>
                   <p className="text-gray-700">
-                    For urgent queries: <span className="text-amber-700 font-medium">support@celebratewithus.com</span>
+                    For urgent queries: <span className="text-amber-700 font-medium">support@a4cleberation.com</span>
                   </p>
                 </div>
               </div>

@@ -25,7 +25,7 @@ const TopNavbar = () => {
 
 
   const { userData, isAuthenticated, loading, error } = useSelector((state) => state.user);
-
+console.log(isAuthenticated)
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -159,19 +159,19 @@ const TopNavbar = () => {
             className="w-full py-2 px-4 pr-10 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-transparent"
           />
         )}
-        <Link to="/wishlist">
+        {/* <Link to="/wishlist">
           <Heart className="h-5 w-5 text-gray-700 hover:text-amber-500" />
         </Link>
         <Link to="/cart">
           <ShoppingCart className="h-5 w-5 text-gray-700 hover:text-amber-500" />
-        </Link>
-        <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        </Link> */}
+        {/* <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
           {isMobileMenuOpen ? (
             <X className="h-6 w-6 text-gray-700" />
           ) : (
             <Menu className="h-6 w-6 text-gray-700" />
           )}
-        </button>
+        </button> */}
          <div className="flex items-center text-gray-700 hover:text-amber-500" onClick={handleOpenModal} >
             <MapPin className="h-5 w-5 mr-1 text-amber-500" /> {selectedCity?selectedCity:"Kanpur"}
           </div>

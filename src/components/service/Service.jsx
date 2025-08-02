@@ -78,7 +78,7 @@ const Services = () => {
   }
 
   return (
-    <section className="bg-gradient-to-b from-amber-50 to-amber-100 py-16 px-4">
+    <section className="bg-gradient-to-b from-amber-50 to-amber-100 py-8 px-4">
       <div className="container mx-auto max-w-7xl">
         <motion.div
           className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-6 md:gap-8"

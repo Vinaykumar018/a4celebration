@@ -4,6 +4,7 @@ import { Search, ShoppingCart, Heart, User, MapPin, HelpCircle, ChevronDown } fr
 import logo from '../../assets/A4 Celebration 1 (3).png'
 import TopNavbar from "./top-navbar";
 import BottomNavbar from "./bottom-navbar";
+import MobileBottomNavbar from "./MobileBottomHeader";
 export default function Navbar() {
   
 
@@ -12,6 +13,7 @@ export default function Navbar() {
     
  <TopNavbar></TopNavbar>
  <BottomNavbar></BottomNavbar>
+ <MobileBottomNavbar></MobileBottomNavbar>
 
 
      

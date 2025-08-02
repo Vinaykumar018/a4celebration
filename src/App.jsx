@@ -11,13 +11,14 @@ import { useDispatch } from 'react-redux';
 import { fetchUserData } from './redux/userSlice';
 import ScrollToTop from './components/service/ScrollToTop';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import MetaTags from './components/SEO/MetaTags';
 
 
 function App() {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    
+
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     const userId = localStorage.getItem('userId');
     if (isLoggedIn && userId) {
@@ -26,24 +27,20 @@ function App() {
   }, [dispatch]);
 
   return (
-    <>
-
+    <Router>
+      <MetaTags
+        title="Best Event Planners in Kanpur"
+        description="Top birthday, wedding, and corporate event organizers in Kanpur."
+        keywords="Best Event Planners in Kanpur, Birthday Decoration, Wedding Event Management, Corporate Events"
+      />
 
       <GoogleOAuthProvider clientId="590949563897-n033hboekn0vtsu906gl6evll817f1gc.apps.googleusercontent.com">
-      {/* Other components */}
-    
-   
-
-      <Router>
-      <ScrollToTop />
-        <Navbar></Navbar>
-
+        <ScrollToTop />
+        <Navbar />
         <RoutesComponent />
-        <Footer></Footer>  {/* Use the Routes Component */}
-      </Router>
-       </GoogleOAuthProvider>
-
-    </>
+        <Footer />
+      </GoogleOAuthProvider>
+    </Router>
   )
 }
 

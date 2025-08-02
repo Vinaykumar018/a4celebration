@@ -1,61 +1,87 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast ,ToastContainer} from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import { loginUser } from "../../services/auth/auth";
-import { useSelector } from 'react-redux'; // Adjust the import path as needed
+import { useDispatch } from 'react-redux';
+import { fetchUserData } from "../../redux/userSlice";
 import GoolgeLoginAuth from "./GoogleLogin";
 
 const LoginPage = () => {
-
-
-
-
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [wrongPassword, setWrongPassword] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Clear form when component mounts
+  useEffect(() => {
+    setFormData({ email: "", password: "" });
+    setWrongPassword(false);
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value.trim() }));
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  const validateForm = () => {
+    if (!formData.email.includes('@')) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+    
     setLoading(true);
     setWrongPassword(false);
 
     try {
       const response = await loginUser({
-        email: formData.email,
+        email: formData.email.toLowerCase().trim(),
         password: formData.password
       });
 
-      // Store user data or token as needed
-      localStorage.setItem("userEmail", formData.email);
+      // Store authentication state
       localStorage.setItem("isLoggedIn", "true");
-
       localStorage.setItem("userId", response.data._id);
 
-      toast.success("Login Successful!");
+      // Fetch and set user data in Redux
+      await dispatch(fetchUserData(response.data._id));
 
-      navigate("/");
-      window.location.reload();// Redirect to home page or dashboard after login
+      toast.success("Login successful! Redirecting...");
+      
+      // Redirect after a brief delay to show success message
+      setTimeout(() => {
+        navigate("/");
+      }, 1500);
+
     } catch (error) {
       console.error("Login error:", error);
       setWrongPassword(true);
-      toast.error(error.response?.data?.message || "Login failed. Please check your credentials.");
+      const errorMessage = error.response?.data?.message || 
+                         "Login failed. Please check your credentials.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-50 py-12 px-4 sm:px-6 lg:px-8">

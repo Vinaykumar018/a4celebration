@@ -16,7 +16,7 @@ const Cart = () => {
 
   const [cartItems, setCartItems] = useState([]);
   const { cart, clearCart, removeItem } = useCart();
-console.log(cart)
+
 
   const navigate = useNavigate();
   const [promoCode, setPromoCode] = useState("");
@@ -240,103 +240,130 @@ console.log(cart)
                 </div>
                 <div className="p-6 space-y-6">
                 <div className="space-y-3">
-  {coupons.map((coupon) => {
-    // Determine coupon status
-    const isExpired = new Date(coupon.expiryDate) < new Date();
-    const isUsedUp = coupon.usedCount >= coupon.usageLimit;
-    const isActive = coupon.isActive && !isExpired && !isUsedUp;
+  {coupons
+    .filter(coupon => new Date(coupon.expiryDate) >= new Date())
+    .map((coupon) => {
+      // Determine coupon status
+      const isUsedUp = coupon.usedCount >= coupon.usageLimit;
+      const isActive = coupon.isActive && !isUsedUp;
 
-    // Choose color scheme based on status
-    let colorScheme = {
-      bgFrom: 'from-amber-50',
-      bgTo: 'to-amber-100',
-      border: 'border-amber-200',
-      textCode: 'text-amber-700',
-      textDesc: 'text-amber-600',
-      textDate: 'text-amber-500',
-      textValue: 'text-amber-700',
-      badgeBg: 'bg-amber-200',
-      badgeText: 'text-amber-800'
-    };
-
-    if (!isActive) {
-      colorScheme = {
-        bgFrom: 'from-rose-50',
-        bgTo: 'to-rose-100',
-        border: 'border-rose-200',
-        textCode: 'text-rose-700',
-        textDesc: 'text-rose-600',
-        textDate: 'text-rose-500',
-        textValue: 'text-rose-700',
-        badgeBg: 'bg-rose-200',
-        badgeText: 'text-rose-800'
+      // Choose color scheme based on status
+      let colorScheme = {
+        bgFrom: 'from-amber-50',
+        bgTo: 'to-amber-100',
+        border: 'border-amber-200',
+        textCode: 'text-amber-700',
+        textDesc: 'text-amber-600',
+        textDate: 'text-amber-500',
+        textValue: 'text-amber-700',
+        badgeBg: 'bg-amber-200',
+        badgeText: 'text-amber-800'
       };
-    } else if (coupon.discountType === 'fixed') {
-      colorScheme = {
-        bgFrom: 'from-blue-50',
-        bgTo: 'to-blue-100',
-        border: 'border-blue-200',
-        textCode: 'text-blue-700',
-        textDesc: 'text-blue-600',
-        textDate: 'text-blue-500',
-        textValue: 'text-blue-700',
-        badgeBg: 'bg-blue-200',
-        badgeText: 'text-blue-800'
+
+      if (!isActive) {
+        colorScheme = {
+          bgFrom: 'from-rose-50',
+          bgTo: 'to-rose-100',
+          border: 'border-rose-200',
+          textCode: 'text-rose-700',
+          textDesc: 'text-rose-600',
+          textDate: 'text-rose-500',
+          textValue: 'text-rose-700',
+          badgeBg: 'bg-rose-200',
+          badgeText: 'text-rose-800'
+        };
+      } else if (coupon.discountType === 'fixed') {
+        colorScheme = {
+          bgFrom: 'from-blue-50',
+          bgTo: 'to-blue-100',
+          border: 'border-blue-200',
+          textCode: 'text-blue-700',
+          textDesc: 'text-blue-600',
+          textDate: 'text-blue-500',
+          textValue: 'text-blue-700',
+          badgeBg: 'bg-blue-200',
+          badgeText: 'text-blue-800'
+        };
+      }
+
+      // Format discount value
+      const discountValue = coupon.discountType === 'percentage' 
+        ? `${coupon.discountValue}% OFF` 
+        : `₹${coupon.discountValue} OFF`;
+
+      // Format expiry date
+      const expiryDate = `Valid until ${new Date(coupon.expiryDate).toLocaleDateString()}`;
+
+      // Function to handle copy to clipboard
+      const handleCopyCode = () => {
+        navigator.clipboard.writeText(coupon.code)
+          .then(() => {
+            // Show notification
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg animate-fade-in-out';
+            notification.textContent = 'Coupon code copied!';
+            document.body.appendChild(notification);
+            
+            // Remove notification after 2 seconds
+            setTimeout(() => {
+              notification.remove();
+            }, 2000);
+          })
+          .catch(err => {
+            console.error('Failed to copy coupon code: ', err);
+          });
       };
-    }
 
-    // Format discount value
-    const discountValue = coupon.discountType === 'percentage' 
-      ? `${coupon.discountValue}% OFF` 
-      : `₹${coupon.discountValue} OFF`;
-
-    // Format expiry date
-    const expiryDate = isExpired 
-      ? 'Expired' 
-      : `Valid until ${new Date(coupon.expiryDate).toLocaleDateString()}`;
-
-    return (
-      <div 
-        key={coupon._id}
-        className={`relative p-4 rounded-lg bg-gradient-to-r ${colorScheme.bgFrom} ${colorScheme.bgTo} border-2 ${colorScheme.border} border-dashed ${!isActive ? 'opacity-70' : ''}`}
-      >
-        <div className="flex justify-between items-center">
-          <div>
-            <span className={`font-bold text-lg ${colorScheme.textCode}`}>
-              {coupon.code}
-            </span>
-            <p className={`text-sm ${colorScheme.textDesc}`}>
-              {coupon.discountType === 'percentage' 
-                ? `Get ${coupon.discountValue}% discount on your order`
-                : `Get ₹${coupon.discountValue} discount on your order`}
-            </p>
-            <p className={`text-xs ${colorScheme.textDate} mt-1`}>
-              {expiryDate}
-            </p>
-            {isUsedUp && (
-              <p className="text-xs text-rose-500 mt-1">
-                Usage limit reached
+      return (
+        <div 
+          key={coupon._id}
+          className={`relative p-4 rounded-lg bg-gradient-to-r ${colorScheme.bgFrom} ${colorScheme.bgTo} border-2 ${colorScheme.border} border-dashed ${!isActive ? 'opacity-70' : ''}`}
+        >
+          <div className="flex justify-between items-center">
+            <div>
+             
+              <p className={`text-sm ${colorScheme.textDesc}`}>
+                {coupon.discountType === 'percentage' 
+                  ? `Get ${coupon.discountValue}% discount on your order`
+                  : `Get ₹${coupon.discountValue} discount on your order`}
               </p>
-            )}
+              <p className={`text-xs ${colorScheme.textDate} mt-1`}>
+                {expiryDate}
+              </p>
+              {isUsedUp && (
+                <p className="text-xs text-rose-500 mt-1">
+                  Usage limit reached
+                </p>
+              )}
+            </div>
+            <div className={`font-bold text-xl ${!isActive ? 'line-through' : ''} ${colorScheme.textValue}`}>
+              {discountValue}
+            </div>
           </div>
-          <div className={`font-bold text-xl ${!isActive ? 'line-through' : ''} ${colorScheme.textValue}`}>
-            {discountValue}
-          </div>
-        </div>
 
-        {!isActive && (
-          <div className={`absolute top-0 right-0 ${colorScheme.badgeBg} ${colorScheme.badgeText} text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg`}>
-            {isExpired ? 'Expired' : isUsedUp ? 'Used Up' : 'Inactive'}
-          </div>
-        )}
-        {isActive && coupon.discountValue >= 20 && (
-          <div className={`absolute top-0 right-0 ${colorScheme.badgeBg} ${colorScheme.badgeText} text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg`}>
-            Hot Deal
-          </div>
-        )}
-      </div>
-    );
-  })}
+          {!isActive && (
+            <div className={`absolute top-0 right-0 ${colorScheme.badgeBg} ${colorScheme.badgeText} text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg`}>
+              {isUsedUp ? 'Used Up' : 'Inactive'}
+            </div>
+          )}
+          {isActive && coupon.discountValue >= 20 && (
+            <>
+             <span 
+                onClick={handleCopyCode}
+                className={`font-bold text-lg ${colorScheme.textCode} cursor-pointer hover:underline`}
+                title="Click to copy"
+              >
+                {coupon.code}
+              </span>
+           
+            <div className={`absolute top-0 right-0 ${colorScheme.badgeBg} ${colorScheme.badgeText} text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg`}>
+              Hot Deal
+            </div>
+             </>
+          )}
+        </div>
+      );
+    })}
 </div>
 
                   <hr className="bg-amber-100" />

@@ -1,51 +1,86 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock, X } from "lucide-react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast,ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { loginUser } from "../../services/auth/auth"; // Adjust the import path as needed
+import { loginUser } from "../../services/auth/auth";
 import GoolgeLoginAuth from "../../pages/auth/GoogleLogin";
+import { fetchUserData } from "../../redux/userSlice";
+import { useDispatch } from "react-redux";
 
 const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [wrongPassword, setWrongPassword] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  // Clear form when modal opens/closes
+  useEffect(() => {
+    if (open) {
+      setFormData({ email: "", password: "" });
+      setWrongPassword(false);
+    }
+  }, [open]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({ ...prev, [name]: value.trim() }));
   };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  const validateForm = () => {
+    if (!formData.email.includes('@')) {
+      toast.error("Please enter a valid email address");
+      return false;
+    }
+    if (formData.password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return false;
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
+
     setLoading(true);
     setWrongPassword(false);
 
     try {
       const response = await loginUser({
-        email: formData.email,
+        email: formData.email.toLowerCase().trim(),
         password: formData.password
       });
 
-      // Store user data or token as needed
-      localStorage.setItem("userEmail", formData.email);
+      // Store authentication state
       localStorage.setItem("isLoggedIn", "true");
+      localStorage.setItem("userId", response.data._id);
 
-      localStorage.setItem("userId", response.data._id); // Assuming the API returns a token
+      // Fetch and set user data in Redux
+      await dispatch(fetchUserData(response.data._id));
 
-      toast.success("Login Successful!");
-      onClose();
+      toast.success("Login successful! Redirecting...");
+
       if (onSuccess) onSuccess(response.data);
-      window.location.reload();
+
+      // Close modal and redirect after a brief delay
+      setTimeout(() => {
+        onClose();
+        navigate("/");
+      }, 1500);
+
     } catch (error) {
       console.error("Login error:", error);
       setWrongPassword(true);
-      toast.error("Login failed. Please check your credentials.");
+      const errorMessage = error.response?.data?.message ||
+        "Login failed. Please check your credentials.";
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -55,7 +90,7 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
 
   return (
     <>
-     
+
       <div className="fixed inset-0 flex items-center justify-center bg-black/70 bg-opacity-50 z-50">
         <div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="relative">
@@ -197,7 +232,7 @@ const LoginModal = ({ open, onClose, onSuccess, onCreateAccount }) => {
               <div className="flex-grow h-px bg-amber-200"></div>
             </div>
 
-           <GoolgeLoginAuth onClose={onClose}></GoolgeLoginAuth>
+            <GoolgeLoginAuth onClose={onClose}></GoolgeLoginAuth>
 
             <div className="text-center pt-4 border-t border-amber-200">
               <p className="text-sm text-amber-700">
