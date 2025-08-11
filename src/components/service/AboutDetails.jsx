@@ -77,11 +77,11 @@ export default function AboutDetails() {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-            <a href="tel:+9198750200899">
+            <Link to="/decorations">
   <button className="bg-gradient-to-r from-amber-500 to-amber-700 flex items-center justify-center hover:from-amber-600 hover:to-amber-800 text-white px-6 py-3 rounded-lg text-lg font-medium transition-all shadow-md hover:shadow-amber-200">
     <Phone className="mr-2 h-5 w-5" /> Book Services Now
   </button>
-</a>
+</Link>
 
              <Link to="/contact">
   <button className="border-2 border-amber-600 flex items-center justify-center hover:bg-amber-50 text-amber-700 px-6 py-3 rounded-lg text-lg font-medium transition-all">

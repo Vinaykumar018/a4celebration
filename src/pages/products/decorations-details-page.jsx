@@ -18,6 +18,7 @@ import CompactReviewSlider from '../../components/ratings/Rating';
 import MetaTags from '../../components/SEO/MetaTags';
 
 
+
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
   
@@ -51,6 +52,7 @@ const styles = `
 const DecorationsDetailsPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const { serviceData, sectionData } = location.state;
   const { userData } = useSelector((state) => state.user);
   const { cartItems: initialCartItems, isLoading: isCartLoading } = useUserCartData();
@@ -177,6 +179,7 @@ const DecorationsDetailsPage = () => {
 
   return (
     <>
+  
 
     <MetaTags
   title="Event Decoration Services | Baby Shower, Wedding, Birthday & More - Kanpur"

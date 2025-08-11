@@ -775,7 +775,7 @@ export default function CheckoutPage() {
                             <h3 className="font-medium text-amber-800">{item.name}</h3>
                             <div className="bg-green-100 text-green-800 border border-green-300 px-2 py-1 rounded-full text-xs inline-flex items-center">
                               <span className="w-2 h-2 rounded-full bg-green-500 mr-1"></span>
-                              {item.stock_left > 0 ? "Ready to Celebrate!" : "Out of Stock"}
+                              {item.stock_left > 0 ? "Ready to Celebrate!" : "Ready to Celebrate!"}
                             </div>
                             {(item.service_date || item.service_time) && (
                               <>

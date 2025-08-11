@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Trash2, ShoppingBag, Gift, Info, Calendar, Clock } from "lucide-react";
+import { Trash2, ShoppingBag, Gift, Info, Calendar, Clock, Copy } from "lucide-react";
 
 import { useDispatch } from "react-redux";
 import useUserCartData from "../../hooks/useUserCartData";
@@ -82,9 +82,6 @@ const Cart = () => {
     };
     fetchCoupons();
   }, []);
-
-  console.log(coupons)
-
   return (
     <div className="min-h-screen bg-white font-poppins">
       <ToastContainer />
@@ -143,7 +140,7 @@ const Cart = () => {
                         className="text-gray-500 hover:text-red-500 hover:bg-red-50 p-2 rounded-full"
                         onClick={() => handleRemoveItem(item.product_id)}
                       >
-                        {console.log(item)}
+                    
                         <Trash2 className="h-5 w-5" />
                       </button>
                     </div>
@@ -295,24 +292,39 @@ const Cart = () => {
       const expiryDate = `Valid until ${new Date(coupon.expiryDate).toLocaleDateString()}`;
 
       // Function to handle copy to clipboard
-      const handleCopyCode = () => {
-        navigator.clipboard.writeText(coupon.code)
-          .then(() => {
-            // Show notification
-            const notification = document.createElement('div');
-            notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-md shadow-lg animate-fade-in-out';
-            notification.textContent = 'Coupon code copied!';
-            document.body.appendChild(notification);
-            
-            // Remove notification after 2 seconds
-            setTimeout(() => {
-              notification.remove();
-            }, 2000);
-          })
-          .catch(err => {
-            console.error('Failed to copy coupon code: ', err);
-          });
-      };
+     const handleCopyCode = () => {
+  navigator.clipboard.writeText(coupon.code)
+    .then(() => {
+      // Success toast
+      toast.success("Coupon code copied!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+       
+      });
+    })
+    .catch(err => {
+      // Error toast
+      toast.error("Failed to copy code!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        
+      });
+      console.error('Failed to copy coupon code: ', err);
+    });
+};
+
 
       return (
         <div 
@@ -348,13 +360,15 @@ const Cart = () => {
           )}
           {isActive && coupon.discountValue >= 20 && (
             <>
-             <span 
-                onClick={handleCopyCode}
-                className={`font-bold text-lg ${colorScheme.textCode} cursor-pointer hover:underline`}
-                title="Click to copy"
-              >
-                {coupon.code}
-              </span>
+             <span
+  onClick={handleCopyCode}
+  className={`inline-flex items-center gap-2 font-bold text-lg ${colorScheme.textCode} cursor-pointer hover:underline`}
+  title="Click to copy"
+>
+  {coupon.code}
+  <Copy className="text-gray-500" />
+</span>
+
            
             <div className={`absolute top-0 right-0 ${colorScheme.badgeBg} ${colorScheme.badgeText} text-xs px-2 py-1 rounded-bl-lg rounded-tr-lg`}>
               Hot Deal

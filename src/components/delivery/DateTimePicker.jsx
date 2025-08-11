@@ -114,11 +114,21 @@ export const TimeSlotPicker = ({ onTimeSlotSelect, PIN }) => {
     setSelectedSlot(null);
   }, [selectedDate, PIN, apiDate]);
 
-  const handleDateChange = (e) => {
-    if (PIN === false) return;
-    setSelectedDate(e.target.value);
-    onTimeSlotSelect(null);
-  };
+ const handleDateChange = (e) => {
+  if (PIN === false) return;
+  
+  const chosenDate = new Date(e.target.value);
+  const minDate = new Date(format(apiDate, 'yyyy-MM-dd'));
+
+  if (chosenDate < minDate) {
+    e.target.value = format(apiDate, 'yyyy-MM-dd');
+    return;
+  }
+
+  setSelectedDate(e.target.value);
+  onTimeSlotSelect(null);
+};
+
 
   const handleSlotSelect = (slot) => {
     if (PIN === false) return;

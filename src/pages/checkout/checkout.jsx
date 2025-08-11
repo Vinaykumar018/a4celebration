@@ -8,6 +8,7 @@ import useUserCartData from "../../hooks/useUserCartData";
 import { fetchUserData } from "../../redux/userSlice";
 import { applyCoupon } from "../../services/coupon-service/coupon";
 import { useState } from "react";
+import { getCoupon } from "../../services/coupon-service/coupon";
 
 
 // Add this in your main CSS file or at the top of your component
@@ -132,6 +133,20 @@ const handleRemoveCoupon = () => {
 const total = Math.max(0, (subtotal - discountAmount)) // Ensure total doesn't go negative
 
 
+
+const [coupons, setCoupons] = useState([]);
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const response = await getCoupon();
+        setCoupons(response);
+      } catch (error) {
+        console.error('Error fetching coupons:', error);
+      }
+    };
+    fetchCoupons();
+  }, []);
+  console.log(coupons)
   return (
     <>
       <style>{styles}</style>
@@ -198,7 +213,7 @@ const total = Math.max(0, (subtotal - discountAmount)) // Ensure total doesn't g
                             <h3 className="font-medium text-amber-800">{item.name}</h3>
                             <div className="bg-green-100 text-green-800 border border-green-300 px-2 py-1 rounded-full text-xs inline-flex items-center">
                               <span className="w-2 h-2 rounded-full bg-green-500 mr-1"></span>
-                              {item.stock_left > 0 ? "Ready to Celebrate!" : "Out of Stock"}
+                              {item.stock_left > 0 ? "Ready to Celebrate!" : "Ready to Celebrate!"}
                             </div>
                             {(item.service_date || item.service_time) && (
                               <>
@@ -267,6 +282,61 @@ const total = Math.max(0, (subtotal - discountAmount)) // Ensure total doesn't g
                           {total.toFixed(2)}
                         </span>
                       </div>
+                      <div className="space-y-2">
+  {coupons
+    .filter(c => new Date(c.expiryDate) >= new Date())
+    .map(c => {
+      const usedUp = c.usedCount >= c.usageLimit;
+      const active = c.isActive && !usedUp;
+      const discount = c.discountType === 'percentage' 
+        ? `${c.discountValue}% OFF` 
+        : `₹${c.discountValue} OFF`;
+      
+      // Color schemes for different coupon types and statuses
+      const colors = !active ? {
+        bg: 'from-rose-50 to-rose-100 border-rose-200',
+        text: 'text-rose-700',
+        badge: 'bg-rose-200 text-rose-800',
+        code: 'text-rose-800'
+      } : c.discountType === 'fixed' ? {
+        bg: 'from-blue-50 to-blue-100 border-blue-200',
+        text: 'text-blue-700',
+        badge: 'bg-blue-200 text-blue-800',
+        code: 'text-blue-800'
+      } : c.discountValue >= 20 ? {
+        bg: 'from-purple-50 to-purple-100 border-purple-200',
+        text: 'text-purple-700',
+        badge: 'bg-purple-200 text-purple-800',
+        code: 'text-purple-800'
+      } : {
+        bg: 'from-amber-50 to-amber-100 border-amber-200',
+        text: 'text-amber-700',
+        badge: 'bg-amber-200 text-amber-800',
+        code: 'text-amber-800'
+      };
+
+      return (
+        <div key={c._id} className={`relative p-3 rounded-lg bg-gradient-to-r ${colors.bg} border border-dashed ${!active && 'opacity-70'}`}>
+          <div className="flex justify-between items-start">
+            <div>
+              <p className={`font-mono font-bold text-sm ${colors.code}`}>{c.code}</p>
+              <p className={`text-xs ${colors.text}`}>{discount}</p>
+              <p className="text-xs text-gray-500 mt-1">Valid until {new Date(c.expiryDate).toLocaleDateString()}</p>
+            </div>
+            <p className={`text-lg font-bold mt-2 ${!active && 'line-through'} ${colors.text}`}>
+              {discount.split(' ')[0]}
+            </p>
+          </div>
+          {!active && <div className={`absolute top-1 right-1 ${colors.badge} text-xs px-2 py-0.5 rounded`}>
+            {usedUp ? 'Used Up' : 'Inactive'}
+          </div>}
+          {active && c.discountValue >= 20 && <div className={`absolute top-1 right-1 ${colors.badge} text-xs px-2 py-0.5 rounded`}>
+            Hot Deal
+          </div>}
+        </div>
+      );
+    })}
+</div>
 
                       <div className="pt-3">
                         <div className="flex items-center space-x-2">
